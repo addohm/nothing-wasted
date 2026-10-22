@@ -96,8 +96,10 @@ local function ReadSoon()
     end)
 end
 
+-- Read at login and as things change during play, not at logout: while the character leaves the
+-- world the game can report nothing, which would wipe good data.
 ns.On("NW_CHARACTER_SAVED", function(c, reason)
-    if reason then Cooldowns.Read(c) end
+    if reason == "login" then Cooldowns.Read(c) end
 end)
 for _, event in ipairs({ "SPELL_UPDATE_COOLDOWN", "BAG_UPDATE_COOLDOWN", "PLAYER_REGEN_ENABLED",
     "LEARNED_SPELL_IN_SKILL_LINE", "BAG_UPDATE_DELAYED", "UNIT_AURA" }) do

@@ -152,8 +152,10 @@ end
 
 -- Events -----------------------------------------------------------------------------------------------
 
+-- Read at login and whenever skills change, not at logout: the game can report no professions
+-- while the character leaves the world, which would wipe them.
 ns.On("NW_CHARACTER_SAVED", function(c, reason)
-    if reason then
+    if reason == "login" then
         Professions.ReadSkills(c)
         Professions.ReadTrade(c)
     end

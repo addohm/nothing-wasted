@@ -13,8 +13,6 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
 
 ## To confirm in game
 
-- **Logout values:** whether the game still reports XP, rested XP and the zone at logout. The addon
-  keeps the last good snapshot if it doesn't, which can make an alt's estimate start a little early.
 - **Rested rates (hardest to test):** 5% of a level per 8h in an inn or city, and a quarter of that
   away from rest (the Classic rule). The `/run` lines in HANDOFF.md measure them.
 - **Well Rested:** whether +4% per rank multiplies the cap (rank 5: 180%) or adds to it (170%). The
@@ -31,6 +29,8 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
 
 - Untrained spells don't show in the spellbook, only at the trainer (2026-10-22).
 - The first mount at level 40 costs 100g (2026-10-22).
+- At logout the game reports empty data (professions vanished from saved characters), so the addon
+  doesn't re-read at logout except the XP snapshot and Well Rested, both guarded (2026-10-22).
 - A first in-game pass: the windows, alerts, tracking and saving work (2026-10-22).
 
 ## Ideas

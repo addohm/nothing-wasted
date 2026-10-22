@@ -84,22 +84,33 @@ return function(root)
 
     test("1b. every character that logged in gets a bar", function()
         local a = mock.NewClient({ root = root, player = { name = "Alpha", level = 10, xp = 200, xpMax = 5000, rested = 100, resting = true } })
+        a.player.professions = { { name = "Tailoring", rank = 120, max = 150, skillLine = 197 } }
+        a.player.bagSlots = { { 2589, 7, "Linen Cloth" } }
+        a.player.perks[1225478] = 3
         a:Login()
-        -- While leaving the world the game may report no XP data; the good snapshot must survive.
+        -- While leaving the world the game may report no data at all; the good values must survive.
         a.player.xpMax, a.player.xp, a.player.rested, a.player.zone = 0, 0, 0, ""
+        a.player.professions, a.player.bagSlots, a.player.perks = {}, {}, {}
         local db = a:Logout()
         local alpha = db.chars["Alpha-Forever"]
         eq(alpha.xpMax, 5000, "logout with no XP data keeps the last good max XP")
         eq(alpha.rested, 100, "and the rested XP")
         eq(alpha.zone, "Elwynn Forest", "and the zone")
+        eq(alpha.professions and #alpha.professions, 1, "and the professions")
+        eq(alpha.bags and alpha.bags[2589], 7, "and the bags")
+        eq(alpha.wellRested, 3, "and the Well Rested rank")
 
         local b = mock.NewClient({ root = root, db = db, now = T0 + HOUR, player = { name = "Beta", level = 12, xp = 0, xpMax = 6000, resting = true } })
         b:Login()
         local texts = RowTexts(b, b.ns.Meter.Frame())
         eq(#texts, 2, "both characters have a bar")
-        local hasAlpha = false
-        for _, t in ipairs(texts) do if t:find("Alpha") then hasAlpha = true end end
+        local hasAlpha, alphaRow = false, nil
+        for i, t in ipairs(texts) do
+            if t:find("Alpha") then hasAlpha, alphaRow = true, b:Rows(b.ns.Meter.Frame())[i] end
+        end
         check(hasAlpha, "the other character is listed")
+        local tip = alphaRow and b:Hover(alphaRow)
+        check(tip and tip:Has("Tailoring"), "the other character's tooltip shows its professions")
 
         -- /nw chars says where the loaded data came from.
         b:ClearChat()

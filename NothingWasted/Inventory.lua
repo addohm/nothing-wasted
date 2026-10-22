@@ -146,8 +146,9 @@ local function ReadSoon()
     end)
 end
 
+-- Read at login and whenever bags change, not at logout (the game can report empty bags then).
 ns.On("NW_CHARACTER_SAVED", function(c, reason)
-    if reason then Inventory.ReadBags(c) end
+    if reason == "login" then Inventory.ReadBags(c) end
 end)
 ns.On("BAG_UPDATE_DELAYED", ReadSoon)
 ns.On("BANKFRAME_OPENED", function()

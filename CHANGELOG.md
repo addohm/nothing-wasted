@@ -51,6 +51,11 @@ All notable changes to this project are documented here. The format follows
 
 ### Fixed
 
+- Other characters' tooltips only showed professions for the character being played. The logout save
+  re-read professions, bags and cooldowns while the game reported none, wiping them. They're now read
+  at login and as they change during play, not at logout, and an empty logout reading can't lower
+  the Well Rested rank. Each alt shows its professions again after its next login.
+
 - The level-40 mount costs 100g in Forever, not 120g.
 
 - "Spells to train" was wiped at every login: the addon looked for untrained spells in the

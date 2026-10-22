@@ -85,7 +85,9 @@ local function PerkRank(perkID)
 end
 
 -- Reads the current character's perk ranks and Legacy points. Returns true if the data was there.
-function Legacy.ReadCharacter(c)
+-- At logout the game can report empty values, so then only a higher Well Rested rank is taken
+-- (refunds are caught live by the trait events) and the points aren't touched.
+function Legacy.ReadCharacter(c, atLogout)
     if not C_Traits or not C_Traits.GetConfigIDByTreeID then return false end
     local missing = false
     for perkID in pairs(ns.Data.perks) do
@@ -95,6 +97,10 @@ function Legacy.ReadCharacter(c)
 
     local wellRested = PerkRank("wellRested")
     if wellRested == nil then return false end
+    if atLogout then
+        if wellRested > (c.wellRested or 0) then c.wellRested = wellRested end
+        return true
+    end
     c.wellRested = wellRested
     c.dedicatedStudy = PerkRank("dedicatedStudy") or 0
 
@@ -215,7 +221,7 @@ ns.On("NW_CHARACTER_SAVED", function(c, reason)
         Legacy.ReadCharacter(c)
         Legacy.UpdateGoals(c)
     elseif reason == "logout" then
-        Legacy.ReadCharacter(c)
+        Legacy.ReadCharacter(c, true)
     end
 end)
 
