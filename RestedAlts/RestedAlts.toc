@@ -1,0 +1,12 @@
+## Interface: 16001
+## Title: Rested Alts
+## Notes: See every character's rested XP, estimated while they are offline, in a small window.
+## Author: KYOL
+## Version: 0.1.0
+## IconTexture: Interface\Icons\Spell_Nature_Sleep
+## SavedVariables: RestedAltsDB
+## OptionalDeps: RestedRoster
+
+Core.lua
+UI.lua
+Minimap.lua
