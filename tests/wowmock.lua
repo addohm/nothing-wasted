@@ -156,7 +156,8 @@ function Frame:HookScript(name, fn)
     end
 end
 function Frame:SetFrameStrata() end
-function Frame:SetFrameLevel() end
+function Frame:SetFrameLevel(l) self.level = l end
+function Frame:GetFrameLevel() return self.level or 1 end
 function Frame:EnableMouse() end
 function Frame:SetMovable() end
 function Frame:SetResizable(v) self.resizable = v end

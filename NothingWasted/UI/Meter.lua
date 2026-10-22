@@ -7,12 +7,14 @@ local L = ns.L
 local Meter = {}
 ns.Meter = Meter
 
-local WIDTH = 220
+local WIDTH = 220 -- default width; the grip resizes it
+local MIN_W, MAX_W = 150, 600
 local TITLE_HEIGHT = 18
 local ROW_HEIGHT = 16
 local REFRESH_SECONDS = 5
 
-local frame, ticker, empty
+local frame, ticker, empty, grip
+local sizing = false -- true while the grip is being dragged
 local rows = {}
 local openedBy -- "auto" when it popped up for resting, "user" otherwise
 
@@ -43,12 +45,13 @@ function Meter.Refresh()
         rows[i]:Hide()
     end
     empty:SetShown(count == 0)
-    frame:SetHeight(TITLE_HEIGHT + math.max(count, 1) * ROW_HEIGHT + 2)
+    if not sizing then frame:SetHeight(TITLE_HEIGHT + math.max(count, 1) * ROW_HEIGHT + 2) end
 end
 
 local function Build()
     frame = CreateFrame("Frame", nil, UIParent)
-    frame:SetSize(WIDTH, TITLE_HEIGHT + ROW_HEIGHT + 2)
+    local width = ns.db.settings.meter.width or WIDTH
+    frame:SetSize(math.max(MIN_W, math.min(MAX_W, width)), TITLE_HEIGHT + ROW_HEIGHT + 2)
     frame:SetFrameStrata("MEDIUM")
     frame:SetMovable(true)
     frame:SetClampedToScreen(true)
@@ -106,6 +109,40 @@ local function Build()
     close:SetHighlightTexture("Interface\\Buttons\\UI-Listbox-Highlight2", "ADD")
     close:SetScript("OnClick", function() Meter.Hide() end)
 
+    -- Resize grip: the width is free; the height snaps to whole bars and sets how many are shown.
+    frame:SetResizable(true)
+    frame:SetResizeBounds(MIN_W, TITLE_HEIGHT + ROW_HEIGHT + 2, MAX_W, TITLE_HEIGHT + 40 * ROW_HEIGHT + 2)
+    grip = CreateFrame("Button", nil, frame)
+    grip:SetSize(12, 12)
+    grip:SetPoint("BOTTOMRIGHT", -1, 1)
+    grip:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Up")
+    grip:SetPushedTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Down")
+    grip:SetHighlightTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Highlight")
+    grip:SetFrameLevel(frame:GetFrameLevel() + 5)
+    grip:SetScript("OnMouseDown", function()
+        if ns.db.settings.meter.locked then return end
+        sizing = true
+        frame:StartSizing("BOTTOMRIGHT")
+    end)
+    grip:SetScript("OnMouseUp", function()
+        if not sizing then return end
+        frame:StopMovingOrSizing()
+        sizing = false
+        local settings = ns.db.settings.meter
+        settings.width = math.floor(frame:GetWidth() + 0.5)
+        settings.maxBars = math.max(1, math.min(40, math.floor((frame:GetHeight() - TITLE_HEIGHT - 2) / ROW_HEIGHT + 0.5)))
+        SavePosition()
+        Meter.Refresh()
+        ns.Fire("NW_REFRESH") -- the options page shows the new bar count
+    end)
+    grip:SetScript("OnEnter", function(self)
+        GameTooltip:SetOwner(self, "ANCHOR_TOP")
+        GameTooltip:AddLine(L["Drag to resize: width, and how many bars"])
+        GameTooltip:Show()
+    end)
+    grip:SetScript("OnLeave", GameTooltip_Hide)
+    Meter.UpdateLock()
+
     empty = frame:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
     empty:SetPoint("TOPLEFT", 6, -(TITLE_HEIGHT + 2))
     empty:SetText(L["Log in to each character once to add it."])
@@ -142,8 +179,15 @@ function Meter.Toggle()
     if Meter.IsShown() then Meter.Hide() else Meter.Show("user") end
 end
 
+-- The grip only shows when the bars window isn't locked.
+function Meter.UpdateLock()
+    if grip then grip:SetShown(not ns.db.settings.meter.locked) end
+end
+ns.On("NW_REFRESH", function() Meter.UpdateLock() end)
+
 -- For the tests.
 function Meter.Frame() return frame end
+function Meter.Grip() return grip end
 
 -- The bars window's frame, built (hidden) if it doesn't exist yet: the reminder card sits on it.
 function Meter.GetFrame()

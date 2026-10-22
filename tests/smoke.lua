@@ -406,6 +406,23 @@ return function(root)
         eq(KyolText(), "to 20.5", "level rested XP reaches")
         settings.meter.text = "toCap"
 
+        -- The bars window's grip: width, and the height snaps to a number of bars.
+        local grip = c.ns.Meter.Grip()
+        check(grip and grip.shown, "the bars window has a resize grip")
+        grip.scripts.OnMouseDown(grip)
+        eq(frame.sizing, "BOTTOMRIGHT", "it resizes from the corner")
+        frame:SetSize(300, 18 + 3 * 16 + 9) -- dragged to about three bars tall
+        grip.scripts.OnMouseUp(grip)
+        local meterSettings = rawget(c.env, "NothingWastedDB").settings.meter
+        eq(meterSettings.width, 300, "width saved")
+        eq(meterSettings.maxBars, 3, "height snapped to three bars")
+        eq(frame.height, 18 + 2 * 16 + 2, "then fits the two characters there are")
+        meterSettings.locked = true
+        c.ns.Meter.UpdateLock()
+        check(not grip.shown, "no grip while locked")
+        meterSettings.locked = false
+        c.ns.Meter.UpdateLock()
+
         -- The bar count limit.
         rawget(c.env, "NothingWastedDB").settings.meter.maxBars = 1
         c.ns.Meter.Refresh()

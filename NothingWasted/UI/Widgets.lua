@@ -198,9 +198,11 @@ function UI.OptionSelect(parent, label, values, get, set)
     row.next = Arrow(1, CONTROL_X + 204)
     row.Sync = function()
         local cur = get()
+        local text = tostring(cur)
         for _, v in ipairs(values) do
-            if v[1] == cur then box:SetText(v[2]) end
+            if v[1] == cur then text = v[2] end
         end
+        box:SetText(text)
     end
     return row
 end

@@ -90,6 +90,8 @@ button for the bars window.
 - The bar text can show, instead of time to cap: the rested XP amount, rested XP as a % of a level or
   of the cap, or the level the rested XP takes the character to (Options → Bars window → Bar shows).
 - Drag the title to move it (or lock it in the options). Click the title to open the full window.
+- Drag the grip in its bottom-right corner to resize it: the width is free, and the height snaps to
+  whole bars and sets how many it shows. Locking hides the grip.
 - `/nw bars`, or shift-click the minimap button, shows it anywhere. A bars window you open yourself
   stays open when you leave; an option makes it hide too.
 - Every character you've logged into gets a bar. Max-level characters can be shown or hidden;
