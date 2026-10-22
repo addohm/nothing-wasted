@@ -13,6 +13,8 @@ All notable changes to this project are documented here. The format follows
 - The design for Nothing Wasted: features in README.md, plan and open questions in ROADMAP.md.
   Includes slash commands, translations at launch, and the option for manually opened bars.
 - Renamed the planned addon from Well Rested to Nothing Wasted.
+- Design scope: leveling alts and Legacy points, with cooldowns, Cozy Sleeping Bag, mail, item
+  search, professions, leveling and Legacy planner features. Slash command `/nw`.
 
 ### Removed
 

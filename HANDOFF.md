@@ -21,6 +21,8 @@ On macOS or Linux the interpreter is `.venv/bin/python`. lupa 2.8 bundles Lua 5.
 - The design so far is in [README.md](README.md) (features) and [ROADMAP.md](ROADMAP.md) (plan,
   open questions and game facts to confirm). The name is Nothing Wasted: no rested XP, cooldown or
   mail left sitting unused.
+- **Scope:** leveling alts and earning Legacy points. The user cut auction-house mail and item
+  tooltip counts as clutter; keep new features inside that scope.
 - Key point from the user: estimates must be accurate, so nothing sits at the cap unnoticed. Read the
   Well Rested perk rank at login, at logout, and when a perk is spent or refunded. Checking only at
   login would get the first estimate wrong after spending a point.

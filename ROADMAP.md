@@ -7,7 +7,8 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
 
 1. Finish the design. Still open:
    - Which languages, and how translations are sourced (for example CurseForge's localization tool).
-   - Which of the extra ideas below go in at launch.
+   - Whether everything in README.md ships at launch, or some of it comes later. Item search is
+     the biggest piece.
    - Anything else the user wants to settle before code.
 2. Confirm the game facts the estimates depend on (see below), from the
    [Forever UI source](https://github.com/Gethe/wow-ui-source/tree/forever) and in game.
@@ -26,24 +27,14 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
   How to read progress toward one, and whether completion is per character or per account.
 - **Camping:** whether logging out at a campfire counts as resting. The Leatherworking Camp Tent tops
   rested XP up to 5% of a level once an hour, which the addon sees live.
+- **Cozy Sleeping Bag:** the chain's quest IDs and item ID (wowhead lists item 211527), and the
+  bag's cooldown. Sources disagree on it: one hour or five minutes.
+- **Dedicated Study, profession cooldowns and the Camp Tent:** how to read each cooldown.
 - **Hardcore:** `C_GameRules.IsHardcoreActive()`, and what reincarnation does to a character.
 - **Logout warning:** which event fires when a logout starts (probably `PLAYER_CAMPING`).
 
 ## Ideas
 
-Not decided yet. A possible theme: "nothing wasted", using the same alerts as the rested cap.
-
-- **Cooldowns:** Dedicated Study (Legacy daily skill point), Camp Tent, profession cooldowns
-  (Mooncloth, transmutes, Salt Shaker).
-- **Mail:** record mail sent to alts (items, gold, COD) so their mailbox is known before login;
-  auction mail; expiring-mail warnings.
-- **Items:** search across alts (bags, bank, mail, mail in transit), item tooltip counts, free bag
-  space. A large feature; likely after launch.
-- **Professions:** recipe tooltips ("Kyol knows this" / "can learn at 175"), next trainer rank, alts
-  stuck at a skill cap, Merchant's Favor and trade reputations, crafts possible from alts' reagents.
-- **Leveling:** who to play next, how far rested carries a character, leveling pace and ETA to 60,
-  untrained spells, mount gold at 40, hearthstone location and cooldown.
-- **Legacy planner:** which class milestones and profession points the account still lacks.
 - Show rested XP on the character-select screen, if the client ever allows addons there.
 - Per-realm group headers for players with many alts.
 
@@ -53,3 +44,5 @@ Not decided yet. A possible theme: "nothing wasted", using the same alerts as th
 - Removed the 0.1.0 draft to plan the project first (2026-10-22).
 - Core design: features, alerts, bars, Legacy goals and the name Well Rested (2026-10-22).
 - Renamed to Nothing Wasted (2026-10-22).
+- Scope set: leveling alts and Legacy points. Added cooldowns, sleeping bag, mail, item search,
+  professions, leveling and Legacy planner features (2026-10-22).

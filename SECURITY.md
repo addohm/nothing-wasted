@@ -8,8 +8,10 @@ problems in a public issue.
 ## What the addon can access
 
 Nothing Wasted (planned) runs inside the World of Warcraft addon sandbox. It will read your
-character's name, realm, class, level, XP, rested XP, rested status, zone, gold, professions and skill
-levels, Legacy perks and Legacy challenge progress. It has no network, file system or chat-sending
+character's name, realm, class, level, XP, rested XP, rested status, zone, gold, professions, skill
+levels and known recipes, reputations and currencies, cooldowns, quest progress, Legacy perks and
+challenge progress, the contents of bags, bank and mailbox, and the mail you send to your own
+characters. It has no network, file system or chat-sending
 access beyond printing messages to your own chat frame and playing sounds.
 
 ## Repository access
