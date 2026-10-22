@@ -49,10 +49,13 @@ local function SkillItems()
     return items
 end
 
+local craftsOpen = {} -- characters expanded on the Crafts view (all collapsed at first)
+
 local function CraftItems()
     local items = {}
     for _, c in ipairs(Chars()) do
-        local header = false
+        -- Gather this character's crafts first, so its header can show how many there are.
+        local byProfession, total = {}, 0
         for profession, set in pairs(c.recipes or {}) do
             local crafts = {}
             for id in pairs(set) do
@@ -61,27 +64,34 @@ local function CraftItems()
             end
             table.sort(crafts, function(a, b) return a.n > b.n end)
             if #crafts > 0 then
-                if not header then
-                    items[#items + 1] = { left = ns.ColoredName(c), header = true }
-                    header = true
-                end
-                items[#items + 1] = { indent = 1, left = profession, header = true }
-                for i = 1, math.min(#crafts, CRAFTS_PER_PROFESSION) do
-                    local r = ns.db.recipes[crafts[i].id]
-                    items[#items + 1] = {
-                        indent = 2,
-                        left = (r.icon and ("|T" .. r.icon .. ":0|t ") or "") .. (r.name or "?"),
-                        right = format(L["can make %d"], crafts[i].n),
-                        tooltip = function(tip)
-                            tip:AddLine(r.name or "?")
-                            for _, reagent in ipairs(r.reagents or {}) do
-                                local item = ns.db.items and ns.db.items[reagent.itemID]
-                                tip:AddDoubleLine(format("%dx %s", reagent.count, item and item.name or ("item:" .. reagent.itemID)),
-                                    format(L["%d on your characters"], ns.Inventory.TotalCount(reagent.itemID)), 1, 1, 1, 1, 1, 1)
-                            end
-                        end,
-                    }
-                end
+                byProfession[#byProfession + 1] = { name = profession, crafts = crafts }
+                total = total + #crafts
+            end
+        end
+        table.sort(byProfession, function(a, b) return a.name < b.name end)
+        local key = (c.name or "?") .. "-" .. (c.realm or "?")
+        if total > 0 then
+            items[#items + 1] = ns.UI.CollapsibleHeader(craftsOpen, key, ns.ColoredName(c),
+                format(L["%d recipe(s)"], total))
+        end
+        for _, group in ipairs(craftsOpen[key] and byProfession or {}) do
+            local profession, crafts = group.name, group.crafts
+            items[#items + 1] = { indent = 1, left = profession, header = true }
+            for i = 1, math.min(#crafts, CRAFTS_PER_PROFESSION) do
+                local r = ns.db.recipes[crafts[i].id]
+                items[#items + 1] = {
+                    indent = 2,
+                    left = (r.icon and ("|T" .. r.icon .. ":0|t ") or "") .. (r.name or "?"),
+                    right = format(L["can make %d"], crafts[i].n),
+                    tooltip = function(tip)
+                        tip:AddLine(r.name or "?")
+                        for _, reagent in ipairs(r.reagents or {}) do
+                            local item = ns.db.items and ns.db.items[reagent.itemID]
+                            tip:AddDoubleLine(format("%dx %s", reagent.count, item and item.name or ("item:" .. reagent.itemID)),
+                                format(L["%d on your characters"], ns.Inventory.TotalCount(reagent.itemID)), 1, 1, 1, 1, 1, 1)
+                        end
+                    end,
+                }
             end
         end
     end

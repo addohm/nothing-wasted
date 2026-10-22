@@ -20,9 +20,9 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
 - **Cozy Sleeping Bag:** which of quests 79007 and 79008 is Alliance or Horde (either counts).
 - **Leveling buffs:** that eating cooked food puts Well Fed XP Boost (spell 1243969) on the player,
   and that the sleeping bag's buff is Well-Rested (429959). Wowhead lists both; not yet seen in game.
-- **Recipe tooltips:** that recipe items show the "Requires <profession> (<skill>)" line the addon
-  reads, and that recipe names match the item name after "Pattern:", "Recipe:" and so on.
-- **Recipe list:** `C_TradeSkillUI.GetFilteredRecipeIDs` is used by Blizzard's UI but undocumented.
+- **Recipe tooltips:** on a recipe item (Pattern:, Recipe:, …), the "Requires <profession> (<skill>)"
+  line the addon reads, and recipe names matching the item name after the prefix. Also the new
+  "Can make" line on crafted items, such as the Basic Campfire Kit.
 
 ## Confirmed in game
 
@@ -32,6 +32,7 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
   6.00% (2026-10-22).
 - Logging out in the Cozy Sleeping Bag gives no rested XP bonus; it isn't a rested area (2026-10-22).
 - Logging out by a campfire doesn't count as resting either (2026-10-22).
+- Recipes are recorded when a profession window is opened (`GetFilteredRecipeIDs` works) (2026-10-22).
 - At logout the game reports empty data (professions vanished from saved characters), so the addon
   doesn't re-read at logout except the XP snapshot and Well Rested, both guarded (2026-10-22).
 - A first in-game pass: the windows, alerts, tracking and saving work (2026-10-22).

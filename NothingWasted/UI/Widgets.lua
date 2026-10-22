@@ -100,6 +100,23 @@ function UI.UpdateTextRow(row, item, index)
     row.stripe:SetShown(not item.header and index % 2 == 0)
 end
 
+-- A header row that expands or collapses the rows under it. `state` is a table of expanded keys
+-- (collapsed by default); clicking toggles the key and refreshes the window.
+local PLUS = "|TInterface\\Buttons\\UI-PlusButton-Up:14:14|t "
+local MINUS = "|TInterface\\Buttons\\UI-MinusButton-Up:14:14|t "
+
+function UI.CollapsibleHeader(state, key, left, right)
+    return {
+        header = true,
+        left = (state[key] and MINUS or PLUS) .. left,
+        right = right,
+        onClick = function()
+            state[key] = not state[key] or nil
+            ns.Window.Refresh()
+        end,
+    }
+end
+
 -- A simple list of text rows: items are { left, right, header, indent, tooltip, onClick }.
 function UI.TextList(parent)
     return UI.List(parent, 20, UI.TextRow, UI.UpdateTextRow)

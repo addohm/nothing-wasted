@@ -115,18 +115,23 @@ button for the bars window.
 ### Professions
 
 - Professions and skill levels for every character, including secondary skills.
-- **Recipe tooltips:** "Kyol knows this", or "Kyol can learn this at 175".
+- **Recipe tooltips:** on a recipe item (Pattern:, Recipe:, …): "Kyol knows it", or "can learn at 175".
+- **Crafted item tooltips:** "Can make: Kampf, Whoat" on anything one of your characters can craft
+  (from recipes recorded when each profession window was opened).
 - **Next trainer rank:** for example "Journeyman at 50". Flags alts stuck at a skill cap that need a
   trainer or a higher level.
 - **Forever's trade economy:** Merchant's Favor and the trade reputations (Azeroth Commerce Authority,
   Durotar Supply and Logistics) per character. Recipes are gated behind them.
-- **Crafts across alts:** "Kyol can make 12 of this with what your alts hold."
+- **Crafts across alts:** "Kyol can make 12 of this with what your alts hold." Grouped by character,
+  collapsed until you click a name.
 
 ### Mail and items
 
 - **Mail sent to alts:** recorded when you send it (items, gold, cash on delivery), so each alt's
   mailbox is known before you log in. Includes arrival time when there's a delay.
 - **Expiring mail:** a warning before uncollected mail is returned or deleted.
+- The Mail view groups mail by character, collapsed until you click a name; each header shows how
+  many are waiting and flags mail about to expire.
 - **Item search** across all characters' bags, bank, mailbox and mail in transit, from the addon
   window or with `/nw [item link]`.
 - **Free bag space** per character.

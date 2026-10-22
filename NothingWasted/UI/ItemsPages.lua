@@ -45,6 +45,8 @@ local function SearchItems(query)
     return items
 end
 
+local mailOpen = {} -- characters expanded on the Mail view (all collapsed at first)
+
 local function MailItems()
     local now = ns.Now()
     local items = {}
@@ -52,11 +54,15 @@ local function MailItems()
         local list = ns.Mail.Pending(c)
         if #list > 0 then
             local seen = c.mail and c.mail.inboxAt
-            items[#items + 1] = {
-                left = ns.ColoredName(c), header = true,
-                right = seen and ("|cff999999" .. format(L["mailbox checked %s ago"], ns.FormatDuration(now - seen)) .. "|r") or "",
-            }
-            for _, m in ipairs(list) do
+            local key = (c.name or "?") .. "-" .. (c.realm or "?")
+            local soonest = list[1].expiresAt
+            local note = format(L["%d waiting"], #list)
+            if soonest and soonest - now < 3 * 86400 then
+                note = note .. "  |cffff4040" .. format(L["first expires in %s"], ns.FormatDuration(soonest - now)) .. "|r"
+            end
+            items[#items + 1] = ns.UI.CollapsibleHeader(mailOpen, key, ns.ColoredName(c) .. "  |cff999999" .. note .. "|r",
+                seen and ("|cff999999" .. format(L["mailbox checked %s ago"], ns.FormatDuration(now - seen)) .. "|r") or "")
+            for _, m in ipairs(mailOpen[key] and list or {}) do
                 local what = {}
                 local count = 0
                 for _, n in pairs(m.items or {}) do count = count + n end

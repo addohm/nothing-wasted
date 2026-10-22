@@ -24,6 +24,9 @@ All notable changes to this project are documented here. The format follows
 - `/nw rate`: measures the rested XP rate in game (a mark, then the rate since it, across a logout
   too) next to the expected rate, and lists automatic checks of the estimate made at each login.
   It shows the mark's clock time and rested value.
+- Crafted items' tooltips say which of your characters can make them ("Can make: Kampf, Whoat").
+- Items → Mail and Professions → Crafts group their rows under collapsible character headers,
+  collapsed by default.
 - Headless tests under Lua 5.1 with a strict fake WoW client.
 - Packaging for CurseForge and Wago (`.pkgmeta`), with translations from contributors.
 - `tools/install_forever.cmd`: pulls the repo and installs the addon into the Forever client on

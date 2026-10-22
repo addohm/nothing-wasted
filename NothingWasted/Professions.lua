@@ -192,8 +192,33 @@ local function RequiredSkill(data)
     end
 end
 
-local function OnItemTooltip(tooltip, data)
-    if not data or not data.id or not ns.db then return end
+-- Names of the characters who know a recipe that makes this item (recorded when their profession
+-- window was opened).
+local function Crafters(itemID)
+    local recipeIDs = {}
+    for id, r in pairs(ns.db.recipes or {}) do
+        if r.output == itemID then recipeIDs[#recipeIDs + 1] = id end
+    end
+    if #recipeIDs == 0 then return {} end
+    local list = {}
+    for _, c in pairs(ns.db.chars) do
+        local knows = false
+        for _, set in pairs(c.recipes or {}) do
+            for _, id in ipairs(recipeIDs) do
+                if set[id] then knows = true end
+            end
+        end
+        if knows then list[#list + 1] = c end
+    end
+    table.sort(list, function(a, b) return (a.name or "") < (b.name or "") end)
+    local names = {}
+    for i, c in ipairs(list) do names[i] = ns.ColoredName(c) end
+    return names
+end
+Professions.Crafters = Crafters
+
+-- Recipe items: which characters know the recipe, or when they can learn it.
+local function RecipeLines(data, lines)
     local _, _, _, _, _, classID, subclassID = C_Item.GetItemInfoInstant(data.id)
     if classID ~= RECIPE_CLASS then return end
     local skillLine = ns.Data.recipeSubclassSkillLine[subclassID]
@@ -201,8 +226,6 @@ local function OnItemTooltip(tooltip, data)
     local itemName = C_Item.GetItemNameByID(data.id)
     local recipeName = itemName and (itemName:match("^[^:]+:%s*(.+)$") or itemName)
     local required = RequiredSkill(data)
-
-    local lines = {}
     for _, c in pairs(ns.db.chars) do
         for _, p in ipairs(c.professions or {}) do
             if p.skillLine == skillLine then
@@ -218,10 +241,18 @@ local function OnItemTooltip(tooltip, data)
             end
         end
     end
+end
+
+local function OnItemTooltip(tooltip, data)
+    if not data or not data.id or not ns.db then return end
+    local lines = {}
+    local crafters = Crafters(data.id)
+    if #crafters > 0 then lines[#lines + 1] = { L["Can make"], table.concat(crafters, ", ") } end
+    RecipeLines(data, lines)
     if #lines == 0 then return end
     tooltip:AddLine(" ")
     tooltip:AddLine("Nothing Wasted", 0.4, 0.8, 1)
-    for _, line in ipairs(lines) do tooltip:AddDoubleLine(line[1], line[2]) end
+    for _, line in ipairs(lines) do tooltip:AddDoubleLine(line[1], line[2], 1, 0.82, 0, 1, 1, 1) end
 end
 
 if TooltipDataProcessor and TooltipDataProcessor.AddTooltipPostCall then

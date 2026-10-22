@@ -383,6 +383,13 @@ return function(root)
         check(kyol.recipes and kyol.recipes.Tailoring and kyol.recipes.Tailoring[3915], "known recipe recorded")
         eq(c.ns.Professions.CraftableFromAlts(3915), 15, "crafts from all characters' items")
 
+        -- A crafted item's tooltip says who can make it.
+        c.recipes[3915].output = 2996
+        c:Fire("TRADE_SKILL_LIST_UPDATE")
+        c:Advance(2)
+        local made = c:ItemTooltip(2996)
+        check(made:Has("Can make | .*Kyol"), "crafted item tooltip lists who can make it")
+
         -- Stuck at a trainer cap.
         local name, skill, level, stuck = c.ns.Professions.NextRank(kyol.professions[1], kyol.level)
         eq(name, "Expert", "next rank")
@@ -392,6 +399,18 @@ return function(root)
         c.itemInfo = { [4355] = { classID = 9, subclassID = 2, name = "Pattern: Icy Cloak" } }
         local tip = c:ItemTooltip(4355, { { type = 4, leftText = "Requires Tailoring (175)" } })
         check(tip:Has("can learn at 175 %(now 150%)"), "recipe tooltip shows when Kyol can learn it")
+
+        -- Mail is grouped by character, collapsed until clicked.
+        c.ns.Window.Select("mail")
+        local mailRows = c:Rows(TabPanel(c))
+        eq(#mailRows, 1, "mail starts collapsed to one header per character")
+        mailRows[1].scripts.OnClick(mailRows[1], "LeftButton")
+        eq(#c:Rows(TabPanel(c)), 2, "clicking the header shows its mail")
+        c.ns.Window.Select("crafts")
+        local craftRows = c:Rows(TabPanel(c))
+        eq(#craftRows, 1, "crafts start collapsed")
+        craftRows[1].scripts.OnClick(craftRows[1], "LeftButton")
+        eq(#c:Rows(TabPanel(c)), 3, "expanding shows the profession and its crafts")
 
         -- Expiring mail warning 3 days before Oldie's mail expires.
         c:ClearChat()
