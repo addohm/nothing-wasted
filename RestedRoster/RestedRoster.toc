@@ -1,7 +1,0 @@
-## Interface: 16001
-## Title: Rested Roster
-## Notes: Tracks rested XP across alts and estimates offline accrual.
-## Author: KYOL
-## Version: 0.1.2
-## SavedVariables: RestedRosterDB
-RestedRoster.lua

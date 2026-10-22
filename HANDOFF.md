@@ -27,8 +27,6 @@ lupa 2.8 bundles Lua 5.1 (`import lupa.lua51`), which matches the game's Lua.
   Rested rank is read at login, at logout, and when perks change.
 - Similar addons exist: ForeverAlts, CLIAlts, Alt Ledger, Rested XP Tracker and Rested XP Helper.
   Nothing Wasted is built from scratch, with no code copied from them.
-- **`RestedRoster/`** is an older addon, included only as an example and inspiration. The addon must
-  not reference it or import from it. **Never modify it.**
 
 ## How the tests work
 

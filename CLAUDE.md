@@ -25,12 +25,10 @@ Guidance for coding assistants working in this repository.
 - `tools/install_forever.cmd`: pulls and copies the addon into the user's Forever client on Windows, and
   stamps the commit into the installed `NothingWasted/Build.lua` (empty in the repo and in releases).
   Keep it CRLF (`.gitattributes`).
-- `RestedRoster/`: an older addon kept only as an example and inspiration. **Do not modify it.**
 
 ## Rules
 
 - Discuss new ideas with the user before building them; record agreed design in README and ROADMAP.
-- The addon stands alone: no references to RestedRoster, no import of its data, no dependency on it.
 - Target client: WoW: Forever, Interface 16001. That's the modern retail client with the Midnight
   addon API, not a Classic-era client. Check API in Blizzard's UI source, `forever` branch:
   https://github.com/Gethe/wow-ui-source/tree/forever. Prefer `C_*` functions; many old globals are gone.
@@ -67,5 +65,4 @@ To try it in game on Windows, push, then run `tools\install_forever.cmd` and `/r
 
 ## Don't
 
-- Modify `RestedRoster/`.
 - Commit secrets (`.env`, keys, tokens) or the `.venv/` folder.
