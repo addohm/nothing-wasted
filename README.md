@@ -64,16 +64,17 @@ button for the bars window.
 - **Logout warning:** a chat line if you log out somewhere that isn't resting, where rested XP builds
   at a quarter of the rate.
 - **Leveling buffs** (below max level): when you leave an inn or city, or a buff wears off while
-  you're out in the world, a **reminder card** takes the bars window's place. It looks just like the
-  bars window, but with one flashing yellow bar per missing buff (its icon, name and bonus; hover
-  for a hint), and comes with the alert sound and a screen-edge flash (each can be turned off).
+  you're out in the world, the missing buffs' **icons** appear where the bars window was, at the same
+  moment it closes: large, with a pulsing yellow glow and a small label under each (hover for
+  details, right-click to dismiss). They come with the alert sound and a screen-edge flash (each can
+  be turned off).
   - "Not Well Fed": cooked food's Well Fed gives +5% XP from kills.
   - "Sleeping bag ready": resting in it gives up to +3% XP. Only when the bag is in your bags (a bag
     in the bank can't be used) and off cooldown.
   - At logout, if the bag is ready and you don't have its buff: rest in it first to carry the buff
     into your next session.
-  - A row goes away when you get that buff; the card hides when none are left, when you close it, or
-    when you're back in a rested area. Chat lines can be turned on as well.
+  - An icon goes away when you get that buff; they all go when none are left, when you right-click
+    one, or when you're back in a rested area. Chat lines can be turned on as well.
 - You pick the alert sound. The default is the raid warning sound. Any game sound works too: choose
   "Custom" and enter its ID, either the number from a Wowhead sound page (`sound=12345`) or a sound
   file ID as `file:12345`; several IDs separated by commas play one at random. A built-in

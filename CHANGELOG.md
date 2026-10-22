@@ -27,9 +27,8 @@ All notable changes to this project are documented here. The format follows
 - Leveling buff reminders now come when you leave an inn or city, and when a buff wears off out in
   the world, instead of at login. `/nw buffs` shows what they see (Well Fed, where the sleeping bag
   is, its cooldown and buff). A sleeping bag that's a toy counts as carried; one in the bank doesn't.
-- Buff reminders show on a reminder card in the bars window's place when you leave an inn or city.
-  It looks like the bars window, with a flashing yellow bar per missing buff (icon, name, bonus),
-  each gone as its buff is applied.
+- Buff reminders show as the missing buffs' icons, large with a pulsing yellow glow and a label,
+  in the bars window's place the moment you leave an inn or city; each goes as its buff is applied.
   Chat lines are now off by default (an option turns them on).
 - A "Farewell" sound choice plays one of the four human NPC farewell lines ("See ya later" and
   others) at random each time, and custom sound IDs can be a comma-separated list played at random.

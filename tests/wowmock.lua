@@ -101,6 +101,7 @@ function Texture:SetTexture(t) self.texture = t end
 function Texture:SetColorTexture(...) for _, v in ipairs({ ... }) do CheckValue("SetColorTexture", v) end end
 function Texture:SetTexCoord() end
 function Texture:SetBlendMode(m) self.blend = m end
+function Texture:SetVertexColor(...) for _, v in ipairs({ ... }) do CheckValue("SetVertexColor", v) end end
 function Texture:SetGradient(orientation, a, b)
     assert(orientation == "HORIZONTAL" or orientation == "VERTICAL", "bad gradient orientation")
     assert(type(a) == "table" and type(b) == "table", "SetGradient needs color objects")

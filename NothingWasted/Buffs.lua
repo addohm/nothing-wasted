@@ -114,7 +114,8 @@ ns.On("PLAYER_ENTERING_WORLD", function(isInitialLogin, isReload)
 end)
 ns.On("UNIT_AURA", function(unit) if unit == "player" then CheckSoon() end end)
 ns.On("PLAYER_REGEN_ENABLED", CheckSoon)
-ns.On("PLAYER_UPDATE_RESTING", CheckSoon)
+-- Leaving rest is checked right away, so the reminder appears as the bars window closes.
+ns.On("PLAYER_UPDATE_RESTING", function() Buffs.Check() end)
 
 -- Logging out with a ready sleeping bag and no Well-Rested buff.
 ns.On("PLAYER_CAMPING", function()

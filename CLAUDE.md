@@ -21,8 +21,8 @@ Guidance for coding assistants working in this repository.
   - `UI/`: the full window (`Window.lua`: tabs, view links under a tab, options behind the gear)
     and its pages (`*Page.lua`, `*Pages.lua`, registered with `Window.AddPage`; a page's `group`
     is its tab); the small bars window that pops up
-    when resting (`Meter.lua`); the reminder card that takes its place when a leveling buff is missing
-    (`Reminder.lua`); the bars both use (`Bars.lua`); the character tooltip
+    when resting (`Meter.lua`); the glowing buff icons that take its place when a leveling buff is
+    missing (`Reminder.lua`); the bars both use (`Bars.lua`); the character tooltip
     (`Tooltip.lua`, `Sections.lua`); widgets, the screen glow and the minimap button.
   - `Slash.lua`: `/nw` and the popups.
 - `tests/`: `wowmock.lua` (a strict fake WoW client), `smoke.lua` (scenarios), `run_tests.py`.
