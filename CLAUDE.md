@@ -15,7 +15,8 @@ Guidance for coding assistants working in this repository.
   - `Rested.lua`: the rested XP model.
   - `Character.lua`, `Legacy.lua`, `Cooldowns.lua`, `Professions.lua`, `Inventory.lua`, `Mail.lua`,
     `Leveling.lua`: read the game and save per character. `Alerts.lua` scans the saved data.
-  - `UI/`: the full window (`Window.lua`) and one file per tab; the small bars window that pops up
+  - `UI/`: the full window (`Window.lua`, a sidebar of sections and pages like the game's Settings)
+    and its pages (`*Page.lua`, `*Pages.lua`, registered with `Window.AddPage`); the small bars window that pops up
     when resting (`Meter.lua`); the bars both use (`Bars.lua`); the character tooltip
     (`Tooltip.lua`, `Sections.lua`); widgets, the screen glow and the minimap button.
   - `Slash.lua`: `/nw` and the popups.

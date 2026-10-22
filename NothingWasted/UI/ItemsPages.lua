@@ -1,9 +1,8 @@
--- Nothing Wasted: the Mail and items tab. Item search across every character, uncollected mail
+-- Nothing Wasted: the Mail and items pages. Item search across every character, uncollected mail
 -- (including mail sent but not yet seen), and bag space.
 local _, ns = ...
 local L = ns.L
 
-local MODES = { { "search", L["Search"] }, { "mail", L["Mail"] }, { "bags", L["Bag space"] } }
 
 local function Chars()
     local list = {}
@@ -100,21 +99,19 @@ local function BagItems()
     return items
 end
 
-ns.Window.AddTab({
-    id = "items",
-    label = L["Mail and items"],
-    order = 5,
+ns.Window.AddPage({
+    id = "search",
+    group = "items",
+    label = L["Item search"],
+    order = 1,
     build = function(panel)
-        panel.mode = "search"
-        panel.cycle = ns.UI.Cycle(panel, L["Show:"], MODES, function() return panel.mode end, function(v)
-            panel.mode = v
-            ns.Window.Refresh()
-        end)
-        panel.cycle:SetPoint("TOPLEFT", 4, 0)
+        local label = panel:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+        label:SetPoint("TOPLEFT", 4, -6)
+        label:SetText(L["Find an item:"])
 
         local box = CreateFrame("EditBox", nil, panel, "InputBoxTemplate")
-        box:SetSize(170, 20)
-        box:SetPoint("TOPRIGHT", -30, -2)
+        box:SetSize(240, 22)
+        box:SetPoint("LEFT", label, "RIGHT", 14, 0)
         box:SetAutoFocus(false)
         box:SetScript("OnEnterPressed", function(self)
             self:ClearFocus()
@@ -124,33 +121,36 @@ ns.Window.AddTab({
         box:SetScript("OnTextChanged", function(self, userInput)
             if userInput then
                 ns.Inventory.lastQuery = self:GetText()
-                panel.mode = "search"
                 ns.Window.Refresh()
             end
         end)
         panel.box = box
 
         local body = CreateFrame("Frame", nil, panel)
-        body:SetPoint("TOPLEFT", 0, -30)
+        body:SetPoint("TOPLEFT", 0, -34)
         body:SetPoint("BOTTOMRIGHT")
         panel.list = ns.UI.TextList(body)
 
         ns.On("NW_SEARCH", function(query)
-            panel.mode = "search"
             box:SetText(query or "")
             ns.Window.Refresh()
         end)
     end,
     refresh = function(panel)
-        panel.cycle:Sync()
-        local items
-        if panel.mode == "mail" then
-            items = MailItems()
-        elseif panel.mode == "bags" then
-            items = BagItems()
-        else
-            items = SearchItems(ns.Inventory.lastQuery)
-        end
-        panel.list:SetItems(items)
+        panel.list:SetItems(SearchItems(ns.Inventory.lastQuery))
     end,
 })
+
+local function ListPage(id, label, order, source)
+    ns.Window.AddPage({
+        id = id,
+        group = "items",
+        label = label,
+        order = order,
+        build = function(panel) panel.list = ns.UI.TextList(panel) end,
+        refresh = function(panel) panel.list:SetItems(source()) end,
+    })
+end
+
+ListPage("mail", L["Mail"], 2, MailItems)
+ListPage("bags", L["Bag space"], 3, BagItems)

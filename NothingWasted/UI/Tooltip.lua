@@ -19,16 +19,20 @@ function Tooltip.Sections()
     return sections
 end
 
-function Tooltip.ShowCharacter(owner, c, isMe)
-    local tip = GameTooltip
-    tip:SetOwner(owner, "ANCHOR_RIGHT")
-    tip:AddLine(c.name .. (c.realm and ("  |cff999999" .. c.realm .. "|r") or ""), ns.ClassColor(c))
-    local now = ns.Now()
+-- Adds a character's name and every enabled section to a tooltip.
+function Tooltip.Fill(tip, c, now, isMe)
+    tip:AddLine((c.name or "?") .. (c.realm and ("  |cff999999" .. c.realm .. "|r") or ""), ns.ClassColor(c))
     local enabled = ns.db.settings.tooltip
     for _, def in ipairs(sections) do
         if enabled[def.id] ~= false then
             def.add(tip, c, now, isMe)
         end
     end
+end
+
+function Tooltip.ShowCharacter(owner, c, isMe)
+    local tip = GameTooltip
+    tip:SetOwner(owner, "ANCHOR_RIGHT")
+    Tooltip.Fill(tip, c, ns.Now(), isMe)
     tip:Show()
 end

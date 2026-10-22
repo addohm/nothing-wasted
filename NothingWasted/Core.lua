@@ -57,6 +57,10 @@ local function ApplyDefaults(dst, src)
     end
 end
 
+function ns.ApplyDefaultSettings()
+    ApplyDefaults(ns.db.settings, DEFAULT_SETTINGS)
+end
+
 -- Event bus. Game events register on first use; names starting with "NW_" are internal messages.
 local handlers = {}
 local eventFrame = CreateFrame("Frame")

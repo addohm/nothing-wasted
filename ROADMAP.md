@@ -14,6 +14,8 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
    - Cooldowns, professions, recipes (open each profession window), bank, mail sent to an alt, item
      search, Legacy goals and the planner.
    - The small bars window pops up in an inn or city and hides when leaving; the full window doesn't.
+   - The full window's sidebar, pages, option rows and Defaults buttons look and work like the
+     game's Settings.
 2. **Confirm the open game facts** below, and fix `Data.lua` where they differ.
 3. **Release** on CurseForge and Wago (see DEPLOY.md), then open translations on CurseForge.
 

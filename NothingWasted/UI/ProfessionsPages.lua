@@ -1,9 +1,8 @@
--- Nothing Wasted: the Professions tab. Skill levels, trainer ranks and the trade economy for every
+-- Nothing Wasted: the Professions pages. Skill levels, trainer ranks and the trade economy for every
 -- character, and what each can craft from what all your characters hold.
 local _, ns = ...
 local L = ns.L
 
-local MODES = { { "skills", L["Skills"] }, { "crafts", L["Crafts from your alts' items"] } }
 local CRAFTS_PER_PROFESSION = 10
 
 local function Chars()
@@ -90,24 +89,17 @@ local function CraftItems()
     return items
 end
 
-ns.Window.AddTab({
-    id = "professions",
-    label = L["Professions"],
-    order = 4,
-    build = function(panel)
-        panel.mode = "skills"
-        panel.cycle = ns.UI.Cycle(panel, L["Show:"], MODES, function() return panel.mode end, function(v)
-            panel.mode = v
-            ns.Window.Refresh()
-        end)
-        panel.cycle:SetPoint("TOPLEFT", 4, 0)
-        local body = CreateFrame("Frame", nil, panel)
-        body:SetPoint("TOPLEFT", 0, -30)
-        body:SetPoint("BOTTOMRIGHT")
-        panel.list = ns.UI.TextList(body)
-    end,
-    refresh = function(panel)
-        panel.cycle:Sync()
-        panel.list:SetItems(panel.mode == "crafts" and CraftItems() or SkillItems())
-    end,
-})
+local function ListPage(id, label, order, source, title)
+    ns.Window.AddPage({
+        id = id,
+        group = "professions",
+        label = label,
+        title = title,
+        order = order,
+        build = function(panel) panel.list = ns.UI.TextList(panel) end,
+        refresh = function(panel) panel.list:SetItems(source()) end,
+    })
+end
+
+ListPage("skills", L["Skills"], 1, SkillItems, L["Skills and trade reputation"])
+ListPage("crafts", L["Crafts"], 2, CraftItems, L["Crafts from your alts' items"])

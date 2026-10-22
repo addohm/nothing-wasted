@@ -101,51 +101,117 @@ function UI.Header(parent, text)
     return fs
 end
 
-function UI.Checkbox(parent, label, get, set)
-    local cb = CreateFrame("CheckButton", nil, parent, "UICheckButtonTemplate")
-    cb:SetSize(24, 24)
-    cb.label = cb:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-    cb.label:SetPoint("LEFT", cb, "RIGHT", 2, 0)
-    cb.label:SetText(label)
+-- Options rows, laid out like the game's Settings: the label on the left, the control on the right.
+-- Each row has :Sync() to show the current value. Place rows top to bottom with UI.Stack.
+
+local LABEL_X, CONTROL_X, ROW_HEIGHT = 16, 330, 34
+
+local function OptionRow(parent, label)
+    local row = CreateFrame("Frame", nil, parent)
+    row:SetHeight(ROW_HEIGHT)
+    row.label = row:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    row.label:SetPoint("LEFT", LABEL_X, 0)
+    row.label:SetWidth(CONTROL_X - LABEL_X - 12)
+    row.label:SetJustifyH("LEFT")
+    row.label:SetText(label)
+    row.Sync = function() end
+    return row
+end
+
+function UI.OptionCheck(parent, label, get, set)
+    local row = OptionRow(parent, label)
+    local cb = CreateFrame("CheckButton", nil, row, "UICheckButtonTemplate")
+    cb:SetSize(30, 30)
+    cb:SetPoint("LEFT", CONTROL_X, 0)
     cb:SetScript("OnClick", function(self) set(self:GetChecked() and true or false) end)
-    cb.Sync = function(self) self:SetChecked(get()) end
-    return cb
+    row.check = cb
+    row.Sync = function() cb:SetChecked(get()) end
+    return row
 end
 
-function UI.Button(parent, label, width, onClick)
-    local b = CreateFrame("Button", nil, parent, "UIPanelButtonTemplate")
-    b:SetSize(width or 100, 22)
-    b:SetText(label)
-    b:SetScript("OnClick", onClick)
-    return b
-end
-
--- A clickable text that cycles through choices: values is a list of { value, label }.
-function UI.Cycle(parent, label, values, get, set)
-    local holder = CreateFrame("Frame", nil, parent)
-    holder:SetSize(320, 24)
-    holder.label = holder:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-    holder.label:SetPoint("LEFT")
-    holder.label:SetText(label)
-    local b = UI.Button(holder, "", 140, function()
-        local cur = get()
-        local idx = 1
+-- A value picker with arrows on each side: values is a list of { value, label }.
+function UI.OptionSelect(parent, label, values, get, set)
+    local row = OptionRow(parent, label)
+    local function Step(dir)
+        local cur, idx = get(), 1
         for i, v in ipairs(values) do
             if v[1] == cur then idx = i end
         end
-        local nextValue = values[idx % #values + 1]
-        set(nextValue[1])
-        holder:Sync()
-    end)
-    b:SetPoint("LEFT", holder.label, "RIGHT", 8, 0)
-    holder.button = b
-    function holder:Sync()
+        idx = (idx - 1 + dir) % #values + 1
+        set(values[idx][1])
+        row.Sync()
+    end
+    local function Arrow(dir, x)
+        local b = CreateFrame("Button", nil, row)
+        b:SetSize(26, 26)
+        b:SetPoint("LEFT", x, 0)
+        local base = dir < 0 and "Interface\\Buttons\\UI-SpellbookIcon-PrevPage-" or "Interface\\Buttons\\UI-SpellbookIcon-NextPage-"
+        b:SetNormalTexture(base .. "Up")
+        b:SetPushedTexture(base .. "Down")
+        b:SetHighlightTexture("Interface\\Buttons\\UI-Common-MouseHilight", "ADD")
+        b:SetScript("OnClick", function() Step(dir) end)
+        return b
+    end
+    row.prev = Arrow(-1, CONTROL_X)
+    local box = CreateFrame("Button", nil, row, "UIPanelButtonTemplate")
+    box:SetSize(170, 24)
+    box:SetPoint("LEFT", CONTROL_X + 30, 0)
+    box:SetScript("OnClick", function() Step(1) end)
+    row.box = box
+    row.next = Arrow(1, CONTROL_X + 204)
+    row.Sync = function()
         local cur = get()
         for _, v in ipairs(values) do
-            if v[1] == cur then b:SetText(v[2]) end
+            if v[1] == cur then box:SetText(v[2]) end
         end
     end
-    return holder
+    return row
+end
+
+function UI.OptionButton(parent, label, buttonText, onClick)
+    local row = OptionRow(parent, label)
+    local b = CreateFrame("Button", nil, row, "UIPanelButtonTemplate")
+    b:SetSize(170, 24)
+    b:SetPoint("LEFT", CONTROL_X + 30, 0)
+    b:SetText(buttonText)
+    b:SetScript("OnClick", onClick)
+    row.button = b
+    return row
+end
+
+-- A section heading inside a page, like "Mouse" in the game's Settings.
+function UI.OptionHeading(parent, text)
+    local row = CreateFrame("Frame", nil, parent)
+    row:SetHeight(ROW_HEIGHT + 4)
+    local fs = row:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
+    fs:SetPoint("BOTTOMLEFT", 4, 6)
+    fs:SetText(text)
+    row.Sync = function() end
+    return row
+end
+
+-- A scrolling column of rows. Returns the stack; call stack:Add(row) for each row in order.
+function UI.Stack(parent)
+    local scroll = CreateFrame("ScrollFrame", nil, parent, "UIPanelScrollFrameTemplate")
+    scroll:SetPoint("TOPLEFT")
+    scroll:SetPoint("BOTTOMRIGHT", -24, 0)
+    local inner = CreateFrame("Frame", nil, scroll)
+    inner:SetSize(520, 1)
+    scroll:SetScrollChild(inner)
+    local stack = { rows = {}, inner = inner, height = 0 }
+    function stack:Add(row)
+        row:SetParent(inner)
+        row:SetPoint("TOPLEFT", 0, -self.height)
+        row:SetPoint("RIGHT", inner, "RIGHT")
+        self.height = self.height + row:GetHeight()
+        inner:SetHeight(self.height)
+        self.rows[#self.rows + 1] = row
+        return row
+    end
+    function stack:Sync()
+        for _, row in ipairs(self.rows) do row:Sync() end
+    end
+    return stack
 end
 
 -- Adds the lines of a tooltip section: lines is a list of { left, right } or a string.

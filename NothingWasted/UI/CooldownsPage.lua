@@ -1,4 +1,4 @@
--- Nothing Wasted: the Cooldowns tab. Every tracked cooldown on every character, ready ones first.
+-- Nothing Wasted: the Cooldowns page. Every tracked cooldown on every character, ready ones first.
 local _, ns = ...
 local L = ns.L
 
@@ -46,10 +46,11 @@ local function Items()
     return items
 end
 
-ns.Window.AddTab({
+ns.Window.AddPage({
     id = "cooldowns",
+    group = "characters",
     label = L["Cooldowns"],
-    order = 2,
+    order = 3,
     build = function(panel)
         panel.list = ns.UI.TextList(panel)
     end,

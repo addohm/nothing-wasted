@@ -38,6 +38,10 @@ All notable changes to this project are documented here. The format follows
 
 ### Changed
 
+- The full window is laid out like the game's Settings: a sidebar of sections (Characters,
+  Professions, Mail and items, Legacy, Options) with a page for each view, replacing the tabs and
+  their "Show:" pickers. Options use label-and-control rows with arrow selectors and a Defaults button.
+
 - "Who to play next" no longer asks how long you'll play. It ranks alts by who's capped, then who
   caps soonest.
 

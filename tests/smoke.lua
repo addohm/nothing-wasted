@@ -43,13 +43,8 @@ local function RowTexts(client, panel)
     return out
 end
 
-local function TabPanel(client, id)
-    for _, def in ipairs(client.ns.Window and {} or {}) do end
-    -- Tab panels are children of the window; find the one that's shown.
-    local window = client:Frame("NothingWastedFrame")
-    for _, f in ipairs(client.frames) do
-        if f.parent == window and f.kind == "Frame" and f.shown and #f.points == 2 then return f end
-    end
+local function TabPanel(client)
+    return client.ns.Window.CurrentPanel()
 end
 
 local MAXI = { name = "Maxi", class = "WARRIOR", className = "Warrior", level = 60, xp = 0, xpMax = 0, resting = false }
@@ -334,9 +329,8 @@ return function(root)
         c.ns.Legacy.SetGoal(1001, true)
         eq(kyol.legacyProgress[1001].q, 20, "goal progress recorded")
         c:Slash("")
-        c.ns.Window.Select("legacy")
+        c.ns.Window.Select("choose")
         local panel = TabPanel(c)
-        panel.cycle.button:Click()
         local texts = RowTexts(c, panel)
         local listed25, listed45 = false, false
         for _, t in ipairs(texts) do
@@ -372,29 +366,48 @@ return function(root)
         check(c.ns.Meter.IsShown(), "bars window open (logged in resting)")
         c:Slash("")
         check(c:Frame("NothingWastedFrame").shown, "/nw opens the full window")
-        for _, tab in ipairs({ "rested", "cooldowns", "leveling", "professions", "items", "legacy", "options" }) do
-            c.ns.Window.Select(tab)
+        local window = c:Frame("NothingWastedFrame")
+        local expectRows = { rested = true, cooldowns = true, pace = true, train = true, skills = true,
+            bags = true, goals = true, choose = true, planner = true, alerts = false }
+        local ids = c.ns.Window.PageIDs()
+        check(#ids >= 18, "every page is in the sidebar")
+        for _, id in ipairs(ids) do
+            c.ns.Window.Select(id)
             local panel = TabPanel(c)
-            check(panel ~= nil, tab .. " tab shown")
-            if tab ~= "options" then check(#c:Rows(panel) > 0, tab .. " tab has rows") end
-            -- Cycle every mode and hover every row.
-            for _ = 1, 3 do
-                if panel.cycle then panel.cycle.button:Click() end
-                for _, row in ipairs(c:Rows(panel)) do
-                    if row.scripts.OnEnter then c:Hover(row) end
+            check(panel and panel:IsVisible(), id .. " page shown")
+            if expectRows[id] then check(#c:Rows(panel) > 0, id .. " page has rows") end
+            for _, row in ipairs(c:Rows(panel)) do
+                if row.scripts.OnEnter then c:Hover(row) end
+            end
+            -- Options pages: toggle every checkbox, step every selector, press Defaults.
+            for _, f in ipairs(c.frames) do
+                if f:IsVisible() and f.kind == "CheckButton" then
+                    f:Click()
+                    f:Click()
+                elseif f:IsVisible() and f.kind == "Button" and f.parent and f.parent.box then
+                    f:Click() -- selector arrows and boxes
                 end
             end
-        end
-        -- Every option toggles without errors.
-        c.ns.Window.Select("options")
-        for _, f in ipairs(c.frames) do
-            if f.kind == "CheckButton" and f:IsVisible() then
-                f:Click()
-                f:Click()
-            elseif f.kind == "Button" and f.templates.UIPanelButtonTemplate and f:IsVisible() and f.parent and f.parent.label then
-                f:Click()
+            local hasDefaults = false
+            for _, f in ipairs(c.frames) do
+                if f.parent == window and f.kind == "Button" and f.text == "Defaults" and f.shown then
+                    hasDefaults = true
+                    f:Click()
+                end
             end
+            if id == "alerts" then check(hasDefaults, "options pages have a Defaults button") end
         end
+        -- Defaults put the alert settings back.
+        local settings = rawget(c.env, "NothingWastedDB").settings
+        settings.alerts.earlyMinutes = 30
+        c.ns.Window.Select("alerts")
+        for _, f in ipairs(c.frames) do
+            if f.parent == window and f.text == "Defaults" then f:Click() end
+        end
+        eq(settings.alerts.earlyMinutes, 120, "Defaults resets the page's settings")
+        -- Old page names still work.
+        c.ns.Window.Select("options")
+        eq(rawget(c.env, "NothingWastedDB").settings.window.tab, "alerts", "'options' opens the Alerts page")
         c.ns.Glow.Pulse()
         c:Logout()
     end)

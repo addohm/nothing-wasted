@@ -37,13 +37,13 @@ Alerts.lua
 UI\Sections.lua
 UI\Bars.lua
 UI\Meter.lua
-UI\RestedTab.lua
-UI\CooldownsTab.lua
-UI\LevelingTab.lua
-UI\ProfessionsTab.lua
-UI\ItemsTab.lua
-UI\LegacyTab.lua
-UI\OptionsTab.lua
+UI\RestedPage.lua
+UI\CooldownsPage.lua
+UI\LevelingPages.lua
+UI\ProfessionsPages.lua
+UI\ItemsPages.lua
+UI\LegacyPages.lua
+UI\OptionsPages.lua
 UI\Minimap.lua
 
 Slash.lua

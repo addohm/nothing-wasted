@@ -1,4 +1,4 @@
--- Nothing Wasted: the Legacy tab. Goals for each character, choosing goals, and an account planner
+-- Nothing Wasted: the Legacy pages. Goals for each character, choosing goals, and an account planner
 -- that shows which challenges the account still lacks.
 local _, ns = ...
 local L = ns.L
@@ -6,11 +6,6 @@ local L = ns.L
 local GREY = "|cff999999"
 local GREEN = "|cff40ff40"
 
-local MODES = {
-    { "goals", L["Goals"] },
-    { "choose", L["Choose goals"] },
-    { "planner", L["Account planner"] },
-}
 
 local function Pct(q, req)
     if not req or req <= 0 then return "" end
@@ -107,32 +102,17 @@ local function PlannerItems()
     return items
 end
 
-ns.Window.AddTab({
-    id = "legacy",
-    label = L["Legacy"],
-    order = 6,
-    build = function(panel)
-        panel.mode = "goals"
-        panel.cycle = ns.UI.Cycle(panel, L["Show:"], MODES, function() return panel.mode end, function(v)
-            panel.mode = v
-            ns.Window.Refresh()
-        end)
-        panel.cycle:SetPoint("TOPLEFT", 4, 0)
-        local body = CreateFrame("Frame", nil, panel)
-        body:SetPoint("TOPLEFT", 0, -30)
-        body:SetPoint("BOTTOMRIGHT")
-        panel.list = ns.UI.TextList(body)
-    end,
-    refresh = function(panel)
-        panel.cycle:Sync()
-        local items
-        if panel.mode == "choose" then
-            items = ChooseItems()
-        elseif panel.mode == "planner" then
-            items = PlannerItems()
-        else
-            items = GoalItems()
-        end
-        panel.list:SetItems(items)
-    end,
-})
+local function ListPage(id, label, order, source)
+    ns.Window.AddPage({
+        id = id,
+        group = "legacy",
+        label = label,
+        order = order,
+        build = function(panel) panel.list = ns.UI.TextList(panel) end,
+        refresh = function(panel) panel.list:SetItems(source()) end,
+    })
+end
+
+ListPage("goals", L["Goals"], 1, GoalItems)
+ListPage("choose", L["Choose goals"], 2, ChooseItems)
+ListPage("planner", L["Account planner"], 3, PlannerItems)

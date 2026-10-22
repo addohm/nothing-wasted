@@ -1,12 +1,13 @@
--- Nothing Wasted: the Rested tab. The same bars as the small bars window, in the full window.
+-- Nothing Wasted: the Rested XP page. The same bars as the small bars window, in the full window.
 local _, ns = ...
 local L = ns.L
 
 local ROW_HEIGHT = 24
 
-ns.Window.AddTab({
+ns.Window.AddPage({
     id = "rested",
-    label = L["Rested"],
+    group = "characters",
+    label = L["Rested XP"],
     order = 1,
     build = function(panel)
         panel.list = ns.UI.List(panel, ROW_HEIGHT, ns.Bars.CreateRow, ns.Bars.UpdateRow)

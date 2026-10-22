@@ -80,6 +80,7 @@ function Region:IsVisible()
     end
     return true
 end
+function Region:SetParent(p) self.parent = p end
 function Region:SetAlpha(a) CheckValue("SetAlpha", a) self.alpha = a end
 
 local FontString = setmetatable({}, Region)
@@ -153,6 +154,13 @@ function Frame:RegisterForDrag() end
 function Frame:SetBackdrop()
     assert(self.templates.BackdropTemplate, "SetBackdrop needs BackdropTemplate")
 end
+function Frame:SetBackdropColor(...)
+    assert(self.templates.BackdropTemplate, "SetBackdropColor needs BackdropTemplate")
+    for _, v in ipairs({ ... }) do CheckValue("SetBackdropColor", v) end
+end
+function Frame:SetBackdropBorderColor(...)
+    assert(self.templates.BackdropTemplate, "SetBackdropBorderColor needs BackdropTemplate")
+end
 function Frame:CreateTexture()
     local t = setmetatable({ points = {}, shown = true, parent = self }, Texture)
     return t
@@ -172,6 +180,8 @@ function Frame:GetEffectiveScale() return 1 end
 local Button = setmetatable({}, Frame)
 Button.__index = Button
 function Button:RegisterForClicks() end
+function Button:SetNormalTexture(t) self.normal = t end
+function Button:SetPushedTexture(t) self.pushed = t end
 function Button:SetHighlightTexture() end
 function Button:SetText(t)
     CheckValue("Button:SetText", t)
@@ -362,7 +372,7 @@ function M.NewClient(opts)
         local d = assert(env.StaticPopupDialogs[which], "unknown popup " .. which)
         client.popups[#client.popups + 1] = { which = which, text = d.text:format(a1, a2), data = data }
     end
-    env.YES, env.NO = "Yes", "No"
+    env.YES, env.NO, env.CLOSE = "Yes", "No", "Close"
     env.SlashCmdList = {}
     env.RAID_CLASS_COLORS = setmetatable({}, { __index = function() return { r = 0.5, g = 0.6, b = 0.7 } end })
     env.GameTooltip = NewTooltip()
