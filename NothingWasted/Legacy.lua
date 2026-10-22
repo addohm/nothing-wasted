@@ -170,6 +170,10 @@ end
 function Legacy.UpdateGoals(c)
     c.legacyGoals = c.legacyGoals or {}
     c.legacyProgress = c.legacyProgress or {}
+    -- Drop the progress of challenges that are no longer goals (unticked).
+    for id in pairs(c.legacyProgress) do
+        if not c.legacyGoals[id] then c.legacyProgress[id] = nil end
+    end
     for id in pairs(c.legacyGoals) do
         local done, q, req, text = Legacy.Progress(id)
         if done then

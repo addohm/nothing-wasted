@@ -49,7 +49,7 @@ local function SkillItems()
     return items
 end
 
-local craftsOpen = {} -- characters expanded on the Crafts view (all collapsed at first)
+local craftsOpen = {} -- headers toggled on the Crafts view: characters start open, professions closed
 
 local function CraftItems()
     local items = {}
@@ -72,12 +72,15 @@ local function CraftItems()
         local key = (c.name or "?") .. "-" .. (c.realm or "?")
         if total > 0 then
             items[#items + 1] = ns.UI.CollapsibleHeader(craftsOpen, key, ns.ColoredName(c),
-                format(L["%d recipe(s)"], total))
+                format(L["%d recipe(s)"], total), true)
         end
-        for _, group in ipairs(craftsOpen[key] and byProfession or {}) do
+        local charOpen = ns.UI.IsOpen(craftsOpen, key, true)
+        for _, group in ipairs(charOpen and byProfession or {}) do
             local profession, crafts = group.name, group.crafts
-            items[#items + 1] = { indent = 1, left = profession, header = true }
-            for i = 1, math.min(#crafts, CRAFTS_PER_PROFESSION) do
+            local profKey = key .. "|" .. profession
+            items[#items + 1] = ns.UI.CollapsibleHeader(craftsOpen, profKey, profession,
+                format(L["%d recipe(s)"], #crafts), false, 1)
+            for i = 1, ns.UI.IsOpen(craftsOpen, profKey) and math.min(#crafts, CRAFTS_PER_PROFESSION) or 0 do
                 local r = ns.db.recipes[crafts[i].id]
                 items[#items + 1] = {
                     indent = 2,

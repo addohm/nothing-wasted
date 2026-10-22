@@ -47,38 +47,83 @@ local function GoalItems()
     return items
 end
 
+local chooseOpen = {}   -- categories expanded on Choose goals (collapsed at first)
+local chooseQuery = ""  -- the search box text
+
 local function ChooseItems()
     local items = {}
     local me = ns.Me()
     if not me then return items end
     items[#items + 1] = { left = format(L["Click a challenge to make it a goal for %s."], ns.ColoredName(me)) }
     local goals = me.legacyGoals or {}
+    local query = chooseQuery:lower()
+    local searching = query ~= ""
     for _, cat in ipairs(ns.Legacy.Catalog()) do
-        local header = false
+        local list, picked = {}, 0
         for _, ch in ipairs(cat.challenges) do
-            if not ch.earnedByMe then -- completed challenges are hidden
-                if not header then
-                    items[#items + 1] = { left = cat.name, header = true }
-                    header = true
+            -- Completed challenges are hidden; while searching, so are ones that don't match.
+            if not ch.earnedByMe and (not searching or (ch.name or ""):lower():find(query, 1, true)) then
+                list[#list + 1] = ch
+                if goals[ch.id] then picked = picked + 1 end
+            end
+        end
+        if #list > 0 then
+            local right = picked > 0 and format(L["%d of %d chosen"], picked, #list) or tostring(#list)
+            if searching then
+                -- Matches are always shown while searching.
+                items[#items + 1] = { left = cat.name, right = right, header = true }
+            else
+                items[#items + 1] = ns.UI.CollapsibleHeader(chooseOpen, cat.id, cat.name, right)
+            end
+            if searching or ns.UI.IsOpen(chooseOpen, cat.id) then
+                for _, ch in ipairs(list) do
+                    local isGoal = goals[ch.id]
+                    items[#items + 1] = {
+                        indent = 1,
+                        left = (isGoal and (GREEN .. "[x]|r ") or "[  ] ") .. ch.name,
+                        right = ch.points > 0 and format(L["%d pts"], ch.points) or "",
+                        onClick = function() ns.Legacy.SetGoal(ch.id, not isGoal) end,
+                        tooltip = function(tip)
+                            tip:AddLine(ch.name)
+                            local done, q, req, text = ns.Legacy.Progress(ch.id)
+                            if text then tip:AddLine(text, 1, 1, 1, true) end
+                            if not done and req > 1 then tip:AddLine(Pct(q, req), 1, 1, 1) end
+                            if ch.completed then tip:AddLine(L["Another character has completed this."], 0.6, 0.6, 0.6, true) end
+                        end,
+                    }
                 end
-                local isGoal = goals[ch.id]
-                items[#items + 1] = {
-                    left = (isGoal and (GREEN .. "[x]|r ") or "[  ] ") .. ch.name,
-                    right = ch.points > 0 and format(L["%d pts"], ch.points) or "",
-                    onClick = function() ns.Legacy.SetGoal(ch.id, not isGoal) end,
-                    tooltip = function(tip)
-                        tip:AddLine(ch.name)
-                        local done, q, req, text = ns.Legacy.Progress(ch.id)
-                        if text then tip:AddLine(text, 1, 1, 1, true) end
-                        if not done and req > 1 then tip:AddLine(Pct(q, req), 1, 1, 1) end
-                        if ch.completed then tip:AddLine(L["Another character has completed this."], 0.6, 0.6, 0.6, true) end
-                    end,
-                }
             end
         end
     end
+    if searching and #items == 1 then
+        items[#items + 1] = { left = GREY .. L["No open challenge matches that."] .. "|r" }
+    end
     return items
 end
+
+-- The search box for Choose goals, at the right of the Legacy view links.
+ns.Window.AddTabWidget("legacy", function(parent)
+    local box = CreateFrame("EditBox", nil, parent, "InputBoxTemplate")
+    box:SetSize(180, 20)
+    box:SetAutoFocus(false)
+    local hint = box:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
+    hint:SetPoint("LEFT", 2, 0)
+    hint:SetText(L["Search challenges..."])
+    local function UpdateHint() hint:SetShown(box:GetText() == "" and not box:HasFocus()) end
+    box:HookScript("OnEditFocusGained", UpdateHint)
+    box:HookScript("OnEditFocusLost", UpdateHint)
+    box:SetScript("OnEnterPressed", function(self) self:ClearFocus() end)
+    box:SetScript("OnEscapePressed", function(self) self:ClearFocus() end)
+    box:SetScript("OnTextChanged", function(self, userInput)
+        UpdateHint()
+        if userInput then
+            chooseQuery = self:GetText() or ""
+            ns.Window.Refresh()
+        end
+    end)
+    UpdateHint()
+    return box
+end, "choose")
 
 local function PlannerItems()
     local items = {}

@@ -37,6 +37,15 @@ function Buffs.BagReady()
     return (carried > 0 or toy) and BagCooldown() == 0
 end
 
+local YELLOW = "|cffffd100"
+
+-- Prints buff reminders in yellow, with one sound for the batch unless turned off.
+local function Remind(messages)
+    if #messages == 0 then return end
+    for _, msg in ipairs(messages) do ns.Print(YELLOW .. msg .. "|r") end
+    if ns.db.settings.alerts.buffSound then ns.Alerts.PlaySound() end
+end
+
 local function BelowMax()
     local c = ns.Me()
     return c and not c.isMax and not c.xpDisabled
@@ -54,14 +63,16 @@ function Buffs.Check()
     local wellFed = HasAura(ns.Data.wellFedXPSpellID)
     local bagBuff = HasAura(ns.Data.sleepingBag.buffSpellID)
 
+    local messages = {}
     if not resting then
         if settings.wellFed and not wellFed and (leftRest or hadWellFed) then
-            ns.Print(L["Not Well Fed: eat cooked food for +5% XP from kills."])
+            messages[#messages + 1] = L["Not Well Fed: eat cooked food for +5% XP from kills."]
         end
         if settings.bagBuff and not bagBuff and Buffs.BagReady() and (leftRest or hadBagBuff) then
-            ns.Print(L["Your Cozy Sleeping Bag is ready: rest in it for up to +3% XP."])
+            messages[#messages + 1] = L["Your Cozy Sleeping Bag is ready: rest in it for up to +3% XP."]
         end
     end
+    Remind(messages)
     wasResting, hadWellFed, hadBagBuff = resting, wellFed, bagBuff
 end
 
@@ -89,7 +100,7 @@ ns.On("PLAYER_UPDATE_RESTING", CheckSoon)
 ns.On("PLAYER_CAMPING", function()
     if not ns.db.settings.alerts.bagLogout or not BelowMax() or IsResting() then return end
     if Buffs.BagReady() and not HasAura(ns.Data.sleepingBag.buffSpellID) then
-        ns.Print(L["Your Cozy Sleeping Bag is ready: rest in it before logging out to keep up to +3% XP for your next session."])
+        Remind({ L["Your Cozy Sleeping Bag is ready: rest in it before logging out to keep up to +3% XP for your next session."] })
     end
 end)
 

@@ -57,8 +57,9 @@ local function MailItems()
             local key = (c.name or "?") .. "-" .. (c.realm or "?")
             local soonest = list[1].expiresAt
             local note = format(L["%d waiting"], #list)
-            if soonest and soonest - now < 3 * 86400 then
-                note = note .. "  |cffff4040" .. format(L["first expires in %s"], ns.FormatDuration(soonest - now)) .. "|r"
+            local color = soonest and ns.Mail.ExpiryColor(soonest - now) or ""
+            if color ~= "" then
+                note = note .. "  " .. color .. format(L["first expires in %s"], ns.FormatDuration(soonest - now)) .. "|r|cff999999"
             end
             items[#items + 1] = ns.UI.CollapsibleHeader(mailOpen, key, ns.ColoredName(c) .. "  |cff999999" .. note .. "|r",
                 seen and ("|cff999999" .. format(L["mailbox checked %s ago"], ns.FormatDuration(now - seen)) .. "|r") or "")
@@ -70,7 +71,7 @@ local function MailItems()
                 if m.money then what[#what + 1] = ns.FormatMoney(m.money) end
                 if m.cod then what[#what + 1] = L["COD"] .. " " .. ns.FormatMoney(m.cod) end
                 local left = m.expiresAt and (m.expiresAt - now) or nil
-                local expiry = left and (left < 3 * 86400 and "|cffff4040" or "") .. format(L["expires in %s"], ns.FormatDuration(left)) .. "|r" or ""
+                local expiry = left and (ns.Mail.ExpiryColor(left) .. format(L["expires in %s"], ns.FormatDuration(left)) .. "|r") or ""
                 items[#items + 1] = {
                     indent = 1,
                     left = format("%s%s  |cff999999%s|r", m.sentAt and (L["(sent)"] .. " ") or "", m.sender or "?", table.concat(what, ", ")),

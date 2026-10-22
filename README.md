@@ -63,8 +63,8 @@ button for the bars window.
 - **Cooldowns ready** and **mail about to expire** use the same alert system.
 - **Logout warning:** a chat line if you log out somewhere that isn't resting, where rested XP builds
   at a quarter of the rate.
-- **Leveling buffs** (below max level), as chat lines when you leave an inn or city, and when a buff
-  wears off while you're out in the world:
+- **Leveling buffs** (below max level), as yellow chat lines with the alert sound (the sound can be
+  turned off) when you leave an inn or city, and when a buff wears off while you're out in the world:
   - "Not Well Fed": cooked food's Well Fed gives +5% XP from kills.
   - "Your Cozy Sleeping Bag is ready": resting in it gives up to +3% XP. Only when the bag is in your
     bags (a bag in the bank can't be used) and off cooldown.
@@ -124,8 +124,8 @@ button for the bars window.
   trainer or a higher level.
 - **Forever's trade economy:** Merchant's Favor and the trade reputations (Azeroth Commerce Authority,
   Durotar Supply and Logistics) per character. Recipes are gated behind them.
-- **Crafts across alts:** "Kyol can make 12 of this with what your alts hold." Grouped by character,
-  collapsed until you click a name.
+- **Crafts across alts:** "Kyol can make 12 of this with what your alts hold." Grouped by character
+  (open) and profession (collapsed until clicked).
 
 ### Mail and items
 
@@ -133,7 +133,8 @@ button for the bars window.
   mailbox is known before you log in. Includes arrival time when there's a delay.
 - **Expiring mail:** a warning before uncollected mail is returned or deleted.
 - The Mail view groups mail by character, collapsed until you click a name; each header shows how
-  many are waiting and flags mail about to expire.
+  many are waiting. Mail expiring within 7 days is yellow, within 3 days red.
+- **At login**, a list of characters with mail expiring within 7 days (can be turned off).
 - **Item search** across all characters' bags, bank, mailbox and mail in transit, from the addon
   window or with `/nw [item link]`.
 - **Free bag space** per character.
@@ -141,7 +142,8 @@ button for the bars window.
 ### Legacy
 
 - Each character can pick one or more Legacy challenges as goals. Its progress toward them is tracked
-  and shown. Challenges that are already complete are hidden from the list.
+  and shown. Challenges that are already complete are hidden from the list. On Choose goals the categories
+  are collapsed until clicked, and a search box finds challenges by name.
 - **Account planner:** which class milestones (levels 25, 45 and 60) and profession points the account
   still lacks. "A level-25 Paladin would earn a point."
 

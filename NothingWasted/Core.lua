@@ -20,6 +20,8 @@ local DEFAULT_SETTINGS = {
         wellFed = true,       -- remind when the Well Fed XP buff is missing (below max level)
         bagBuff = true,       -- remind when the sleeping bag is ready and its buff is missing
         bagLogout = true,     -- remind at logout to use a ready sleeping bag first
+        buffSound = true,     -- play the alert sound with the buff reminders
+        mailLogin = true,     -- at login, list characters with mail expiring within 7 days
         glow = true,          -- red screen-edge glow on the rested cap alert
         sound = "RAID_WARNING",
     },

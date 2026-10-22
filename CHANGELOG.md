@@ -27,6 +27,11 @@ All notable changes to this project are documented here. The format follows
 - Leveling buff reminders now come when you leave an inn or city, and when a buff wears off out in
   the world, instead of at login. `/nw buffs` shows what they see (Well Fed, where the sleeping bag
   is, its cooldown and buff). A sleeping bag that's a toy counts as carried; one in the bank doesn't.
+- Buff reminders are yellow and play the alert sound (raid warning by default; can be turned off).
+- Mail expiring within 7 days is yellow, within 3 days red, and a login message lists characters with
+  mail expiring within 7 days (can be turned off).
+- Crafts: character headers start open and profession headers collapsed. Choose goals: categories
+  are collapsible (collapsed at first), with a search box.
 - Crafted items' tooltips say which of your characters can make them ("Can make: Kampf, Whoat").
 - Items → Mail and Professions → Crafts group their rows under collapsible character headers,
   collapsed by default.
@@ -62,6 +67,8 @@ All notable changes to this project are documented here. The format follows
   caps soonest.
 
 ### Fixed
+
+- Unticking a challenge on Choose goals left it on the Goals list.
 
 - Other characters' tooltips only showed professions for the character being played. The logout save
   re-read professions, bags and cooldowns while the game reported none, wiping them. They're now read

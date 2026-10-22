@@ -126,6 +126,15 @@ function Mail.ReadInbox(c)
     mail.incoming = {}
 end
 
+-- Colour for time left before mail expires: red within 3 days, yellow within 7, none otherwise.
+local RED, YELLOW = "|cffff4040", "|cffffd100"
+function Mail.ExpiryColor(left)
+    if not left then return "" end
+    if left <= 3 * DAY then return RED end
+    if left <= 7 * DAY then return YELLOW end
+    return ""
+end
+
 -- Mail of one character that hasn't been collected: inbox and sent-but-not-seen, soonest to expire first.
 function Mail.Pending(c)
     local list = {}
@@ -135,6 +144,34 @@ function Mail.Pending(c)
     table.sort(list, function(a, b) return (a.expiresAt or math.huge) < (b.expiresAt or math.huge) end)
     return list
 end
+
+-- At login: every character with mail expiring within 7 days.
+local SOON = 7 * DAY
+ns.On("PLAYER_ENTERING_WORLD", function(isInitialLogin)
+    if not isInitialLogin then return end
+    C_Timer.After(7, function()
+        if not ns.db.settings.alerts.mailLogin then return end
+        local now = ns.Now()
+        local lines = {}
+        for _, c in pairs(ns.db.chars) do
+            local count, soonest = 0, nil
+            for _, m in ipairs(Mail.Pending(c)) do
+                if m.expiresAt and m.expiresAt > now and m.expiresAt - now <= SOON then
+                    count = count + 1
+                    if not soonest or m.expiresAt < soonest then soonest = m.expiresAt end
+                end
+            end
+            if count > 0 then lines[#lines + 1] = { c = c, count = count, left = soonest - now } end
+        end
+        if #lines == 0 then return end
+        table.sort(lines, function(a, b) return a.left < b.left end)
+        ns.Print(L["Mail expiring within 7 days:"])
+        for _, e in ipairs(lines) do
+            ns.Print(format("  %s: %s%s|r", ns.ColoredName(e.c), Mail.ExpiryColor(e.left),
+                format(L["%d mail(s), first in %s"], e.count, ns.FormatDuration(e.left))))
+        end
+    end)
+end)
 
 local readPending
 local function ReadSoon()

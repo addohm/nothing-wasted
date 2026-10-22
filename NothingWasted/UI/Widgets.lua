@@ -100,15 +100,22 @@ function UI.UpdateTextRow(row, item, index)
     row.stripe:SetShown(not item.header and index % 2 == 0)
 end
 
--- A header row that expands or collapses the rows under it. `state` is a table of expanded keys
--- (collapsed by default); clicking toggles the key and refreshes the window.
+-- A header row that expands or collapses the rows under it. `state` holds the keys toggled away
+-- from the default (collapsed unless `defaultOpen`); clicking toggles the key and refreshes the
+-- window. UI.IsOpen tells whether a header is open.
 local PLUS = "|TInterface\\Buttons\\UI-PlusButton-Up:14:14|t "
 local MINUS = "|TInterface\\Buttons\\UI-MinusButton-Up:14:14|t "
 
-function UI.CollapsibleHeader(state, key, left, right)
+function UI.IsOpen(state, key, defaultOpen)
+    if defaultOpen then return not state[key] end
+    return state[key] and true or false
+end
+
+function UI.CollapsibleHeader(state, key, left, right, defaultOpen, indent)
     return {
         header = true,
-        left = (state[key] and MINUS or PLUS) .. left,
+        indent = indent,
+        left = (UI.IsOpen(state, key, defaultOpen) and MINUS or PLUS) .. left,
         right = right,
         onClick = function()
             state[key] = not state[key] or nil

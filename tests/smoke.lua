@@ -146,7 +146,8 @@ return function(root)
         c.player.resting = false
         c:Fire("PLAYER_UPDATE_RESTING")
         c:Advance(2)
-        check(c:ChatHas("Not Well Fed"), "Well Fed reminder when leaving rest")
+        check(c:ChatHas("|cffffd100Not Well Fed"), "Well Fed reminder in yellow when leaving rest")
+        eq(c.sounds[1], 8959, "with the alert sound")
         check(c:ChatHas("Sleeping Bag is ready: rest in it for"), "bag reminder when leaving rest")
 
         -- Nothing more until something changes.
@@ -441,15 +442,28 @@ return function(root)
         eq(#c:Rows(TabPanel(c)), 2, "clicking the header shows its mail")
         c.ns.Window.Select("crafts")
         local craftRows = c:Rows(TabPanel(c))
-        eq(#craftRows, 1, "crafts start collapsed")
+        eq(#craftRows, 2, "crafts: character open, profession collapsed")
+        craftRows[2].scripts.OnClick(craftRows[2], "LeftButton")
+        eq(#c:Rows(TabPanel(c)), 3, "expanding the profession shows its crafts")
         craftRows[1].scripts.OnClick(craftRows[1], "LeftButton")
-        eq(#c:Rows(TabPanel(c)), 3, "expanding shows the profession and its crafts")
+        eq(#c:Rows(TabPanel(c)), 1, "collapsing the character hides everything under it")
+
+        -- Mail colours: yellow within 7 days, red within 3.
+        eq(c.ns.Mail.ExpiryColor(6 * DAY), "|cffffd100", "yellow within 7 days")
+        eq(c.ns.Mail.ExpiryColor(2 * DAY), "|cffff4040", "red within 3 days")
+        eq(c.ns.Mail.ExpiryColor(10 * DAY), "", "no colour further out")
 
         -- Expiring mail warning 3 days before Oldie's mail expires.
         c:ClearChat()
         c:Advance(27 * DAY + HOUR)
         check(c:ChatHas("mail from Kyol expires in"), "warning before sent mail expires")
         db3 = c:Logout()
+        -- And a summary at the next login.
+        local l = mock.NewClient({ root = root, db = db3, now = c.now + HOUR, player = { name = "Kyol", level = 20, xpMax = 10000 } })
+        l:Login()
+        l:Advance(8)
+        check(l:ChatHas("Mail expiring within 7 days"), "login lists mail expiring soon")
+        check(l:ChatHas("Oldie.-1 mail%(s%), first in"), "with the character and time")
     end)
 
     test("6. cooldowns", function()
@@ -494,6 +508,9 @@ return function(root)
         c:Slash("")
         c.ns.Window.Select("choose")
         local panel = TabPanel(c)
+        eq(#c:Rows(panel), 2, "categories start collapsed (intro line and one header)")
+        local catHeader = c:Rows(panel)[2]
+        catHeader.scripts.OnClick(catHeader, "LeftButton")
         local texts = RowTexts(c, panel)
         local listed25, listed45 = false, false
         for _, t in ipairs(texts) do
@@ -502,6 +519,29 @@ return function(root)
         end
         check(listed25, "open challenge listed to choose")
         check(not listed45, "completed challenge hidden")
+
+        -- Search: the box on Choose goals filters challenges.
+        local search
+        for _, f in ipairs(c.frames) do
+            if f.kind == "EditBox" and f:IsVisible() then search = f end
+        end
+        check(search ~= nil, "Choose goals has a search box")
+        catHeader.scripts.OnClick(catHeader, "LeftButton") -- collapse again; search shows matches anyway
+        search:SetText("zzz")
+        search.scripts.OnTextChanged(search, true)
+        check(RowTexts(c, panel)[2] and RowTexts(c, panel)[2]:find("No open challenge"), "no match message")
+        search:SetText("25")
+        search.scripts.OnTextChanged(search, true)
+        local found = false
+        for _, t in ipairs(RowTexts(c, panel)) do if t:find("level 25") then found = true end end
+        check(found, "search finds the challenge even in a collapsed category")
+        search:SetText("")
+        search.scripts.OnTextChanged(search, true)
+
+        -- Unticking a goal removes it from Goals.
+        c.ns.Legacy.SetGoal(1002, true)
+        c.ns.Legacy.SetGoal(1002, false)
+        check(kyol.legacyProgress[1002] == nil, "unticked goal leaves the Goals list")
         c.player.achievements[1001] = { completed = true, earnedByMe = true, q = 25 }
         c:Fire("CRITERIA_UPDATE")
         c:Advance(3)
