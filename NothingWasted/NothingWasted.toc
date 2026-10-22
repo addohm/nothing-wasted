@@ -1,0 +1,46 @@
+## Interface: 16001
+## Title: Nothing Wasted
+## Notes: Tracks every alt as it levels: rested XP and the rested cap, cooldowns, professions, mail, items and Legacy goals. Nothing goes to waste.
+## Author: KYOL
+## Version: 1.0.0
+## IconTexture: Interface\Icons\Spell_Nature_Sleep
+## SavedVariables: NothingWastedDB
+## AddonCompartmentFunc: NothingWasted_OnAddonCompartmentClick
+
+Locales\enUS.lua
+Locales\deDE.lua
+Locales\frFR.lua
+Locales\esES.lua
+Locales\ruRU.lua
+Locales\zhCN.lua
+Locales\koKR.lua
+
+Core.lua
+Data.lua
+Rested.lua
+
+UI\Widgets.lua
+UI\Tooltip.lua
+UI\Window.lua
+UI\Glow.lua
+
+Character.lua
+Legacy.lua
+Cooldowns.lua
+Professions.lua
+Inventory.lua
+Mail.lua
+Leveling.lua
+Alerts.lua
+
+UI\Sections.lua
+UI\RestedTab.lua
+UI\CooldownsTab.lua
+UI\LevelingTab.lua
+UI\ProfessionsTab.lua
+UI\ItemsTab.lua
+UI\LegacyTab.lua
+UI\OptionsTab.lua
+UI\Minimap.lua
+
+Slash.lua

@@ -8,6 +8,17 @@ All notable changes to this project are documented here. The format follows
 
 ### Added
 
+- Nothing Wasted 1.0.0 (not yet released): rested XP tracking with offline estimates that account
+  for Well Rested; cap alerts with sound and a red screen-edge glow, early warnings, login reminders
+  and a logout warning; a tabbed window (Rested, Cooldowns, Leveling, Professions, Mail and items,
+  Legacy, Options) that pops up in inns and cities; character tooltips; cooldown tracking
+  (Dedicated Study, Mooncloth, transmutes, Salt Shaker, Camp Tent, Cozy Sleeping Bag, hearthstone);
+  leveling pace, who to play next, spells to train and mount gold; professions, trainer ranks,
+  recipe tooltips, crafts from your alts' items, Merchant's Favor and trade reputations; mail sent to
+  alts, expiring mail, bags, bank and item search; Legacy goals and an account planner; a minimap
+  button and the addon menu entry; `/nw`.
+- Headless tests under Lua 5.1 with a strict fake WoW client.
+- Packaging for CurseForge and Wago (`.pkgmeta`), with translations from contributors.
 - Standard docs: README, CLAUDE, CHANGELOG, DEPLOY, SECURITY and ROADMAP.
 - HANDOFF.md: current status, plus the design for the planned headless smoke test.
 - The design for Nothing Wasted: features in README.md, plan and open questions in ROADMAP.md.

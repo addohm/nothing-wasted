@@ -1,34 +1,36 @@
 # Roadmap
 
 What's done for Nothing Wasted and what's next. Update it in the same commit as the change.
-[README.md](README.md) describes the planned features.
+[README.md](README.md) describes the features.
 
 ## Next, in order
 
-1. Finish the design. Still open:
-   - Anything else the user wants to settle before code.
-2. Confirm the game facts the estimates depend on (see below), from the
-   [Forever UI source](https://github.com/Gethe/wow-ui-source/tree/forever) and in game.
-3. Build it, with a headless test under Lua 5.1 against a mocked WoW API. HANDOFF.md has an older
-   test design to adapt.
-4. Test in game, then release on CurseForge and Wago.
+1. **Test in game.** Load with no errors, then check:
+   - The bars and times match the game: log out a character in an inn, check the estimate the next
+     day against the real value when you log it in.
+   - The cap alert, early warning, logout warning, glow and sound.
+   - Well Rested: `/nw perks` lists the perk (spell 1225478), and spending a point changes the cap.
+   - Cooldowns, professions, recipes (open each profession window), bank, mail sent to an alt, item
+     search, Legacy goals and the planner.
+   - The window pops up in an inn or city and hides when leaving.
+2. **Confirm the open game facts** below, and fix `Data.lua` where they differ.
+3. **Release** on CurseForge and Wago (see DEPLOY.md), then open translations on CurseForge.
 
-## To confirm
+## To confirm in game
 
-- **Base rested rules on Forever:** 5% of a level per 8 hours resting, a quarter of that elsewhere,
-  capped at 150% of a level.
-- **Well Rested perk:** the ranks and their effects. A third-party addon (ForeverAlts) says +4% rate
-  and +6% cap per rank, up to a 180% cap. How to read a character's rank (probably `C_Traits` on the
-  Legacy trees), and which event fires when a point is spent or refunded.
-- **Legacy challenges:** these are achievements in per-class categories (`Constants.LegacyConsts`).
-  How to read progress toward one, and whether completion is per character or per account.
-- **Camping:** whether logging out at a campfire counts as resting. The Leatherworking Camp Tent tops
-  rested XP up to 5% of a level once an hour, which the addon sees live.
-- **Cozy Sleeping Bag:** the chain's quest IDs and item ID (wowhead lists item 211527), and the
-  bag's cooldown. Sources disagree on it: one hour or five minutes.
-- **Dedicated Study, profession cooldowns and the Camp Tent:** how to read each cooldown.
-- **Hardcore:** `C_GameRules.IsHardcoreActive()`, and what reincarnation does to a character.
-- **Logout warning:** which event fires when a logout starts (probably `PLAYER_CAMPING`).
+- **Rested rate away from inns:** the addon uses a quarter of the inn rate (the Classic rule).
+- **Well Rested:** whether +4% per rank multiplies the cap (rank 5: 180%) or adds to it (170%). The
+  addon multiplies.
+- **Interface number:** 16001, taken from the old reference addon.
+- **Future spells:** whether Forever lists untrained spells in the spellbook. If not, "spells to
+  train" only updates at a trainer.
+- **Cozy Sleeping Bag:** which of quests 79007 and 79008 is Alliance or Horde (either counts), and
+  whether lying in the bag counts as resting at logout.
+- **Campfires:** whether logging out at a campfire counts as resting.
+- **First mount:** level 40, 120g (from fan guides).
+- **Recipe tooltips:** that recipe items show the "Requires <profession> (<skill>)" line the addon
+  reads, and that recipe names match the item name after "Pattern:", "Recipe:" and so on.
+- **Recipe list:** `C_TradeSkillUI.GetFilteredRecipeIDs` is used by Blizzard's UI but undocumented.
 
 ## Ideas
 
@@ -47,3 +49,4 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
   languages plus English (2026-10-22).
 - Translations from contributors. Window: tabs, with the Rested tab showing only the bars
   (name and time to cap) and their tooltips (2026-10-22).
+- 1.0.0 written: every planned feature, with headless tests (2026-10-22).

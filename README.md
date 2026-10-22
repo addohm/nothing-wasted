@@ -1,15 +1,34 @@
 # Nothing Wasted
 
-A planned World of Warcraft addon for WoW: Forever (Interface 16001) for leveling alts and earning
-Legacy points. It tracks every character on your account and makes sure nothing goes to waste:
-no alt sits at the rested XP cap, no cooldown sits ready unused, and no mail expires unnoticed.
+A World of Warcraft addon for WoW: Forever (Interface 16001) for leveling alts and earning Legacy
+points. It tracks every character on your account and makes sure nothing goes to waste: no alt sits
+at the rested XP cap, no cooldown sits ready unused, and no mail expires unnoticed.
 
-**Status:** design. There's no addon code yet. See [ROADMAP.md](ROADMAP.md) for the plan.
+**Status:** 1.0.0, written and passing its headless tests, but not yet run in the game client. See
+[ROADMAP.md](ROADMAP.md) for what still needs checking in game.
 
 **Scope:** leveling alts and earning Legacy points. Features outside that stay out, to avoid clutter.
-Everything below ships at launch, including mail and item search.
 
-## Planned features
+## Install
+
+Copy the `NothingWasted` folder into your client's `Interface/AddOns` folder (for Forever,
+`_forever_/Interface/AddOns`), then log in each character once so it gets recorded.
+
+## Commands
+
+| Command | What it does |
+| --- | --- |
+| `/nw` | Show or hide the window |
+| `/nw [item]` | Find an item on all your characters (an item link or part of a name) |
+| `/nw options` | Open the options |
+| `/nw minimap` | Show or hide the minimap button |
+| `/nw reset` | Forget every character (asks first) |
+| `/nw perks` | List the Legacy perk nodes, to check perk spell IDs |
+
+`/nothingwasted` works too, in case another addon uses `/nw`. The minimap button and the game's
+addon menu by the minimap also open the window (right-click for options).
+
+## Features
 
 ### Rested XP
 
@@ -58,13 +77,15 @@ Everything below ships at launch, including mail and item search.
 - Max-level characters can be shown or hidden.
 - Hover a bar for the details: time left to cap, level, professions and skill levels, gold, where the
   character logged out, Legacy goal progress, and more. You choose which details show.
+- Right-click a bar to forget that character.
 
 ### Leveling
 
 - **Who to play next:** ranks alts by the time you have. "You have 2h: play Oldie, caps in 3h, rested
   covers 1.4 levels."
 - **How far rested XP carries a character:** "rested takes Kyol to about 34.6."
-- **Leveling pace:** levels per hour played, and an estimate of when each alt reaches 60.
+- **Leveling pace:** XP per hour online (the addon keeps its own count, no /played needed), and an
+  estimate of when each alt reaches 60.
 - **Untrained spells:** "Kyol hit 24 and has spells to train."
 - **Mount gold:** gold saved toward the level-40 mount as an alt gets close.
 - **Hearthstone:** where each alt is bound and when its hearthstone is ready.
@@ -103,22 +124,41 @@ Everything below ships at launch, including mail and item search.
 - English, with a starter set of translations: German, French, Spanish, Russian, Simplified Chinese
   and Korean. Translations come from contributors (for example CurseForge's localization tool), so
   each ships when it's ready. More languages later.
-- To be released on CurseForge and Wago.
+- Released on CurseForge and Wago (once tested in game).
 
 ### Out of scope
 
 - Auction house mail (sales and expired auctions).
 - Item counts added to every item's tooltip. Use item search instead.
 
+## How the estimates work
+
+- Rested XP builds at 5% of a level per 8 hours in an inn or city, a quarter of that elsewhere, up to
+  150% of a level. Each Well Rested rank adds 4% to the rate and the cap.
+- A character's numbers are exact when you log out; after that they're estimated from where it logged
+  out. Logging it in shows the exact value again.
+- Some data can only be read at certain times: recipes when a profession window is open, the bank when
+  it's open, the mailbox when it's open. The addon keeps what it last saw.
+
 ## Repository layout
 
-- `RestedRoster/`: an older addon kept only as an example and inspiration. Nothing Wasted won't use it.
+- `NothingWasted/`: the addon. This folder is what gets installed.
+- `tests/`: headless tests that run the addon against a fake WoW API under Lua 5.1.
+- `RestedRoster/`: an older addon kept only as an example and inspiration. Nothing Wasted doesn't use it.
+
+## Development
+
+Run the tests with Python and lupa (`pip install lupa`):
+
+```bash
+python3 tests/run_tests.py
+```
 
 ## Docs
 
 - [CHANGELOG.md](CHANGELOG.md): what changed
-- [DEPLOY.md](DEPLOY.md): installing and releasing, once there's something to install
-- [SECURITY.md](SECURITY.md): what the addon will access, its data, and reporting problems
+- [DEPLOY.md](DEPLOY.md): installing and releasing
+- [SECURITY.md](SECURITY.md): what the addon accesses, its data, and reporting problems
 - [ROADMAP.md](ROADMAP.md): the plan and open questions
 - [HANDOFF.md](HANDOFF.md): where the work stands
 - [CLAUDE.md](CLAUDE.md): notes for coding assistants
