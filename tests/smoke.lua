@@ -588,8 +588,8 @@ return function(root)
         -- Untrained spells come from the trainer, not the spellbook.
         eq(#c.ns.Leveling.Trainable(kyol), 0, "nothing known before a trainer visit")
         c.trainer = {
-            { name = "Frostbolt", kind = "available", level = 24 },
-            { name = "Blizzard", kind = "unavailable", level = 26 },
+            { name = "Frostbolt", kind = "available", level = 24, rank = "Rank 4", cost = 6000 },
+            { name = "Blizzard", kind = "unavailable", level = 26, rank = "Rank 2", cost = 8000 },
             { name = "Arcane Intellect", kind = "used", level = 14 },
         }
         c:Fire("TRAINER_SHOW")
@@ -600,6 +600,16 @@ return function(root)
         c:Advance(4) -- then the level-up message
         eq(#c.ns.Leveling.Trainable(kyol), 2, "reaching level 26 adds the spell the trainer listed for it")
         check(c:ChatHas("reached level 26 and has 2 spell"), "level-up says how many spells to train")
+        local _, total = c.ns.Leveling.Trainable(kyol)
+        eq(total, 14000, "total training cost")
+        c.ns.Window.Show("train")
+        local trainTexts = RowTexts(c, TabPanel(c))
+        check(trainTexts[1] and trainTexts[1]:find("Kyol"), "character header first")
+        check(trainTexts[2] and trainTexts[2]:find("Frostbolt") and trainTexts[2]:find("Rank 4"), "then each spell with its rank")
+        local trainRows = c:Rows(TabPanel(c))
+        check(trainRows[1].right.text:find("1"), "header shows the total cost")
+        check(trainRows[2].right.text:find("60"), "spell rows show their price")
+        c.ns.Window.Hide()
         eq(kyol.sleepingBag and kyol.sleepingBag.done, 2, "sleeping bag chain progress")
         check(kyol.trade and kyol.trade.commerce, "trade reputation read")
         check(c.ns.Meter.IsShown(), "bars window open (logged in resting)")

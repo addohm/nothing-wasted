@@ -52,16 +52,21 @@ end
 local function Train()
     local items = {}
     for _, e in ipairs(Chars()) do
-        local names = ns.Leveling.Trainable(e.c)
-        if #names > 0 then
+        local spells, total = ns.Leveling.Trainable(e.c)
+        if #spells > 0 then
+            -- The character, with the total cost; then each spell with its rank and price.
             items[#items + 1] = {
-                left = ns.ColoredName(e.c),
-                right = format(L["%d spell(s)"], #names),
-                tooltip = function(tip)
-                    tip:AddLine(L["Spells to train"])
-                    for _, n in ipairs(names) do tip:AddLine(n, 1, 1, 1) end
-                end,
+                header = true,
+                left = ns.ColoredName(e.c) .. "  |cff999999" .. format(L["%d spell(s)"], #spells) .. "|r",
+                right = total > 0 and ns.FormatMoney(total) or "",
             }
+            for _, sp in ipairs(spells) do
+                items[#items + 1] = {
+                    indent = 1,
+                    left = sp.name .. (sp.rank and ("  |cff999999" .. sp.rank .. "|r") or ""),
+                    right = sp.cost and ns.FormatMoney(sp.cost) or "",
+                }
+            end
         end
     end
     return items, L["No spells waiting at a trainer. Visit your class trainer once so the addon knows what's coming."]

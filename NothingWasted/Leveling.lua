@@ -109,12 +109,13 @@ local function ReadTrainer(c)
     if IsTradeskillTrainer and IsTradeskillTrainer() then return end
     local spells = {}
     for i = 1, GetNumTrainerServices() or 0 do
-        local name, kind, _, reqLevel = GetTrainerServiceInfo(i)
+        local name, kind, _, reqLevel, rank = GetTrainerServiceInfo(i)
         if name and (kind == "available" or kind == "unavailable") then
             -- "unavailable" can also mean a missing earlier rank; those get a level of at least now+1.
             local level = reqLevel or 0
             if kind == "unavailable" and level <= (c.level or 0) then level = (c.level or 0) + 1 end
-            spells[#spells + 1] = { name = name, level = level }
+            local cost = GetTrainerServiceCost and GetTrainerServiceCost(i) or nil
+            spells[#spells + 1] = { name = name, rank = rank ~= "" and rank or nil, level = level, cost = cost }
         end
     end
     c.trainerSpells = spells
@@ -123,12 +124,17 @@ local function ReadTrainer(c)
 end
 
 -- Names of the spells the character can train at its current level, from its last trainer visit.
+-- The spells the character can train at its current level, from its last trainer visit:
+-- a list of { name, rank, level, cost }, and their total cost in copper.
 function Leveling.Trainable(c)
-    local names = {}
+    local list, total = {}, 0
     for _, s in ipairs(c.trainerSpells or {}) do
-        if s.level <= (c.level or 0) then names[#names + 1] = s.name end
+        if s.level <= (c.level or 0) then
+            list[#list + 1] = s
+            total = total + (s.cost or 0)
+        end
     end
-    return names
+    return list, total
 end
 
 -- Cozy Sleeping Bag --------------------------------------------------------------------------------

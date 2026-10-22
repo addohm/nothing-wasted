@@ -27,6 +27,8 @@ All notable changes to this project are documented here. The format follows
 - Leveling buff reminders now come when you leave an inn or city, and when a buff wears off out in
   the world, instead of at login. `/nw buffs` shows what they see (Well Fed, where the sleeping bag
   is, its cooldown and buff). A sleeping bag that's a toy counts as carried; one in the bank doesn't.
+- Spells to train lists each spell under its character, with its rank and training cost, and the
+  character's total cost (recorded at the next trainer visit).
 - The bars window's title is "Nothing Wasted". A "Bar shows" option picks the bar text: time to cap
   (default), rested XP, rested % of a level, rested % of the cap, or the level rested XP reaches.
 - Buff reminders are yellow, play the alert sound (raid warning by default) and flash the screen

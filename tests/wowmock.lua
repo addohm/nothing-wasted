@@ -559,7 +559,8 @@ function M.NewClient(opts)
         IsSpellKnown = function(id) return player.spells[id] or false end,
     }
     env.GetNumTrainerServices = function() return #client.trainer end
-    env.GetTrainerServiceInfo = function(i) local s = client.trainer[i] return s.name, s.kind, 1, s.level end
+    env.GetTrainerServiceInfo = function(i) local s = client.trainer[i] return s.name, s.kind, 1, s.level, s.rank or "" end
+    env.GetTrainerServiceCost = function(i) return client.trainer[i].cost or 0, false end
     env.IsTradeskillTrainer = function() return false end
 
     -- Items, bags, bank
