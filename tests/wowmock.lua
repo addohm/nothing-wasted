@@ -55,7 +55,12 @@ function Region:GetPoint(i)
     return p[1], nil, p[1], p[2], p[3]
 end
 function Region:SetAllPoints() self.points = { { "ALL" } } end
-function Region:SetSize(w, h) self.width, self.height = w, h end
+function Region:SetSize(w, h)
+    CheckValue("SetSize", w)
+    CheckValue("SetSize", h)
+    self.width, self.height = w, h
+    if self.scripts and self.scripts.OnSizeChanged then self.scripts.OnSizeChanged(self, w, h) end
+end
 function Region:SetWidth(w) CheckValue("SetWidth", w) self.width = w end
 function Region:SetHeight(h) CheckValue("SetHeight", h) self.height = h end
 function Region:GetWidth() return self.width or 300 end
@@ -154,6 +159,15 @@ function Frame:SetFrameStrata() end
 function Frame:SetFrameLevel() end
 function Frame:EnableMouse() end
 function Frame:SetMovable() end
+function Frame:SetResizable(v) self.resizable = v end
+function Frame:SetResizeBounds(minW, minH, maxW, maxH)
+    assert(self.resizable, "SetResizeBounds before SetResizable")
+    self.bounds = { minW, minH, maxW, maxH }
+end
+function Frame:StartSizing(point)
+    assert(self.resizable, "StartSizing on a frame that isn't resizable")
+    self.sizing = point
+end
 function Frame:SetClampedToScreen() end
 function Frame:StartMoving() end
 function Frame:StopMovingOrSizing()

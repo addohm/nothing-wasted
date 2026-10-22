@@ -706,6 +706,17 @@ return function(root)
             if f.text == "Defaults" and f:IsVisible() then f:Click() end
         end
         eq(settings.alerts.earlyMinutes, 120, "Defaults resets the page's settings")
+        -- The resize grip resizes the window and remembers the size.
+        local frame = c:Frame("NothingWastedFrame")
+        local grip = c.ns.Window.grip
+        check(grip ~= nil, "the window has a resize grip")
+        grip.scripts.OnMouseDown(grip)
+        eq(frame.sizing, "BOTTOMRIGHT", "dragging the grip resizes from the corner")
+        frame:SetSize(900, 640) -- what the game does while you drag
+        grip.scripts.OnMouseUp(grip)
+        local size = rawget(c.env, "NothingWastedDB").settings.window.size
+        check(size and size[1] == 900 and size[2] == 640, "the new size is saved")
+
         -- Old page names still work.
         c.ns.Window.Select("options")
         eq(rawget(c.env, "NothingWastedDB").settings.window.tab, "alerts", "'options' opens the Alerts page")

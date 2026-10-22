@@ -37,6 +37,8 @@ All notable changes to this project are documented here. The format follows
   the alert sound by default.
 - Spells to train lists each spell under its character (collapsible, open at first), with its rank and training cost, and the
   character's total cost (recorded at the next trainer visit).
+- The full window can be resized with a grip in its bottom-right corner (like the chat windows);
+  lists and options stretch to fit, and the size is remembered.
 - The bars window's title is "Nothing Wasted". A "Bar shows" option picks the bar text: time to cap
   (default), rested XP, rested % of a level, rested % of the cap, or the level rested XP reaches.
 - Buff reminders are yellow, play the alert sound (raid warning by default) and flash the screen

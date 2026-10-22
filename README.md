@@ -111,6 +111,7 @@ button for the bars window.
 - The gear button in the title bar opens the options: Alerts, Bars window, Tooltip and Minimap, each
   with a Defaults button.
 - Each tab reopens the view you used last.
+- Drag the grip in the bottom-right corner to resize the window; the size is remembered.
 
 ### Leveling
 

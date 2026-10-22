@@ -9,7 +9,8 @@ local L = ns.L
 local Window = {}
 ns.Window = Window
 
-local WIDTH, HEIGHT = 620, 460
+local WIDTH, HEIGHT = 620, 460           -- default size
+local MIN_W, MIN_H, MAX_W, MAX_H = 520, 320, 1400, 1000
 local TABS_Y = -36       -- top of the tab row
 local TAB_HEIGHT = 24
 local LINKS_Y = -66      -- top of the row of view links
@@ -193,6 +194,36 @@ local function SavePosition()
     ns.db.settings.window.pos = { point, relPoint, x, y }
 end
 
+local function SaveSize()
+    ns.db.settings.window.size = { math.floor(frame:GetWidth() + 0.5), math.floor(frame:GetHeight() + 0.5) }
+end
+
+-- The resize grip in the bottom-right corner, like the chat windows'.
+local function AddResizeGrip()
+    frame:SetResizable(true)
+    frame:SetResizeBounds(MIN_W, MIN_H, MAX_W, MAX_H)
+    local grip = CreateFrame("Button", nil, frame)
+    grip:SetSize(16, 16)
+    grip:SetPoint("BOTTOMRIGHT", -4, 4)
+    grip:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Up")
+    grip:SetPushedTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Down")
+    grip:SetHighlightTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Highlight")
+    grip:SetScript("OnMouseDown", function() frame:StartSizing("BOTTOMRIGHT") end)
+    grip:SetScript("OnMouseUp", function()
+        frame:StopMovingOrSizing()
+        SaveSize()
+        SavePosition()
+        Window.Refresh()
+    end)
+    grip:SetScript("OnEnter", function(self)
+        GameTooltip:SetOwner(self, "ANCHOR_TOP")
+        GameTooltip:AddLine(L["Drag to resize"])
+        GameTooltip:Show()
+    end)
+    grip:SetScript("OnLeave", GameTooltip_Hide)
+    Window.grip = grip
+end
+
 local function Rule(y)
     local t = frame:CreateTexture(nil, "BORDER")
     t:SetPoint("TOPLEFT", 12, y)
@@ -204,7 +235,12 @@ end
 
 local function Build()
     frame = CreateFrame("Frame", "NothingWastedFrame", UIParent, "BackdropTemplate")
-    frame:SetSize(WIDTH, HEIGHT)
+    local size = ns.db.settings.window.size
+    if size then
+        frame:SetSize(math.max(MIN_W, math.min(MAX_W, size[1])), math.max(MIN_H, math.min(MAX_H, size[2])))
+    else
+        frame:SetSize(WIDTH, HEIGHT)
+    end
     frame:SetFrameStrata("HIGH")
     frame:SetBackdrop({
         bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
@@ -293,6 +329,8 @@ local function Build()
         panel:Hide()
         def.panel = panel
     end
+
+    AddResizeGrip() -- lists and option pages stretch with it (their scroll frames follow the width)
 
     frame:SetScript("OnShow", function()
         Window.Select(current or ns.db.settings.window.tab)

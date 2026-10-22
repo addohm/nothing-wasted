@@ -17,6 +17,8 @@ function UI.List(parent, rowHeight, createRow, update)
     local content = CreateFrame("Frame", nil, scroll)
     content:SetSize(1, 1)
     scroll:SetScrollChild(content)
+    -- Follow the window's width when it's resized.
+    scroll:SetScript("OnSizeChanged", function(_, width) content:SetWidth(width) end)
 
     local list = { scroll = scroll, content = content, rows = {} }
 
@@ -254,6 +256,7 @@ function UI.Stack(parent)
     local inner = CreateFrame("Frame", nil, scroll)
     inner:SetSize(520, 1)
     scroll:SetScrollChild(inner)
+    scroll:SetScript("OnSizeChanged", function(_, width) inner:SetWidth(width) end)
     local stack = { rows = {}, inner = inner, height = 0 }
     function stack:Add(row)
         row:SetParent(inner)
