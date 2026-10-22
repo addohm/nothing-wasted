@@ -1,9 +1,10 @@
-# Deploying Rested Alts
+# Deploying Well Rested
 
-There's nothing to install yet: the addon is being planned. The steps below are from the removed
-draft and apply once `RestedAlts/` exists again.
+There's nothing to install yet: the addon is being designed. The steps below are from the removed
+draft (folder `RestedAlts/`). They'll be updated for Well Rested, including CurseForge and Wago
+releases, once there's code.
 
-Rested Alts is a World of Warcraft addon. It runs inside the game client (Interface 16001), and
+The addon is a World of Warcraft addon. It runs inside the game client (Interface 16001), and
 there's no server.
 
 ## First-time setup

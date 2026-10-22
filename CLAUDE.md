@@ -5,14 +5,17 @@ Guidance for coding assistants working in this repository.
 ## Layout
 
 - `RestedRoster/`: an older addon kept only as an example and inspiration. **Do not modify it.**
-- There's no addon code yet. The project is in planning; see [ROADMAP.md](ROADMAP.md).
+- There's no addon code yet. The addon will be called Well Rested; README.md has the design and
+  ROADMAP.md the plan.
 
 ## Rules
 
 - Don't write or change code until the user asks for it. Discuss ideas first.
 - The new addon stands alone: no references to RestedRoster, no import of its data, no dependency
   on it.
-- Target client: WoW: Forever, Interface 16001.
+- Target client: WoW: Forever, Interface 16001. That's the modern retail client with the Midnight
+  addon API, not a Classic-era client. Check API in Blizzard's UI source, `forever` branch:
+  https://github.com/Gethe/wow-ui-source/tree/forever
 
 ## Commands
 

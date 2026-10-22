@@ -16,13 +16,18 @@ On macOS or Linux the interpreter is `.venv/bin/python`. lupa 2.8 bundles Lua 5.
 
 ## Where it stands
 
-- **Planning.** The user wants to spitball ideas and flesh out the project before any code is
-  written. Don't write code until asked.
-- The `RestedAlts/` 0.1.0 draft was removed on 2026-10-22. Its feature ideas are in
-  [ROADMAP.md](ROADMAP.md), and its code is in git history (`853bebc`).
+- **Design.** The user wants to settle the design before any code is written. Don't write code until
+  asked.
+- The design so far is in [README.md](README.md) (features) and [ROADMAP.md](ROADMAP.md) (plan,
+  open questions and game facts to confirm). The name is Well Rested, after the Legacy perk.
+- Key point from the user: estimates must be accurate, so nothing sits at the cap unnoticed. Read the
+  Well Rested perk rank at login, at logout, and when a perk is spent or refunded. Checking only at
+  login would get the first estimate wrong after spending a point.
+- Similar addons exist: ForeverAlts, CLIAlts, Alt Ledger, Rested XP Tracker and Rested XP Helper.
+  Well Rested is built from scratch, with no code copied from them.
+- The `RestedAlts/` 0.1.0 draft was removed on 2026-10-22. Its code is in git history (`853bebc`).
 - **`RestedRoster/`** is an older addon, included only as an example and inspiration. The new addon
   must not reference it or import from it. **Never modify it.**
-- The docs and `.gitignore` are in place.
 
 ## Parked: smoke-test design for the removed draft
 
@@ -116,11 +121,8 @@ The full-in times above come from `(cap - rested) / (xpMax * rate)`, where the i
 
 ## Still open
 
-- The design. See [ROADMAP.md](ROADMAP.md).
-- WoW: Forever runs on the modern retail client with the Midnight addon API, not a Classic-era
-  client. The draft and the mock design above assumed Classic-era API. Check API choices against
-  the retail/Midnight API.
-- Confirm the rested rates and the 150% cap in game.
+- The rest of the design, and the game facts to confirm. Both are listed in [ROADMAP.md](ROADMAP.md).
+- The parked test design above assumed a Classic-era API. Rework it for the retail/Midnight API.
 
 ## Owner's standing rules
 
