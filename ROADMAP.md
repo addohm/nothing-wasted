@@ -13,10 +13,10 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
 
 ## To confirm in game
 
-- **Rested rate away from rest:** a quarter of the inn rate (the Classic rule). `/nw rate` across a
-  logout outside an inn or city, or the login checks it lists, will show it.
-- **Well Rested:** whether +4% per rank multiplies the cap (rank 5: 180%) or adds to it (170%). The
-  addon multiplies.
+- **Rested rate away from rest:** a quarter of the inn rate (the Classic rule). In progress: being
+  measured with `/nw rate` across a logout outside an inn or city.
+- **Well Rested cap:** whether +4% per rank multiplies the cap (rank 5: 180%) or adds to it (170%). The
+  addon multiplies. Long term: it only shows once a character with Well Rested reaches the cap.
 - **Cozy Sleeping Bag:** which of quests 79007 and 79008 is Alliance or Horde (either counts).
 - **Leveling buffs:** that eating cooked food puts Well Fed XP Boost (spell 1243969) on the player,
   and that the sleeping bag's buff is Well-Rested (429959). Wowhead lists both; not yet seen in game.
