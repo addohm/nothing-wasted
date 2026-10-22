@@ -29,6 +29,7 @@ installed `Build.lua`. `WOW` at the top of the script is the client folder, by d
 - On the first run it creates the addon folder (and `Interface\AddOns` if the client has none yet).
   If `WOW` itself doesn't exist it stops instead, since the path is probably wrong.
 - `/nw help` then shows `v1.0.0 build <commit>`; "-dirty" means the copy included uncommitted changes.
+- The pull can update the script itself, so it runs from a copy in `%TEMP%`.
 - WoW reads the addon's file list only when the game starts. When files were added, renamed or
   removed, the script says so: fully restart the game instead of using `/reload`.
 - It only gets what's pushed, so push first. If creating or copying fails, the WoW folder may need

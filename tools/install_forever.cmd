@@ -3,9 +3,18 @@ rem Update this repo from GitHub and copy Nothing Wasted into the WoW: Forever c
 rem Run it from a terminal (from any folder), then restart the client, or /reload if Nothing
 rem Wasted was already loaded. It only pulls what's on GitHub: push your commits first.
 setlocal
+
+rem git pull can update this very file, and cmd reads a running script from disk line by line, so
+rem the script runs from a temporary copy. The original folder is passed along as the second argument.
+if not "%~1"=="--copy" (
+  copy /y "%~f0" "%TEMP%\nothing_wasted_install.cmd" >nul
+  call "%TEMP%\nothing_wasted_install.cmd" --copy "%~dp0"
+  exit /b
+)
+
 rem The repo is the folder above this script's tools folder, so it keeps working if the repo is
 rem renamed or moved.
-for %%i in ("%~dp0..") do set "REPO=%%~fi"
+for %%i in ("%~2..") do set "REPO=%%~fi"
 rem Change WOW if your client lives elsewhere (for example the live _forever_ folder).
 rem Inside ( ) blocks, always quote paths: the ) in "Program Files (x86)" would end the block.
 set "WOW=C:\Program Files (x86)\World of Warcraft\_classic_beta_"
