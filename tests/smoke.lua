@@ -106,6 +106,18 @@ return function(root)
         for _, t in ipairs(texts) do if t:find("Alpha") then hasAlpha = true end end
         check(hasAlpha, "the other character is listed")
 
+        -- /nw chars says where the loaded data came from.
+        b:ClearChat()
+        b:Slash("chars")
+        check(b:ChatHas("saved by Alpha%-Forever"), "/nw chars names the session that saved the data")
+
+        -- A secret value somewhere in the data is removed before saving, so the save can't fail.
+        rawget(b.env, "NothingWastedDB").chars["Beta-Forever"].legacyProgress = { [1] = { name = mock.Secret("A challenge") } }
+        local saved = b:Logout()
+        check(saved.chars["Beta-Forever"].legacyProgress[1].name == nil, "secret values are removed before saving")
+        eq(saved.lastSave and saved.lastSave.secretsRemoved, 1, "and counted")
+        eq(saved.lastSave.by, "Beta-Forever", "the save records who wrote it")
+
         -- A character with no XP data at all still gets a bar.
         rawget(b.env, "NothingWastedDB").chars["Gamma-Forever"] = { name = "Gamma", realm = "Forever", level = 5 }
         b.ns.Meter.Refresh()

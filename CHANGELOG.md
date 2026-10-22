@@ -46,6 +46,9 @@ All notable changes to this project are documented here. The format follows
 - Other characters were missing from the bars. The logout save could record empty XP data, which hid
   the character like a max-level one. Saves now keep the last good values, and every character gets
   a bar (only max level can be hidden). `/nw chars` lists the saved characters.
+- Saved data could fail to save if it held one of Midnight's secret values; they're now removed
+  just before the game writes the file. Each save records which character wrote it, and
+  `/nw chars` reports it, so a save that didn't happen is visible.
 
 ### Removed
 

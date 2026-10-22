@@ -382,6 +382,8 @@ function M.NewClient(opts)
     env.ATTACHMENTS_MAX_SEND, env.ATTACHMENTS_MAX_RECEIVE = 12, 16
     env.InCombatLockdown = function() return client.inCombat or false end
     env.IsShiftKeyDown = function() return client.shift or false end
+    -- Midnight's secret values: tests mark values secret by wrapping them with mock.Secret().
+    env.issecretvalue = function(v) return type(v) == "table" and getmetatable(v) == M.SecretMeta end
 
     env.Enum = {
         BankType = { Character = 0, Account = 2 },
@@ -701,6 +703,9 @@ function M.NewClient(opts)
 
     return client
 end
+
+M.SecretMeta = { __tostring = function() return "<secret>" end }
+function M.Secret(v) return setmetatable({ value = v }, M.SecretMeta) end
 
 M.T0 = T0
 return M

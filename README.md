@@ -24,7 +24,7 @@ Copy the `NothingWasted` folder into your client's `Interface/AddOns` folder (fo
 | `/nw options` | Open the options |
 | `/nw minimap` | Show or hide the minimap button |
 | `/nw reset` | Forget every character (asks first) |
-| `/nw chars` | List every saved character and what its bar shows |
+| `/nw chars` | List every saved character, what its bar shows, and which session last saved the data |
 | `/nw perks` | List the Legacy perk nodes, to check perk spell IDs |
 
 `/nothingwasted` works too, in case another addon uses `/nw`. The minimap button and the game's

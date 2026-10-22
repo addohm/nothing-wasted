@@ -79,7 +79,36 @@ function ns.Fire(event, ...)
     end
 end
 
-eventFrame:SetScript("OnEvent", function(_, event, ...) ns.Fire(event, ...) end)
+-- Removes Midnight "secret" values from the saved data, since the game can't save them.
+-- Returns how many were removed.
+local function StripSecrets(t, seen)
+    if not issecretvalue then return 0 end
+    seen = seen or {}
+    if seen[t] then return 0 end
+    seen[t] = true
+    local removed = 0
+    for k, v in pairs(t) do
+        if issecretvalue(k) or issecretvalue(v) then
+            t[k] = nil
+            removed = removed + 1
+        elseif type(v) == "table" then
+            removed = removed + StripSecrets(v, seen)
+        end
+    end
+    return removed
+end
+
+-- Runs after every PLAYER_LOGOUT handler, right before the game writes the saved data.
+local function FinishSave()
+    if not ns.db then return end
+    local ok, removed = pcall(StripSecrets, ns.db)
+    ns.db.lastSave = { by = ns.PlayerKey(), at = time(), secretsRemoved = ok and removed or nil }
+end
+
+eventFrame:SetScript("OnEvent", function(_, event, ...)
+    ns.Fire(event, ...)
+    if event == "PLAYER_LOGOUT" then FinishSave() end
+end)
 
 -- Helpers
 
@@ -165,7 +194,10 @@ end
 ns.On("ADDON_LOADED", function(name)
     if name ~= addonName then return end
     local firstRun = NothingWastedDB == nil
+    ns.firstRun = firstRun
     InitDB()
+    -- What the saved file said about the session that wrote it, for /nw chars.
+    ns.loadedSave = ns.db.lastSave
     ns.Fire("NW_INIT")
     if firstRun then
         ns.Print(L["type /nw or click the minimap button to see your characters."])

@@ -19,6 +19,9 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
 
 ## To confirm in game
 
+- **Saving across characters:** after logging out of one character, `/nw chars` on the next one
+  should say "saved by <first character>". If it says no saved data was found, the game isn't
+  writing the file.
 - **Logout values:** whether the game still reports XP, rested XP and the zone at logout. The addon
   keeps the last good snapshot if it doesn't, which can make an alt's estimate start a little early.
 

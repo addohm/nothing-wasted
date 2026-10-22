@@ -20,6 +20,13 @@ local function ListCharacters()
     local keys = {}
     for key in pairs(ns.db.chars) do keys[#keys + 1] = key end
     table.sort(keys)
+    -- Where the data came from: if the game didn't write it at the last logout, alts are missing.
+    local save = ns.loadedSave
+    if ns.firstRun then
+        ns.Print(L["No saved data was found when this character logged in. If you've played other characters with Nothing Wasted, the game didn't write their data: log out to the character screen or type /reload before closing the game."])
+    elseif save and save.at then
+        ns.Print(format(L["Data loaded at login was saved by %s %s ago."], save.by or "?", ns.FormatDuration(now - save.at)))
+    end
     ns.Print(format(L["%d saved character(s):"], #keys))
     for _, key in ipairs(keys) do
         local c = ns.db.chars[key]
