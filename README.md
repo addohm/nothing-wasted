@@ -41,6 +41,13 @@ Everything below ships at launch, including mail and item search.
   at a quarter of the rate.
 - You pick the alert sound. The default is the raid warning sound.
 
+### Window
+
+- The main view shows only the bars: one per character, with its name and time to cap. Everything
+  else is in the tooltips or the sidebar.
+- A sidebar of icon buttons opens the other sections: cooldowns, leveling, professions, mail and
+  items, Legacy, and options. Each has its own icon so it's easy to recognize.
+
 ### Progress bars
 
 - One bar per character, running from 0 to that character's rested cap, sorted with the soonest to
@@ -93,8 +100,9 @@ Everything below ships at launch, including mail and item search.
 - Designed for a single account. Hardcore characters are ignored while they're hardcore.
 - Settings live in the addon's own options window.
 - Slash commands: `/nw`, with `/nothingwasted` as a fallback in case another addon uses `/nw`.
-- Translated at launch into a starter set: German, French, Spanish, Russian, Simplified Chinese and
-  Korean, plus English. More languages later.
+- English, with a starter set of translations: German, French, Spanish, Russian, Simplified Chinese
+  and Korean. Translations come from contributors (for example CurseForge's localization tool), so
+  each ships when it's ready. More languages later.
 - To be released on CurseForge and Wago.
 
 ### Out of scope

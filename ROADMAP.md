@@ -6,8 +6,8 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
 ## Next, in order
 
 1. Finish the design. Still open:
-   - How translations are sourced: contributors (for example CurseForge's localization tool), or
-     machine drafts flagged for review.
+   - Window details: where the sidebar sits, and whether it shows with the bars that pop up
+     automatically when resting.
    - Anything else the user wants to settle before code.
 2. Confirm the game facts the estimates depend on (see below), from the
    [Forever UI source](https://github.com/Gethe/wow-ui-source/tree/forever) and in game.
@@ -47,3 +47,5 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
   professions, leveling and Legacy planner features (2026-10-22).
 - Launch scope: every planned feature, including mail and item search. Starter set of six
   languages plus English (2026-10-22).
+- Translations from contributors. Window: bars only (name and time to cap), tooltips, and a
+  sidebar of icon buttons for everything else (2026-10-22).
