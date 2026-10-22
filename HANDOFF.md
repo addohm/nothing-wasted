@@ -19,12 +19,13 @@ On macOS or Linux the interpreter is `.venv/bin/python`. lupa 2.8 bundles Lua 5.
 - **Design.** The user wants to settle the design before any code is written. Don't write code until
   asked.
 - The design so far is in [README.md](README.md) (features) and [ROADMAP.md](ROADMAP.md) (plan,
-  open questions and game facts to confirm). The name is Well Rested, after the Legacy perk.
+  open questions and game facts to confirm). The name is Nothing Wasted: no rested XP, cooldown or
+  mail left sitting unused.
 - Key point from the user: estimates must be accurate, so nothing sits at the cap unnoticed. Read the
   Well Rested perk rank at login, at logout, and when a perk is spent or refunded. Checking only at
   login would get the first estimate wrong after spending a point.
 - Similar addons exist: ForeverAlts, CLIAlts, Alt Ledger, Rested XP Tracker and Rested XP Helper.
-  Well Rested is built from scratch, with no code copied from them.
+  Nothing Wasted is built from scratch, with no code copied from them.
 - The `RestedAlts/` 0.1.0 draft was removed on 2026-10-22. Its code is in git history (`853bebc`).
 - **`RestedRoster/`** is an older addon, included only as an example and inspiration. The new addon
   must not reference it or import from it. **Never modify it.**

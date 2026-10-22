@@ -1,6 +1,6 @@
 # Roadmap
 
-What's done for Well Rested and what's next. Update it in the same commit as the change.
+What's done for Nothing Wasted and what's next. Update it in the same commit as the change.
 [README.md](README.md) describes the planned features.
 
 ## Next, in order
@@ -52,3 +52,4 @@ Not decided yet. A possible theme: "nothing wasted", using the same alerts as th
 - Standard docs (2026-10-22).
 - Removed the 0.1.0 draft to plan the project first (2026-10-22).
 - Core design: features, alerts, bars, Legacy goals and the name Well Rested (2026-10-22).
+- Renamed to Nothing Wasted (2026-10-22).

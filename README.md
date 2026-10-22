@@ -1,4 +1,4 @@
-# Well Rested
+# Nothing Wasted
 
 A planned World of Warcraft addon for WoW: Forever (Interface 16001) that tracks every character on
 your account as it levels: rested XP, level, professions and Legacy goals. Its main job: make sure no
@@ -56,7 +56,7 @@ alt sits at the rested XP cap wasting time.
 
 ## Repository layout
 
-- `RestedRoster/`: an older addon kept only as an example and inspiration. Well Rested won't use it.
+- `RestedRoster/`: an older addon kept only as an example and inspiration. Nothing Wasted won't use it.
 
 ## Docs
 

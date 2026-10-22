@@ -5,7 +5,7 @@ Guidance for coding assistants working in this repository.
 ## Layout
 
 - `RestedRoster/`: an older addon kept only as an example and inspiration. **Do not modify it.**
-- There's no addon code yet. The addon will be called Well Rested; README.md has the design and
+- There's no addon code yet. The addon will be called Nothing Wasted; README.md has the design and
   ROADMAP.md the plan.
 
 ## Rules

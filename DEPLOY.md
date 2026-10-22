@@ -1,7 +1,7 @@
-# Deploying Well Rested
+# Deploying Nothing Wasted
 
 There's nothing to install yet: the addon is being designed. The steps below are from the removed
-draft (folder `RestedAlts/`). They'll be updated for Well Rested, including CurseForge and Wago
+draft (folder `RestedAlts/`). They'll be updated for Nothing Wasted, including CurseForge and Wago
 releases, once there's code.
 
 The addon is a World of Warcraft addon. It runs inside the game client (Interface 16001), and

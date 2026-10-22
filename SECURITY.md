@@ -7,7 +7,7 @@ problems in a public issue.
 
 ## What the addon can access
 
-Well Rested (planned) runs inside the World of Warcraft addon sandbox. It will read your
+Nothing Wasted (planned) runs inside the World of Warcraft addon sandbox. It will read your
 character's name, realm, class, level, XP, rested XP, rested status, zone, gold, professions and skill
 levels, Legacy perks and Legacy challenge progress. It has no network, file system or chat-sending
 access beyond printing messages to your own chat frame and playing sounds.
