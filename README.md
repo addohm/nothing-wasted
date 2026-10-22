@@ -1,8 +1,8 @@
 # Rested Alts
 
-A World of Warcraft addon (Interface 16001, the same client as the original RestedRoster) that shows
-how much rested XP each of your characters has, in a small window you can move around. For characters
-you're not playing, it estimates the rested XP they've built up since you last logged out.
+A World of Warcraft addon (Interface 16001) that shows how much rested XP each of your characters has,
+in a small window you can move around. For characters you're not playing, it estimates the rested XP
+they've built up since you last logged out.
 
 **Status:** 0.1.0. Written but not yet tested in the game client. See [ROADMAP.md](ROADMAP.md).
 
@@ -23,9 +23,6 @@ you're not playing, it estimates the rested XP they've built up since you last l
 Copy the `RestedAlts` folder into your client's `Interface/AddOns` folder, then log in each character
 once so it gets recorded.
 
-Moving from RestedRoster: leave both addons enabled for one login. Rested Alts copies RestedRoster's
-characters over once, then you can disable RestedRoster.
-
 ## Commands
 
 | Command | What it does |
@@ -43,7 +40,7 @@ characters over once, then you can disable RestedRoster.
 ## Repository layout
 
 - `RestedAlts/`: the new addon
-- `RestedRoster/`: the original addon, kept unchanged for reference
+- `RestedRoster/`: an older addon kept only as an example and inspiration. Rested Alts doesn't use it.
 
 ## Docs
 

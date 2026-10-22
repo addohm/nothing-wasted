@@ -11,6 +11,11 @@ All notable changes to this project are documented here. The format follows
 - Standard docs: README, CLAUDE, CHANGELOG, DEPLOY, SECURITY and ROADMAP.
 - HANDOFF.md: current status, plus the design for the planned headless smoke test.
 
+### Removed
+
+- The one-time import from RestedRoster and the optional dependency on it. Rested Alts stands alone;
+  `RestedRoster/` is only an example.
+
 ## [0.1.0] - 2026-10-22
 
 ### Added

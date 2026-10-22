@@ -10,11 +10,12 @@ Guidance for coding assistants working in this repository.
   - `Core.lua`: saved data, rested XP estimates, events, popups, slash commands.
   - `UI.lua`: the roster window (rows, sorting, filters, tooltips).
   - `Minimap.lua`: the minimap button. It uses no libraries.
-- `RestedRoster/`: the original addon, kept for reference. **Do not modify it.**
+- `RestedRoster/`: an older addon kept only as an example and inspiration. **Do not modify it.**
 
 ## Rules
 
-- Target client: Interface 16001, the same as RestedRoster. Use only API that Classic-era clients have.
+- Rested Alts stands alone: no references to RestedRoster, no import of its data, no dependency on it.
+- Target client: Interface 16001. Use only API that Classic-era clients have.
   Don't add feature checks for API that has always existed. Do check API that moved, such as
   `C_AddOns.GetAddOnMetadata`.
 - No external libraries (Ace, LibDBIcon and so on). Keep the addon lightweight.

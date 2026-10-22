@@ -18,9 +18,10 @@ On macOS or Linux the interpreter is `.venv/bin/python`. lupa 2.8 bundles Lua 5.
 
 - **`RestedAlts/`** is the new addon (v0.1.0): a movable roster window with live estimates, time
   until full, rested status icon, sorting, filters, tooltips, forget-with-confirm, a minimap button
-  that uses no libraries, and a one-time import from RestedRoster. [README.md](README.md) describes
+  that uses no libraries. [README.md](README.md) describes
   the features; [CLAUDE.md](CLAUDE.md) covers the code layout and rules.
-- **`RestedRoster/`** is the original addon, included only as inspiration. **Never modify it.**
+- **`RestedRoster/`** is an older addon, included only as an example and inspiration. Rested Alts
+  must not reference it or import from it. **Never modify it.**
 - The root docs and `.gitignore`.
 - The only check so far: a Python script confirmed every Lua block and bracket is balanced. Nothing
   has run in the game client or under a real Lua interpreter.
@@ -42,7 +43,7 @@ realistic sessions. Nothing is written yet except the venv. The planned design:
 ### Mock rules (to catch real bugs)
 
 - **Strict globals:** reading an undefined global errors. The exceptions are `RestedAltsDB`,
-  `RestedRosterDB`, `C_AddOns` and `GetAddOnMetadata`, which can legitimately be nil. Every global
+  `C_AddOns` and `GetAddOnMetadata`, which can legitimately be nil. Every global
   write is recorded. Only these are allowed: `RestedAltsDB`, `RestedAltsFrame`,
   `RestedAltsMinimapButton`, `SLASH_RESTEDALTS1` and `SLASH_RESTEDALTS2`.
 - **Widgets:** `__index` is an explicit method table, so a misspelled method fails as "attempt to call
@@ -75,14 +76,10 @@ realistic sessions. Nothing is written yet except the venv. The planned design:
    - The window starts hidden and `/alts` opens it.
    - Maxi's row says "Max level", its bar is hidden, its info line shows "online", and the tooltip
      mentions max level.
-2. **Kyol** (level 20 Mage on Forever, xp 1000/10000, rested 2000, resting) at `T0 + 2h`, with a
-   `RestedRosterDB` containing Oldie, Broken and Maxi:
-   - Oldie: level 30, xpMax 20000, rested 0, resting, saved 8h earlier.
-   - Broken: xpMax 0.
-   - Maxi: level 59.
+2. **Kyol** (level 20 Mage on Forever, xp 1000/10000, rested 2000, resting) at `T0 + 2h`, using the
+   saved variables from scenario 1 with one extra entry added by the test:
+   - Oldie-Forever: level 30, xpMax 20000, rested 0, resting, saved 8h earlier.
    - No first-run hint this time.
-   - Exactly "imported 1 character(s)": Broken is skipped, and Maxi is not overwritten (it stays
-     level 60).
    - Rested sort gives Kyol, Oldie, Maxi.
    - Kyol shows "20%" and "full in 8d 16h", with the rest icon shown.
    - Oldie's bar is about 5 (8h in an inn) and its status is "full in 9d 16h".
@@ -125,7 +122,7 @@ The full-in times above come from `(cap - rested) / (xpMax * rate)`, where the i
 
 ## Still open
 
-- **Untested in game.** The target is "WoW: Forever", Interface 16001, copied from RestedRoster.
+- **Untested in game.** The target is "WoW: Forever", Interface 16001.
   Before relying on the code, confirm in game that these Classic-era APIs exist: `BackdropTemplate`,
   `C_Timer.NewTicker`, `GetMaxPlayerLevel`, `UICheckButtonTemplate` and
   `UIPanelScrollFrameTemplate`.

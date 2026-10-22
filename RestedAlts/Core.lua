@@ -93,33 +93,6 @@ function ns.ForgetAll()
     ns.RefreshUI()
 end
 
--- One-time copy of characters recorded by the older RestedRoster addon, if it is enabled.
-local function ImportRestedRoster()
-    if ns.db.importedRestedRoster or type(RestedRosterDB) ~= "table" then return end
-    local count = 0
-    for key, old in pairs(RestedRosterDB) do
-        if type(old) == "table" and old.name and old.savedAt and (old.xpMax or 0) > 0 and not ns.db.chars[key] then
-            ns.db.chars[key] = {
-                name = old.name,
-                realm = old.realm,
-                class = old.class,
-                level = old.level or 0,
-                isMax = (old.level or 0) >= GetMaxPlayerLevel(),
-                xp = old.xp or 0,
-                xpMax = old.xpMax or 0,
-                rested = old.rested or 0,
-                resting = old.resting and true or false,
-                savedAt = old.savedAt,
-            }
-            count = count + 1
-        end
-    end
-    ns.db.importedRestedRoster = true
-    if count > 0 then
-        ns.Print(format("imported %d character(s) from RestedRoster. You can disable that addon now.", count))
-    end
-end
-
 function ns.FormatDuration(seconds)
     seconds = math.floor(seconds)
     if seconds < 60 then return "<1m" end
@@ -186,9 +159,6 @@ events:SetScript("OnEvent", function(self, event, arg1)
         return
     end
 
-    if event == "PLAYER_LOGIN" then
-        ImportRestedRoster()
-    end
     ns.SaveCurrent()
     ns.RefreshUI()
 end)
