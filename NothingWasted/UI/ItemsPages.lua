@@ -105,42 +105,43 @@ ns.Window.AddPage({
     group = "items",
     label = L["Search"],
     order = 1,
-    build = function(panel)
-        local label = panel:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-        label:SetPoint("TOPLEFT", 4, -6)
-        label:SetText(L["Find an item:"])
-
-        local box = CreateFrame("EditBox", nil, panel, "InputBoxTemplate")
-        box:SetSize(240, 22)
-        box:SetPoint("LEFT", label, "RIGHT", 14, 0)
-        box:SetAutoFocus(false)
-        box:SetScript("OnEnterPressed", function(self)
-            self:ClearFocus()
-            ns.Inventory.ShowSearch(self:GetText())
-        end)
-        box:SetScript("OnEscapePressed", function(self) self:ClearFocus() end)
-        box:SetScript("OnTextChanged", function(self, userInput)
-            if userInput then
-                ns.Inventory.lastQuery = self:GetText()
-                ns.Window.Refresh()
-            end
-        end)
-        panel.box = box
-
-        local body = CreateFrame("Frame", nil, panel)
-        body:SetPoint("TOPLEFT", 0, -34)
-        body:SetPoint("BOTTOMRIGHT")
-        panel.list = ns.UI.TextList(body)
-
-        ns.On("NW_SEARCH", function(query)
-            box:SetText(query or "")
-            ns.Window.Refresh()
-        end)
-    end,
+    build = function(panel) panel.list = ns.UI.TextList(panel) end,
     refresh = function(panel)
         panel.list:SetItems(SearchItems(ns.Inventory.lastQuery))
     end,
 })
+
+-- The search box sits in the Items tab's header, so it's there on every Items view. Typing in it
+-- switches to the Search view.
+ns.Window.AddTabWidget("items", function(parent)
+    local box = CreateFrame("EditBox", nil, parent, "InputBoxTemplate")
+    box:SetSize(180, 20)
+    box:SetAutoFocus(false)
+    local hint = box:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
+    hint:SetPoint("LEFT", 2, 0)
+    hint:SetText(L["Search items..."])
+    local function UpdateHint() hint:SetShown(box:GetText() == "" and not box:HasFocus()) end
+    -- HookScript keeps the template's own focus handling.
+    box:HookScript("OnEditFocusGained", UpdateHint)
+    box:HookScript("OnEditFocusLost", UpdateHint)
+    box:SetScript("OnEnterPressed", function(self) self:ClearFocus() end)
+    box:SetScript("OnEscapePressed", function(self) self:ClearFocus() end)
+    box:SetScript("OnTextChanged", function(self, userInput)
+        UpdateHint()
+        if userInput then
+            ns.Inventory.lastQuery = self:GetText()
+            ns.Window.Select("search")
+        end
+    end)
+    ns.On("NW_SEARCH", function(query)
+        box:SetText(query or "")
+        UpdateHint()
+        ns.Window.Refresh()
+    end)
+    box:SetText(ns.Inventory.lastQuery or "")
+    UpdateHint()
+    return box
+end)
 
 local function ListPage(id, label, order, source)
     ns.Window.AddPage({

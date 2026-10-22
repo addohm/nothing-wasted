@@ -264,6 +264,20 @@ return function(root)
         local texts = RowTexts(c, TabPanel(c))
         check(texts[1] and texts[1]:find("Linen Cloth"), "search result shown")
 
+        -- The search box is in the Items header, so it shows on every Items view.
+        local box
+        for _, f in ipairs(c.frames) do
+            if f.kind == "EditBox" then box = f end
+        end
+        check(box and box:IsVisible() and box:GetText() == "linen", "search box shows the query")
+        c.ns.Window.Select("mail")
+        check(box:IsVisible(), "search box stays on the Mail view")
+        box:SetText("lin")
+        box.scripts.OnTextChanged(box, true)
+        eq(rawget(c.env, "NothingWastedDB").settings.window.tab, "search", "typing switches to the Search view")
+        c.ns.Window.Select("rested")
+        check(not box:IsVisible(), "search box only on the Items tab")
+
         -- Recipes recorded while the profession window is open.
         c.openProfession = "Tailoring"
         c:Fire("TRADE_SKILL_LIST_UPDATE")

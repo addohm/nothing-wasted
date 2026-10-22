@@ -85,7 +85,8 @@ button for the bars window.
   show them as links under the tabs:
   - **Leveling:** Who to play next, Pace, Spells to train, Mount gold.
   - **Professions:** Skills, Crafts from your alts' items.
-  - **Items:** Search, Mail, Bag space.
+  - **Items:** Search, Mail, Bag space. The search box sits in the Items header on every view;
+    typing in it switches to Search.
   - **Legacy:** Goals, Choose goals, Account planner.
 - The gear button in the title bar opens the options: Alerts, Bars window, Tooltip and Minimap, each
   with a Defaults button.

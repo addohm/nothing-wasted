@@ -43,7 +43,8 @@ All notable changes to this project are documented here. The format follows
 - The full window has tabs again, cleaned up: six text tabs (Rested, Leveling, Cooldowns, Professions,
   Items, Legacy), views within a tab as links under it instead of "Show:" buttons, options behind a
   gear button, and lists with indentation, light striping and ruled headers. Options use
-  label-and-control rows with arrow selectors and a Defaults button.
+  label-and-control rows with arrow selectors and a Defaults button. The item search box sits in the
+  Items tab's header, so it's on every Items view.
 
 - "Who to play next" no longer asks how long you'll play. It ranks alts by who's capped, then who
   caps soonest.

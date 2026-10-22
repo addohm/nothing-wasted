@@ -142,6 +142,13 @@ function Frame:RegisterEvent(e) self.client.events[e] = self.client.events[e] or
 function Frame:UnregisterEvent(e) if self.client.events[e] then self.client.events[e][self] = nil end end
 function Frame:SetScript(name, fn) self.scripts[name] = fn end
 function Frame:GetScript(name) return self.scripts[name] end
+function Frame:HookScript(name, fn)
+    local orig = self.scripts[name]
+    self.scripts[name] = function(...)
+        if orig then orig(...) end
+        return fn(...)
+    end
+end
 function Frame:SetFrameStrata() end
 function Frame:SetFrameLevel() end
 function Frame:EnableMouse() end
@@ -222,7 +229,8 @@ EditBox.__index = EditBox
 function EditBox:SetAutoFocus() end
 function EditBox:SetText(t) CheckValue("EditBox:SetText", t) self.text = t end
 function EditBox:GetText() return self.text or "" end
-function EditBox:ClearFocus() end
+function EditBox:ClearFocus() self.focus = false end
+function EditBox:HasFocus() return self.focus or false end
 
 local KINDS = {
     Frame = Frame, Button = Button, CheckButton = CheckButton, StatusBar = StatusBar,

@@ -34,6 +34,7 @@ local ALIASES = { characters = "rested", options = "alerts" }
 
 local frame, ticker, content, linkBar, defaultsButton
 local tabButtons = {}
+local tabWidgets = {} -- [tab] = { build = function(parent), frame }
 local pages, pageOrder = {}, {}
 local current
 
@@ -41,6 +42,12 @@ local current
 function Window.AddPage(def)
     pages[def.id] = def
     pageOrder[#pageOrder + 1] = def
+end
+
+-- A widget shown at the right of the view links whenever a tab is selected (the Items search box).
+-- build(parent) returns the widget's frame.
+function Window.AddTabWidget(group, build)
+    tabWidgets[group] = { build = build }
 end
 
 local function GroupPages(group)
@@ -121,7 +128,15 @@ local function ShowLinks(def)
             x = x + b:GetWidth() + 4
         end
     end
-    linkBar:SetShown(#list > 1 or def.defaults ~= nil)
+    local widget = tabWidgets[def.group]
+    if widget and not widget.frame then
+        widget.frame = widget.build(linkBar)
+        widget.frame:SetPoint("RIGHT", -2, 0)
+    end
+    for group, w in pairs(tabWidgets) do
+        if w.frame then w.frame:SetShown(group == def.group) end
+    end
+    linkBar:SetShown(#list > 1 or def.defaults ~= nil or widget ~= nil)
     defaultsButton:SetShown(def.defaults ~= nil)
     content:ClearAllPoints()
     content:SetPoint("TOPLEFT", 14, linkBar:IsShown() and (LINKS_Y - LINK_HEIGHT - 8) or (TABS_Y - TAB_HEIGHT - 10))
