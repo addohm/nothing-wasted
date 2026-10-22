@@ -38,7 +38,7 @@ function UI.List(parent, rowHeight, createRow, update)
                 self.rows[i] = row
             end
             row.item = item
-            update(row, item)
+            update(row, item, i)
             row:Show()
         end
         for i = #items + 1, #self.rows do
@@ -54,15 +54,24 @@ function UI.List(parent, rowHeight, createRow, update)
 end
 
 -- A row with a left and a right text, for simple lists. Rows with a tooltip function get one.
+-- Every other plain row gets a faint stripe; headers get a thin gold rule under them.
+local INDENT = 16
+
 function UI.TextRow(parent)
     local row = CreateFrame("Button", nil, parent)
+    row.stripe = row:CreateTexture(nil, "BACKGROUND")
+    row.stripe:SetAllPoints()
+    row.stripe:SetColorTexture(1, 1, 1, 0.04)
+    row.rule = row:CreateTexture(nil, "BORDER")
+    row.rule:SetPoint("BOTTOMLEFT", 4, 1)
+    row.rule:SetPoint("BOTTOMRIGHT", -4, 1)
+    row.rule:SetHeight(1)
+    row.rule:SetColorTexture(0.6, 0.45, 0.15, 0.5)
     row.left = row:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-    row.left:SetPoint("LEFT", 4, 0)
     row.left:SetJustifyH("LEFT")
     row.right = row:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-    row.right:SetPoint("RIGHT", -4, 0)
+    row.right:SetPoint("RIGHT", -6, 0)
     row.right:SetJustifyH("RIGHT")
-    row.left:SetPoint("RIGHT", row.right, "LEFT", -8, 0)
     row:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight", "ADD")
     row:SetScript("OnEnter", function(self)
         if self.item and self.item.tooltip then
@@ -79,19 +88,21 @@ function UI.TextRow(parent)
     return row
 end
 
-function UI.UpdateTextRow(row, item)
+function UI.UpdateTextRow(row, item, index)
+    row.left:ClearAllPoints()
+    row.left:SetPoint("LEFT", 6 + (item.indent or 0) * INDENT, 0)
+    row.left:SetPoint("RIGHT", row.right, "LEFT", -10, 0)
     row.left:SetText(item.left or "")
     row.right:SetText(item.right or "")
-    if item.header then
-        row.left:SetFontObject("GameFontNormal")
-    else
-        row.left:SetFontObject("GameFontHighlight")
-    end
+    row.left:SetFontObject(item.header and "GameFontNormal" or "GameFontHighlight")
+    row.right:SetFontObject(item.header and "GameFontNormalSmall" or "GameFontHighlight")
+    row.rule:SetShown(item.header and true or false)
+    row.stripe:SetShown(not item.header and index % 2 == 0)
 end
 
--- A simple list of text rows: items are { left, right, header, tooltip, onClick }.
+-- A simple list of text rows: items are { left, right, header, indent, tooltip, onClick }.
 function UI.TextList(parent)
-    return UI.List(parent, 18, UI.TextRow, UI.UpdateTextRow)
+    return UI.List(parent, 20, UI.TextRow, UI.UpdateTextRow)
 end
 
 -- A small text header line above a list.

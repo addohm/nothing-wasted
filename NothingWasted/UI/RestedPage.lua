@@ -6,8 +6,8 @@ local ROW_HEIGHT = 24
 
 ns.Window.AddPage({
     id = "rested",
-    group = "characters",
-    label = L["Rested XP"],
+    group = "rested",
+    label = L["Rested"],
     order = 1,
     build = function(panel)
         panel.list = ns.UI.List(panel, ROW_HEIGHT, ns.Bars.CreateRow, ns.Bars.UpdateRow)

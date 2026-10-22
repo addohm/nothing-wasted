@@ -81,13 +81,15 @@ button for the bars window.
 ### Full window
 
 - Opens only when you ask: `/nw`, the minimap button, or the bars window's title.
-- Laid out like the game's Settings: a sidebar of sections on the left, the chosen page on the right.
-  - **Characters:** Rested XP (the same bars), Who to play next, Cooldowns, Leveling pace, Spells to
-    train, Mount gold.
-  - **Professions:** Skills, Crafts.
-  - **Mail and items:** Item search, Mail, Bag space.
+- Tabs: Rested, Leveling, Cooldowns, Professions, Items and Legacy. Tabs with more than one view
+  show them as links under the tabs:
+  - **Leveling:** Who to play next, Pace, Spells to train, Mount gold.
+  - **Professions:** Skills, Crafts from your alts' items.
+  - **Items:** Search, Mail, Bag space.
   - **Legacy:** Goals, Choose goals, Account planner.
-  - **Options:** Alerts, Bars window, Tooltip, Minimap. Each has a Defaults button.
+- The gear button in the title bar opens the options: Alerts, Bars window, Tooltip and Minimap, each
+  with a Defaults button.
+- Each tab reopens the view you used last.
 
 ### Leveling
 

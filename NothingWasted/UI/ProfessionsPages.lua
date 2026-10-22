@@ -30,17 +30,18 @@ local function SkillItems()
                     note = "  |cff999999" .. format(L["%s at %d"], nextName, skill) .. "|r"
                 end
                 items[#items + 1] = {
-                    left = "   " .. (p.icon and ("|T" .. p.icon .. ":0|t ") or "") .. p.name .. note,
+                    indent = 1,
+                    left = (p.icon and ("|T" .. p.icon .. ":0|t ") or "") .. p.name .. note,
                     right = format("%d / %d", p.rank, p.max),
                 }
             end
             if trade.favor then
-                items[#items + 1] = { left = "   " .. (trade.favor.icon and ("|T" .. trade.favor.icon .. ":0|t ") or "") .. trade.favor.name, right = ns.FormatNumber(trade.favor.quantity) }
+                items[#items + 1] = { indent = 1, left = (trade.favor.icon and ("|T" .. trade.favor.icon .. ":0|t ") or "") .. trade.favor.name, right = ns.FormatNumber(trade.favor.quantity) }
             end
             for _, f in ipairs(ns.Data.tradeFactions) do
                 local rep = trade[f.key]
                 if rep then
-                    items[#items + 1] = { left = "   " .. rep.name, right = format("%s  %d / %d", rep.standing or "", rep.value, rep.max) }
+                    items[#items + 1] = { indent = 1, left = rep.name, right = format("%s  %d / %d", rep.standing or "", rep.value, rep.max) }
                 end
             end
         end
@@ -64,11 +65,12 @@ local function CraftItems()
                     items[#items + 1] = { left = ns.ColoredName(c), header = true }
                     header = true
                 end
-                items[#items + 1] = { left = "   " .. profession, header = true }
+                items[#items + 1] = { indent = 1, left = profession, header = true }
                 for i = 1, math.min(#crafts, CRAFTS_PER_PROFESSION) do
                     local r = ns.db.recipes[crafts[i].id]
                     items[#items + 1] = {
-                        left = "      " .. (r.icon and ("|T" .. r.icon .. ":0|t ") or "") .. (r.name or "?"),
+                        indent = 2,
+                        left = (r.icon and ("|T" .. r.icon .. ":0|t ") or "") .. (r.name or "?"),
                         right = format(L["can make %d"], crafts[i].n),
                         tooltip = function(tip)
                             tip:AddLine(r.name or "?")
@@ -89,17 +91,16 @@ local function CraftItems()
     return items
 end
 
-local function ListPage(id, label, order, source, title)
+local function ListPage(id, label, order, source)
     ns.Window.AddPage({
         id = id,
         group = "professions",
         label = label,
-        title = title,
         order = order,
         build = function(panel) panel.list = ns.UI.TextList(panel) end,
         refresh = function(panel) panel.list:SetItems(source()) end,
     })
 end
 
-ListPage("skills", L["Skills"], 1, SkillItems, L["Skills and trade reputation"])
-ListPage("crafts", L["Crafts"], 2, CraftItems, L["Crafts from your alts' items"])
+ListPage("skills", L["Skills"], 1, SkillItems)
+ListPage("crafts", L["Crafts from your alts' items"], 2, CraftItems)

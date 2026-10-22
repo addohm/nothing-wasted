@@ -37,7 +37,7 @@ local function GoalItems()
             any = true
             items[#items + 1] = { left = ns.ColoredName(e.c), header = true }
             for _, g in pairs(goals) do
-                items[#items + 1] = { left = "   " .. (g.name or "?"), right = Pct(g.q, g.req) }
+                items[#items + 1] = { indent = 1, left = g.name or "?", right = Pct(g.q, g.req) }
             end
         end
     end
@@ -94,7 +94,7 @@ local function PlannerItems()
             any = true
             items[#items + 1] = { left = cat.name, header = true, right = format(L["%d left"], #open) }
             for _, ch in ipairs(open) do
-                items[#items + 1] = { left = "   " .. ch.name, right = ch.points > 0 and format(L["%d pts"], ch.points) or "" }
+                items[#items + 1] = { indent = 1, left = ch.name, right = ch.points > 0 and format(L["%d pts"], ch.points) or "" }
             end
         end
     end

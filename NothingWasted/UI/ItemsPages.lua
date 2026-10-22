@@ -36,7 +36,7 @@ local function SearchItems(query)
                 tooltip = r.link and function(tip) tip:SetHyperlink(r.link) end or nil,
             }
             for _, h in ipairs(r.holders) do
-                items[#items + 1] = { left = "   " .. ns.ColoredName(h.c), right = Where(h) }
+                items[#items + 1] = { indent = 1, left = ns.ColoredName(h.c), right = Where(h) }
             end
         end
         if shown >= 30 then break end
@@ -66,7 +66,8 @@ local function MailItems()
                 local left = m.expiresAt and (m.expiresAt - now) or nil
                 local expiry = left and (left < 3 * 86400 and "|cffff4040" or "") .. format(L["expires in %s"], ns.FormatDuration(left)) .. "|r" or ""
                 items[#items + 1] = {
-                    left = format("   %s%s  |cff999999%s|r", m.sentAt and (L["(sent)"] .. " ") or "", m.sender or "?", table.concat(what, ", ")),
+                    indent = 1,
+                    left = format("%s%s  |cff999999%s|r", m.sentAt and (L["(sent)"] .. " ") or "", m.sender or "?", table.concat(what, ", ")),
                     right = expiry,
                     tooltip = function(tip)
                         tip:AddLine(m.subject ~= "" and m.subject or L["(no subject)"])
@@ -102,7 +103,7 @@ end
 ns.Window.AddPage({
     id = "search",
     group = "items",
-    label = L["Item search"],
+    label = L["Search"],
     order = 1,
     build = function(panel)
         local label = panel:CreateFontString(nil, "OVERLAY", "GameFontNormal")

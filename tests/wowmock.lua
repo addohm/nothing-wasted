@@ -90,6 +90,7 @@ function FontString:SetText(t)
     self.text = t
 end
 function FontString:GetText() return self.text end
+function FontString:GetStringWidth() return #(tostring(self.text or "")) * 7 end
 function FontString:SetJustifyH() end
 function FontString:SetTextColor(...) for _, v in ipairs({ ... }) do CheckValue("SetTextColor", v) end end
 function FontString:SetFontObject(f) self.font = f end

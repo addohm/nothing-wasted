@@ -82,19 +82,18 @@ local function Mount()
     return items, format(L["No characters close to level %d without a mount."], ns.Data.mount.level)
 end
 
-local function ListPage(id, label, order, source, title)
+local function ListPage(id, label, order, source)
     ns.Window.AddPage({
         id = id,
-        group = "characters",
+        group = "leveling",
         label = label,
-        title = title,
         order = order,
         build = function(panel) panel.list = ns.UI.TextList(panel) end,
         refresh = function(panel) panel.list:SetItems(source()) end,
     })
 end
 
-ListPage("whoplay", L["Who to play next"], 2, WhoToPlay)
-ListPage("pace", L["Leveling pace"], 4, Pace)
-ListPage("train", L["Spells to train"], 5, Train)
-ListPage("mount", L["Mount gold"], 6, Mount, format(L["Gold for the level %d mount"], ns.Data.mount.level))
+ListPage("whoplay", L["Who to play next"], 1, WhoToPlay)
+ListPage("pace", L["Pace"], 2, Pace)
+ListPage("train", L["Spells to train"], 3, Train)
+ListPage("mount", format(L["Gold for the level %d mount"], ns.Data.mount.level), 4, Mount)

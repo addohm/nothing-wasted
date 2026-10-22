@@ -366,11 +366,10 @@ return function(root)
         check(c.ns.Meter.IsShown(), "bars window open (logged in resting)")
         c:Slash("")
         check(c:Frame("NothingWastedFrame").shown, "/nw opens the full window")
-        local window = c:Frame("NothingWastedFrame")
         local expectRows = { rested = true, cooldowns = true, pace = true, train = true, skills = true,
             bags = true, goals = true, choose = true, planner = true, alerts = false }
         local ids = c.ns.Window.PageIDs()
-        check(#ids >= 18, "every page is in the sidebar")
+        check(#ids >= 18, "every page has a tab or view")
         for _, id in ipairs(ids) do
             c.ns.Window.Select(id)
             local panel = TabPanel(c)
@@ -390,7 +389,7 @@ return function(root)
             end
             local hasDefaults = false
             for _, f in ipairs(c.frames) do
-                if f.parent == window and f.kind == "Button" and f.text == "Defaults" and f.shown then
+                if f.kind == "Button" and f.text == "Defaults" and f:IsVisible() then
                     hasDefaults = true
                     f:Click()
                 end
@@ -402,12 +401,17 @@ return function(root)
         settings.alerts.earlyMinutes = 30
         c.ns.Window.Select("alerts")
         for _, f in ipairs(c.frames) do
-            if f.parent == window and f.text == "Defaults" then f:Click() end
+            if f.text == "Defaults" and f:IsVisible() then f:Click() end
         end
         eq(settings.alerts.earlyMinutes, 120, "Defaults resets the page's settings")
         -- Old page names still work.
         c.ns.Window.Select("options")
         eq(rawget(c.env, "NothingWastedDB").settings.window.tab, "alerts", "'options' opens the Alerts page")
+        -- A tab reopens the view used last.
+        c.ns.Window.Select("mail")
+        c.ns.Window.Select("rested")
+        c.ns.Window.Select("items")
+        eq(rawget(c.env, "NothingWastedDB").settings.window.tab, "mail", "a tab reopens its last view")
         c.ns.Glow.Pulse()
         c:Logout()
     end)

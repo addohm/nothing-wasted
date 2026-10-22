@@ -48,9 +48,9 @@ end
 
 ns.Window.AddPage({
     id = "cooldowns",
-    group = "characters",
+    group = "cooldowns",
     label = L["Cooldowns"],
-    order = 3,
+    order = 1,
     build = function(panel)
         panel.list = ns.UI.TextList(panel)
     end,
