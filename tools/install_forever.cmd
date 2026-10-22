@@ -63,5 +63,5 @@ set "RESULT=0"
 
 :done
 rem Keep the window open when started by double-click.
-echo %cmdcmdline% | find /i "%~nx0" >nul && pause
+echo %cmdcmdline% | find /i "%~nx0" >nul
 exit /b %RESULT%
