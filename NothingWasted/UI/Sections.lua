@@ -39,8 +39,9 @@ ns.Tooltip.AddSection({
         tip:AddLine(text, 1, 1, 1)
         local hours = ns.Leveling.HoursToMax(c)
         if hours then Line(tip, format(L["Level %d in"], ns.db.maxLevel or 60), format(L["about %s played"], ns.FormatDuration(hours * 3600))) end
-        if c.trainable and #c.trainable > 0 then
-            Line(tip, L["Spells to train"], tostring(#c.trainable))
+        local trainable = ns.Leveling.Trainable(c)
+        if #trainable > 0 then
+            Line(tip, L["Spells to train"], tostring(#trainable))
         end
     end,
 })

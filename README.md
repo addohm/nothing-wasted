@@ -99,7 +99,9 @@ button for the bars window.
 - **How far rested XP carries a character:** "rested takes Kyol to about 34.6."
 - **Leveling pace:** XP per hour online (the addon keeps its own count, no /played needed), and an
   estimate of when each alt reaches 60.
-- **Untrained spells:** "Kyol hit 24 and has spells to train."
+- **Untrained spells:** "Kyol hit 24 and has spells to train." Forever only lists untrained spells at
+  the trainer, so visit your class trainer once; after that the addon knows which spells unlock at
+  which level and counts them as you level.
 - **Mount gold:** gold saved toward the level-40 mount as an alt gets close.
 - **Hearthstone:** where each alt is bound and when its hearthstone is ready.
 

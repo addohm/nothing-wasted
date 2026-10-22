@@ -52,8 +52,8 @@ end
 local function Train()
     local items = {}
     for _, e in ipairs(Chars()) do
-        local names = e.c.trainable
-        if names and #names > 0 then
+        local names = ns.Leveling.Trainable(e.c)
+        if #names > 0 then
             items[#items + 1] = {
                 left = ns.ColoredName(e.c),
                 right = format(L["%d spell(s)"], #names),
@@ -64,7 +64,7 @@ local function Train()
             }
         end
     end
-    return items, L["No spells waiting at a trainer."]
+    return items, L["No spells waiting at a trainer. Visit your class trainer once so the addon knows what's coming."]
 end
 
 local function Mount()

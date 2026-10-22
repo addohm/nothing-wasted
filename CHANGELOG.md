@@ -51,6 +51,10 @@ All notable changes to this project are documented here. The format follows
 
 ### Fixed
 
+- "Spells to train" was wiped at every login: the addon looked for untrained spells in the
+  spellbook, where Forever doesn't list them. It now saves what the class trainer lists, including
+  spells for higher levels, and counts them as trainable once the character reaches their level.
+
 - Other characters were missing from the bars. The logout save could record empty XP data, which hid
   the character like a max-level one. Saves now keep the last good values, and every character gets
   a bar (only max level can be hidden). `/nw chars` lists the saved characters.

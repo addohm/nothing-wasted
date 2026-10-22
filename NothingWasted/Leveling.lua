@@ -102,39 +102,33 @@ end
 
 -- Spells to train --------------------------------------------------------------------------------
 
--- Counts spells in the spellbook the character could train now. Forever lists future spells in the
--- spellbook; if it doesn't, this finds none and the trainer visit fills it in instead.
-local function CountTrainable(c)
-    if not C_SpellBook or not C_SpellBook.GetNumSpellBookSkillLines then return end
-    local bank = Enum.SpellBookSpellBank.Player
-    local level = UnitLevel("player")
-    local names = {}
-    for line = 1, C_SpellBook.GetNumSpellBookSkillLines() do
-        local info = C_SpellBook.GetSpellBookSkillLineInfo(line)
-        if info and not info.offSpecID then
-            for slot = info.itemIndexOffset + 1, info.itemIndexOffset + info.numSpellBookItems do
-                local item = C_SpellBook.GetSpellBookItemInfo(slot, bank)
-                if item and item.itemType == Enum.SpellBookItemType.FutureSpell then
-                    local learnedAt = C_SpellBook.GetSpellBookItemLevelLearned(slot, bank)
-                    if learnedAt and learnedAt > 0 and learnedAt <= level then
-                        names[#names + 1] = item.name
-                    end
-                end
-            end
-        end
-    end
-    c.trainable = names
-end
-
--- At a class trainer the game says exactly what's available.
+-- Forever doesn't list untrained spells in the spellbook; only the trainer shows them. So a trainer
+-- visit saves every spell it lists that isn't learned yet, with the level it needs. Between visits,
+-- a saved spell counts as trainable once the character reaches its level.
 local function ReadTrainer(c)
     if IsTradeskillTrainer and IsTradeskillTrainer() then return end
-    local names = {}
+    local spells = {}
     for i = 1, GetNumTrainerServices() or 0 do
-        local name, kind = GetTrainerServiceInfo(i)
-        if kind == "available" and name then names[#names + 1] = name end
+        local name, kind, _, reqLevel = GetTrainerServiceInfo(i)
+        if name and (kind == "available" or kind == "unavailable") then
+            -- "unavailable" can also mean a missing earlier rank; those get a level of at least now+1.
+            local level = reqLevel or 0
+            if kind == "unavailable" and level <= (c.level or 0) then level = (c.level or 0) + 1 end
+            spells[#spells + 1] = { name = name, level = level }
+        end
     end
-    c.trainable = names
+    c.trainerSpells = spells
+    c.trainerAt = ns.Now()
+    c.trainable = nil -- from older builds
+end
+
+-- Names of the spells the character can train at its current level, from its last trainer visit.
+function Leveling.Trainable(c)
+    local names = {}
+    for _, s in ipairs(c.trainerSpells or {}) do
+        if s.level <= (c.level or 0) then names[#names + 1] = s.name end
+    end
+    return names
 end
 
 -- Cozy Sleeping Bag --------------------------------------------------------------------------------
@@ -168,10 +162,7 @@ end
 ns.On("NW_CHARACTER_SAVED", function(c, reason)
     AddOnlineTime(c)
     TrackXP(c)
-    if reason == "login" then
-        CountTrainable(c)
-        ReadSleepingBag(c)
-    end
+    if reason == "login" then ReadSleepingBag(c) end
 end)
 
 ns.On("NW_INIT", function()
@@ -182,26 +173,15 @@ ns.On("NW_INIT", function()
     ns.db.maxLevel = level or 60
 end)
 
-local pending
-local function TrainableSoon()
-    if pending then return end
-    pending = true
-    C_Timer.After(2, function()
-        pending = false
-        local c = ns.Me()
-        if c then CountTrainable(c) end
-    end)
-end
 ns.On("NW_LEVEL_UP", function(c, level)
-    TrainableSoon()
     C_Timer.After(3, function()
         local me = ns.Me()
-        if me and me.trainable and #me.trainable > 0 then
-            ns.Print(format(L["%s reached level %d and has %d spell(s) to train."], ns.ColoredName(me), level, #me.trainable))
+        local n = me and #Leveling.Trainable(me) or 0
+        if n > 0 then
+            ns.Print(format(L["%s reached level %d and has %d spell(s) to train."], ns.ColoredName(me), level, n))
         end
     end)
 end)
-ns.On("LEARNED_SPELL_IN_SKILL_LINE", TrainableSoon)
 ns.On("TRAINER_SHOW", function() local c = ns.Me() if c then ReadTrainer(c) end end)
 ns.On("TRAINER_UPDATE", function() local c = ns.Me() if c then ReadTrainer(c) end end)
 ns.On("QUEST_TURNED_IN", function()

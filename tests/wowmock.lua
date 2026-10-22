@@ -296,7 +296,6 @@ local DEFAULT_PLAYER = {
     legacyUnlocked = true,
     legacy = { unspent = 2, spent = 4, cap = 16 },
     achievements = {},  -- [id] = { completed, earnedByMe, q, req }
-    futureSpells = {},  -- { name, level }
 }
 
 function M.NewClient(opts)
@@ -407,7 +406,6 @@ function M.NewClient(opts)
     env.Enum = {
         BankType = { Character = 0, Account = 2 },
         SpellBookSpellBank = { Player = 0 },
-        SpellBookItemType = { Spell = 1, FutureSpell = 2 },
         TooltipDataType = { Item = 0 },
         TooltipDataLineType = { UsageRequirement = 4 },
     }
@@ -557,13 +555,9 @@ function M.NewClient(opts)
     }
     env.C_SpellBook = {
         IsSpellKnown = function(id) return player.spells[id] or false end,
-        GetNumSpellBookSkillLines = function() return 1 end,
-        GetSpellBookSkillLineInfo = function() return { itemIndexOffset = 0, numSpellBookItems = #player.futureSpells } end,
-        GetSpellBookItemInfo = function(slot) local s = player.futureSpells[slot] return { itemType = 2, name = s.name } end,
-        GetSpellBookItemLevelLearned = function(slot) return player.futureSpells[slot].level end,
     }
     env.GetNumTrainerServices = function() return #client.trainer end
-    env.GetTrainerServiceInfo = function(i) local s = client.trainer[i] return s.name, s.kind end
+    env.GetTrainerServiceInfo = function(i) local s = client.trainer[i] return s.name, s.kind, 1, s.level end
     env.IsTradeskillTrainer = function() return false end
 
     -- Items, bags, bank

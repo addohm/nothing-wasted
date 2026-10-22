@@ -367,14 +367,27 @@ return function(root)
             root = root, db = db3, now = T0 + 70 * DAY,
             player = {
                 name = "Kyol", level = 24, xpMax = 12000, rested = 500, resting = true, money = 425000,
-                futureSpells = { { name = "Frostbolt", level = 24 }, { name = "Blizzard", level = 26 } },
                 professions = { { name = "Tailoring", rank = 150, max = 150, skillLine = 197 }, { name = "Cooking", rank = 40, max = 75, skillLine = 185 } },
                 quests = { [79008] = true, [79192] = true },
             },
         })
         c:Login()
         local kyol = rawget(c.env, "NothingWastedDB").chars["Kyol-Forever"]
-        eq(kyol.trainable and #kyol.trainable, 1, "one spell to train at level 24")
+        -- Untrained spells come from the trainer, not the spellbook.
+        eq(#c.ns.Leveling.Trainable(kyol), 0, "nothing known before a trainer visit")
+        c.trainer = {
+            { name = "Frostbolt", kind = "available", level = 24 },
+            { name = "Blizzard", kind = "unavailable", level = 26 },
+            { name = "Arcane Intellect", kind = "used", level = 14 },
+        }
+        c:Fire("TRAINER_SHOW")
+        eq(#c.ns.Leveling.Trainable(kyol), 1, "one spell to train at level 24")
+        c.player.level = 26
+        c:Fire("PLAYER_LEVEL_UP", 26)
+        c:Advance(1) -- the save notices the new level
+        c:Advance(4) -- then the level-up message
+        eq(#c.ns.Leveling.Trainable(kyol), 2, "reaching level 26 adds the spell the trainer listed for it")
+        check(c:ChatHas("reached level 26 and has 2 spell"), "level-up says how many spells to train")
         eq(kyol.sleepingBag and kyol.sleepingBag.done, 2, "sleeping bag chain progress")
         check(kyol.trade and kyol.trade.commerce, "trade reputation read")
         check(c.ns.Meter.IsShown(), "bars window open (logged in resting)")

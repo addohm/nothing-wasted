@@ -25,13 +25,10 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
   writing the file.
 - **Logout values:** whether the game still reports XP, rested XP and the zone at logout. The addon
   keeps the last good snapshot if it doesn't, which can make an alt's estimate start a little early.
-
 - **Rested rate away from inns:** the addon uses a quarter of the inn rate (the Classic rule).
 - **Well Rested:** whether +4% per rank multiplies the cap (rank 5: 180%) or adds to it (170%). The
   addon multiplies.
 - **Interface number:** 16001, taken from the old reference addon.
-- **Future spells:** whether Forever lists untrained spells in the spellbook. If not, "spells to
-  train" only updates at a trainer.
 - **Cozy Sleeping Bag:** which of quests 79007 and 79008 is Alliance or Horde (either counts), and
   whether lying in the bag counts as resting at logout.
 - **Campfires:** whether logging out at a campfire counts as resting.
@@ -39,6 +36,10 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
 - **Recipe tooltips:** that recipe items show the "Requires <profession> (<skill>)" line the addon
   reads, and that recipe names match the item name after "Pattern:", "Recipe:" and so on.
 - **Recipe list:** `C_TradeSkillUI.GetFilteredRecipeIDs` is used by Blizzard's UI but undocumented.
+
+## Confirmed in game
+
+- Untrained spells don't show in the spellbook, only at the trainer (2026-10-22).
 
 ## Ideas
 
