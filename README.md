@@ -61,6 +61,12 @@ button for the bars window.
 - **Cooldowns ready** and **mail about to expire** use the same alert system.
 - **Logout warning:** a chat line if you log out somewhere that isn't resting, where rested XP builds
   at a quarter of the rate.
+- **Leveling buffs** (below max level), as chat lines once after login and again when a buff wears off:
+  - "Not Well Fed": cooked food's Well Fed gives +5% XP from kills.
+  - "Your Cozy Sleeping Bag is ready": resting in it gives up to +3% XP. Not shown in inns and
+    cities, where the bag can't be used.
+  - At logout, if the bag is ready and you don't have its buff: rest in it first to carry the buff
+    into your next session.
 - You pick the alert sound. The default is the raid warning sound.
 
 ### Bars window

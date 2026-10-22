@@ -20,6 +20,8 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
 - **Interface number:** 16001, taken from the old reference addon.
 - **Cozy Sleeping Bag:** which of quests 79007 and 79008 is Alliance or Horde (either counts).
 - **Campfires:** whether logging out at a campfire counts as resting.
+- **Leveling buffs:** that eating cooked food puts Well Fed XP Boost (spell 1243969) on the player,
+  and that the sleeping bag's buff is Well-Rested (429959). Wowhead lists both; not yet seen in game.
 - **Recipe tooltips:** that recipe items show the "Requires <profession> (<skill>)" line the addon
   reads, and that recipe names match the item name after "Pattern:", "Recipe:" and so on.
 - **Recipe list:** `C_TradeSkillUI.GetFilteredRecipeIDs` is used by Blizzard's UI but undocumented.

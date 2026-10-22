@@ -17,6 +17,9 @@ local DEFAULT_SETTINGS = {
         mail = true,          -- warn before mail expires
         mailDays = 3,
         logout = true,        -- chat line when logging out somewhere that isn't resting
+        wellFed = true,       -- remind when the Well Fed XP buff is missing (below max level)
+        bagBuff = true,       -- remind when the sleeping bag is ready and its buff is missing
+        bagLogout = true,     -- remind at logout to use a ready sleeping bag first
         glow = true,          -- red screen-edge glow on the rested cap alert
         sound = "RAID_WARNING",
     },

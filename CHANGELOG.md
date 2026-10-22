@@ -18,6 +18,9 @@ All notable changes to this project are documented here. The format follows
   recipe tooltips, crafts from your alts' items, Merchant's Favor and trade reputations; mail sent to
   alts, expiring mail, bags, bank and item search; Legacy goals and an account planner; a minimap
   button and the addon menu entry; `/nw`.
+- Leveling buff reminders below max level: a missing Well Fed XP Boost (+5% kill XP) and an unused,
+  ready Cozy Sleeping Bag (up to +3% XP), once after login and when the buff wears off; and at
+  logout, a reminder to rest in a ready sleeping bag first. Each can be turned off.
 - Headless tests under Lua 5.1 with a strict fake WoW client.
 - Packaging for CurseForge and Wago (`.pkgmeta`), with translations from contributors.
 - `tools/install_forever.cmd`: pulls the repo and installs the addon into the Forever client on

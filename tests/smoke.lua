@@ -134,6 +134,57 @@ return function(root)
         check(b:ChatHas("Gamma%-Forever.-no XP data yet"), "and says why a bar is empty")
     end)
 
+    test("1c. leveling buff reminders", function()
+        local c = mock.NewClient({ root = root, player = {
+            name = "Buffy", level = 20, xp = 0, xpMax = 10000, resting = true, items = { [211527] = 1 },
+        } })
+        c:Login()
+        c:Advance(11)
+        check(c:ChatHas("Not Well Fed"), "missing Well Fed mentioned after login")
+        check(not c:ChatHas("Sleeping Bag is ready"), "no bag reminder while in an inn (it can't be used there)")
+        c:ClearChat()
+        c.player.resting = false
+        c:Fire("PLAYER_UPDATE_RESTING")
+        c:Advance(2)
+        check(c:ChatHas("Sleeping Bag is ready: rest in it for"), "bag reminder once out of the inn")
+        check(not c:ChatHas("Not Well Fed"), "Well Fed isn't repeated without a change")
+
+        -- Eat, then let it wear off.
+        c:ClearChat()
+        c.player.auras[1243969] = 99999
+        c.player.auras[429959] = 99999
+        c:Fire("UNIT_AURA", "player")
+        c:Advance(2)
+        check(not c:ChatHas("Not Well Fed") and not c:ChatHas("Sleeping Bag"), "quiet while buffed")
+        c.player.auras[1243969] = nil
+        c:Fire("UNIT_AURA", "player")
+        c:Advance(2)
+        check(c:ChatHas("Not Well Fed"), "reminder when Well Fed wears off")
+        c:ClearChat()
+        c:Fire("UNIT_AURA", "player")
+        c:Advance(2)
+        check(not c:ChatHas("Not Well Fed"), "only once per drop")
+
+        -- Logging out with a ready bag and no bag buff.
+        c.player.auras[429959] = nil
+        c:Fire("UNIT_AURA", "player")
+        c:Advance(2)
+        c:ClearChat()
+        c:Fire("PLAYER_CAMPING")
+        check(c:ChatHas("before logging out"), "logout reminder for a ready sleeping bag")
+        c:ClearChat()
+        c.player.itemCooldowns[211527] = { c.env.GetTime(), 3600 }
+        c:Fire("PLAYER_CAMPING")
+        check(not c:ChatHas("before logging out"), "no logout reminder while the bag is on cooldown")
+
+        -- Max level: none of it.
+        local m = mock.NewClient({ root = root, player = { name = "Maxi", level = 60, xpMax = 0, items = { [211527] = 1 } } })
+        m:Login()
+        m:Advance(11)
+        m:Fire("PLAYER_CAMPING")
+        check(not m:ChatHas("Well Fed") and not m:ChatHas("Sleeping Bag"), "no buff reminders at max level")
+    end)
+
     test("2. rested estimates, alerts and the logout warning", function()
         local db = mock.Copy(db1)
         local now = T0 + 2 * HOUR

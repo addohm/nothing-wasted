@@ -32,6 +32,7 @@ Professions.lua
 Inventory.lua
 Mail.lua
 Leveling.lua
+Buffs.lua
 Alerts.lua
 
 UI\Sections.lua

@@ -40,9 +40,13 @@ Data.cooldowns = {
 -- confirmed, so either counts).
 Data.sleepingBag = {
     itemID = 211527,
+    buffSpellID = 429959, -- Well-Rested: +1% XP per stack, up to 3, for 2 hours
     level = 14,
     chain = { { 79007, 79008 }, { 79192 }, { 79980 }, { 79974 }, { 79975 }, { 79976 } },
 }
+
+-- Cooked food's Well Fed also applies Well Fed XP Boost: +5% XP from kills for 15 minutes.
+Data.wellFedXPSpellID = 1243969
 
 -- First mount: level 40, 100g in total (confirmed in game, 2026-10-22).
 Data.mount = { level = 40, cost = 100 * 10000 }
