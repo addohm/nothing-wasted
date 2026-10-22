@@ -78,6 +78,8 @@ button for the bars window.
   city and hides when you leave.
 - One bar per character with its name and time to cap, running from 0 to that character's rested cap,
   soonest to cap at the top. Shows up to 10 bars by default (5 to 40 in the options).
+- The bar text can show, instead of time to cap: the rested XP amount, rested XP as a % of a level or
+  of the cap, or the level the rested XP takes the character to (Options → Bars window → Bar shows).
 - Drag the title to move it (or lock it in the options). Click the title to open the full window.
 - `/nw bars`, or shift-click the minimap button, shows it anywhere. A bars window you open yourself
   stays open when you leave; an option makes it hide too.

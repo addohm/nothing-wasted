@@ -28,6 +28,8 @@ function Bars.Items()
                 idle = idle,
                 fraction = cap > 0 and rested / cap or 0,
                 toCap = toCap,
+                rested = rested,
+                cap = cap,
             }
         end
     end
@@ -75,6 +77,30 @@ function Bars.CreateRow(parent, font)
     return row
 end
 
+-- What the right-hand text of a bar can show (settings.meter.text), in the order offered.
+Bars.TEXT_CHOICES = {
+    { "toCap", L["Time to cap"] },
+    { "rested", L["Rested XP"] },
+    { "levelPct", L["Rested % of a level"] },
+    { "capPct", L["Rested % of the cap"] },
+    { "carries", L["Level rested XP reaches"] },
+}
+
+local function ValueText(item, mode)
+    local c = item.c
+    if mode == "rested" then
+        return ns.FormatNumber(item.rested)
+    elseif mode == "levelPct" then
+        return format("%d%%", math.floor(item.rested / c.xpMax * 100 + 0.5))
+    elseif mode == "capPct" then
+        return format("%d%%", math.floor(item.fraction * 100 + 0.5))
+    elseif mode == "carries" then
+        local level = ns.Leveling.RestedCarriesTo(c, ns.Now())
+        return level and format(L["to %.1f"], level) or ""
+    end
+    return ns.FormatDuration(item.toCap)
+end
+
 function Bars.UpdateRow(row, item)
     local c = item.c
     row.name:SetText(ns.ColoredName(c) .. (item.isMe and (" |cff999999" .. L["(you)"] .. "|r") or ""))
@@ -89,12 +115,16 @@ function Bars.UpdateRow(row, item)
         else
             row.time:SetText(L["log in to update"])
         end
-    elseif item.toCap <= 0 then
-        color = COLOR_CAPPED
-        row.time:SetText("|cffff4040" .. L["At cap!"] .. "|r")
     else
-        color = COLOR_FILLING
-        row.time:SetText(ns.FormatDuration(item.toCap))
+        local mode = ns.db.settings.meter.text
+        if item.toCap <= 0 then
+            color = COLOR_CAPPED
+            -- At the cap, time to cap becomes "At cap!"; the other values just turn red.
+            row.time:SetText("|cffff4040" .. (mode == "toCap" and L["At cap!"] or ValueText(item, mode)) .. "|r")
+        else
+            color = COLOR_FILLING
+            row.time:SetText(ValueText(item, mode))
+        end
     end
     row.bar:SetStatusBarColor(color[1], color[2], color[3])
 end

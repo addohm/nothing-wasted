@@ -46,6 +46,7 @@ local DEFAULT_SETTINGS = {
     meter = {
         maxBars = 10,         -- bars shown in the small bars window
         locked = false,       -- stop the bars window from being dragged
+        text = "toCap",       -- what a bar's right-hand text shows (see Bars.TEXT_CHOICES)
     },
     window = { tab = "rested" },
     minimap = { angle = 200, hide = false },

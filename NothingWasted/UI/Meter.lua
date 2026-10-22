@@ -76,7 +76,7 @@ local function Build()
     titleBg:SetColorTexture(0.1, 0.1, 0.15, 0.9)
     local text = title:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
     text:SetPoint("LEFT", 6, 0)
-    text:SetText(L["Rested XP"])
+    text:SetText("Nothing Wasted")
     title:SetScript("OnClick", function() ns.Window.Show("rested") end)
     title:SetScript("OnDragStart", function()
         if not ns.db.settings.meter.locked then frame:StartMoving() end

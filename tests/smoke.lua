@@ -332,6 +332,28 @@ return function(root)
         c:Fire("PLAYER_UPDATE_RESTING")
         check(frame.shown, "a bars window opened by hand stays open when leaving")
 
+        -- What the bar text shows is up to the player.
+        local settings = rawget(c.env, "NothingWastedDB").settings
+        local function KyolText()
+            for i, t in ipairs(RowTexts(c, frame)) do
+                if t:find("Kyol") then return c:Rows(frame)[i].time.text end
+            end
+        end
+        check(KyolText():find("%dd %d+h"), "time to cap by default")
+        settings.meter.text = "rested"
+        c.ns.Meter.Refresh()
+        eq(KyolText(), "2,000", "rested XP amount")
+        settings.meter.text = "levelPct"
+        c.ns.Meter.Refresh()
+        eq(KyolText(), "20%", "rested % of a level")
+        settings.meter.text = "capPct"
+        c.ns.Meter.Refresh()
+        eq(KyolText(), "11%", "rested % of the cap (rank 5 cap of 18,000)")
+        settings.meter.text = "carries"
+        c.ns.Meter.Refresh()
+        eq(KyolText(), "to 20.5", "level rested XP reaches")
+        settings.meter.text = "toCap"
+
         -- The bar count limit.
         rawget(c.env, "NothingWastedDB").settings.meter.maxBars = 1
         c.ns.Meter.Refresh()
