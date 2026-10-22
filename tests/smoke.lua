@@ -87,6 +87,35 @@ return function(root)
         db1 = c:Logout()
     end)
 
+    test("1b. every character that logged in gets a bar", function()
+        local a = mock.NewClient({ root = root, player = { name = "Alpha", level = 10, xp = 200, xpMax = 5000, rested = 100, resting = true } })
+        a:Login()
+        -- While leaving the world the game may report no XP data; the good snapshot must survive.
+        a.player.xpMax, a.player.xp, a.player.rested, a.player.zone = 0, 0, 0, ""
+        local db = a:Logout()
+        local alpha = db.chars["Alpha-Forever"]
+        eq(alpha.xpMax, 5000, "logout with no XP data keeps the last good max XP")
+        eq(alpha.rested, 100, "and the rested XP")
+        eq(alpha.zone, "Elwynn Forest", "and the zone")
+
+        local b = mock.NewClient({ root = root, db = db, now = T0 + HOUR, player = { name = "Beta", level = 12, xp = 0, xpMax = 6000, resting = true } })
+        b:Login()
+        local texts = RowTexts(b, b.ns.Meter.Frame())
+        eq(#texts, 2, "both characters have a bar")
+        local hasAlpha = false
+        for _, t in ipairs(texts) do if t:find("Alpha") then hasAlpha = true end end
+        check(hasAlpha, "the other character is listed")
+
+        -- A character with no XP data at all still gets a bar.
+        rawget(b.env, "NothingWastedDB").chars["Gamma-Forever"] = { name = "Gamma", realm = "Forever", level = 5 }
+        b.ns.Meter.Refresh()
+        eq(#b:Rows(b.ns.Meter.Frame()), 3, "a character without XP data still gets a bar")
+        b:ClearChat()
+        b:Slash("chars")
+        check(b:ChatHas("3 saved character"), "/nw chars lists them")
+        check(b:ChatHas("Gamma%-Forever.-no XP data yet"), "and says why a bar is empty")
+    end)
+
     test("2. rested estimates, alerts and the logout warning", function()
         local db = mock.Copy(db1)
         local now = T0 + 2 * HOUR

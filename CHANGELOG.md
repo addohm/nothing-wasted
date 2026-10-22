@@ -36,6 +36,12 @@ All notable changes to this project are documented here. The format follows
 - Window design: one window with tabs. The Rested tab shows bars with name and time to cap, plus
   tooltips.
 
+### Fixed
+
+- Other characters were missing from the bars. The logout save could record empty XP data, which hid
+  the character like a max-level one. Saves now keep the last good values, and every character gets
+  a bar (only max level can be hidden). `/nw chars` lists the saved characters.
+
 ### Removed
 
 - The RestedAlts 0.1.0 draft (`RestedAlts/`), to plan the project before writing code. It was never

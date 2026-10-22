@@ -104,7 +104,8 @@ ns.Tooltip.AddSection({
         local where = c.zone or "?"
         if c.subzone and c.subzone ~= "" and c.subzone ~= c.zone then where = c.subzone .. ", " .. where end
         Line(tip, isMe and L["Location"] or L["Logged out in"], where)
-        if not isMe and c.savedAt then Line(tip, L["Last played"], format(L["%s ago"], ns.FormatDuration(now - c.savedAt))) end
+        local seen = c.seenAt or c.savedAt
+        if not isMe and seen then Line(tip, L["Last played"], format(L["%s ago"], ns.FormatDuration(now - seen))) end
     end,
 })
 

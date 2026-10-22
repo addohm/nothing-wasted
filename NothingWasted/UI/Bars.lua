@@ -11,14 +11,15 @@ local COLOR_FILLING = { 0.25, 0.5, 1 }
 local COLOR_CAPPED = { 0.85, 0.15, 0.15 }
 local COLOR_IDLE = { 0.4, 0.4, 0.4 }
 
--- The characters to show, capped first, then soonest to cap, then those that can't rest.
+-- Every saved character, capped first, then soonest to cap, then those that can't rest. Only
+-- max-level characters can be hidden (by the option); everyone else always gets a bar.
 function Bars.Items()
     local now, me = ns.Now(), ns.PlayerKey()
     local showMax = ns.db.settings.bars.showMax
     local items = {}
     for key, c in pairs(ns.db.chars) do
         local idle = ns.Rested.IsIdle(c)
-        if not (idle and not showMax) then
+        if showMax or not c.isMax then
             local rested, cap, toCap = ns.Rested.Estimate(c, now)
             items[#items + 1] = {
                 key = key,
@@ -81,7 +82,13 @@ function Bars.UpdateRow(row, item)
     local color
     if item.idle then
         color = COLOR_IDLE
-        row.time:SetText(c.isMax and L["Max level"] or "")
+        if c.isMax then
+            row.time:SetText(L["Max level"])
+        elseif c.xpDisabled then
+            row.time:SetText(L["XP turned off"])
+        else
+            row.time:SetText(L["log in to update"])
+        end
     elseif item.toCap <= 0 then
         color = COLOR_CAPPED
         row.time:SetText("|cffff4040" .. L["At cap!"] .. "|r")

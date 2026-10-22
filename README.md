@@ -24,6 +24,7 @@ Copy the `NothingWasted` folder into your client's `Interface/AddOns` folder (fo
 | `/nw options` | Open the options |
 | `/nw minimap` | Show or hide the minimap button |
 | `/nw reset` | Forget every character (asks first) |
+| `/nw chars` | List every saved character and what its bar shows |
 | `/nw perks` | List the Legacy perk nodes, to check perk spell IDs |
 
 `/nothingwasted` works too, in case another addon uses `/nw`. The minimap button and the game's
@@ -71,7 +72,8 @@ button for the bars window.
 - Drag the title to move it (or lock it in the options). Click the title to open the full window.
 - `/nw bars`, or shift-click the minimap button, shows it anywhere. A bars window you open yourself
   stays open when you leave; an option makes it hide too.
-- Max-level characters can be shown or hidden.
+- Every character you've logged into gets a bar. Max-level characters can be shown or hidden;
+  a character without XP data yet shows "log in to update".
 - Hover a bar for the details: time left to cap, level, professions and skill levels, gold, where the
   character logged out, Legacy goal progress, and more. You choose which details show.
 - Right-click a bar to forget that character.
