@@ -301,6 +301,20 @@ return function(root)
             player = { name = "Rater", level = 27, xp = 19455, xpMax = 38900, rested = saved.rested + 1945, resting = true } })
         d:Login()
         local sample = rawget(d.env, "NothingWastedDB").rateSamples[1]
+
+        -- A character whose rested XP stays at 0 (the game reports none, e.g. at a level cap) isn't sampled.
+        local zeroDb = d:Logout()
+        zeroDb.chars["Rater-Forever"].rested = 0
+        local before = #zeroDb.rateSamples
+        local z = mock.NewClient({ root = root, db = zeroDb, now = d.now + 2 * HOUR,
+            player = { name = "Rater", level = 27, xp = 19455, xpMax = 38900, rested = 0, resting = true } })
+        z:Login()
+        eq(#rawget(z.env, "NothingWastedDB").rateSamples, before, "no sample when rested XP stays at 0")
+        local oldDb = z:Logout()
+        table.insert(oldDb.rateSamples, 1, { name = "Kampf", gain = 0, expectedGain = 546, away = 5520, rate = 0, expectedRate = 6 })
+        local o = mock.NewClient({ root = root, db = oldDb, now = z.now + HOUR, player = { name = "Rater", level = 27, xpMax = 38900 } })
+        o:Login()
+        eq(#rawget(o.env, "NothingWastedDB").rateSamples, before, "a saved check with no gain is dropped")
         check(sample ~= nil, "a login check is recorded")
         near(sample and sample.rate, 5.0, 0.01, "measured 5% per 8h")
         near(sample and sample.expectedRate, 5.0, 0.01, "against an expected 5%")

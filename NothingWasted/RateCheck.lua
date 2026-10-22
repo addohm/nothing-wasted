@@ -46,6 +46,9 @@ local function Sample(c, now)
     if away < MIN_SAMPLE or live.level ~= c.level or live.xpMax ~= c.xpMax then return end
     local estimate, cap = ns.Rested.Estimate(c, now)
     if estimate >= cap or live.rested >= cap then return end
+    -- No rested XP before or after: the game isn't reporting any (for example a character at the
+    -- beta's level cap), so there's nothing to measure.
+    if (c.rested or 0) == 0 and live.rested == 0 then return end
     local gain = live.rested - (c.rested or 0)
     local samples = ns.db.rateSamples or {}
     ns.db.rateSamples = samples
@@ -57,6 +60,16 @@ local function Sample(c, now)
     })
     while #samples > KEEP_SAMPLES do table.remove(samples) end
 end
+
+-- Older builds also saved checks for characters the game reports no rested XP for; a real logout of
+-- half an hour or more always gains something, so checks with no gain are dropped.
+ns.On("NW_INIT", function()
+    local samples = ns.db.rateSamples
+    if not samples then return end
+    for i = #samples, 1, -1 do
+        if (samples[i].gain or 0) == 0 then table.remove(samples, i) end
+    end
+end)
 
 ns.On("PLAYER_ENTERING_WORLD", function(isInitialLogin)
     if not isInitialLogin or not ns.db then return end

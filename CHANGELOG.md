@@ -23,7 +23,8 @@ All notable changes to this project are documented here. The format follows
   logout, a reminder to rest in a ready sleeping bag first. Each can be turned off.
 - `/nw rate`: measures the rested XP rate in game (a mark, then the rate since it, across a logout
   too) next to the expected rate, and lists automatic checks of the estimate made at each login.
-  It shows the mark's clock time and rested value.
+  It shows the mark's clock time and rested value. Login checks skip characters the game reports no
+  rested XP for (such as one at the beta's level cap).
 - Leveling buff reminders now come when you leave an inn or city, and when a buff wears off out in
   the world, instead of at login. `/nw buffs` shows what they see (Well Fed, where the sleeping bag
   is, its cooldown and buff). A sleeping bag that's a toy counts as carried; one in the bank doesn't.
