@@ -54,10 +54,6 @@ All notable changes to this project are documented here. The format follows
 
 ### Fixed
 
-- The character being played no longer gains estimated rested XP while logged in. Forever only builds
-  rested XP while a character is logged out (confirmed in game), so its bar holds the live value and
-  its time to cap means "if you log out here now".
-
 - Other characters' tooltips only showed professions for the character being played. The logout save
   re-read professions, bags and cooldowns while the game reported none, wiping them. They're now read
   at login and as they change during play, not at logout, and an empty logout reading can't lower

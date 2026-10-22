@@ -1,6 +1,6 @@
 -- Nothing Wasted: rested XP estimates.
 --
--- A character builds rested XP only while logged out, from the moment it logged out:
+-- A character that isn't being played keeps building rested XP from the moment it logged out:
 -- 5% of a level per 8 hours when it logged out resting (inn or city), a quarter of that anywhere
 -- else, up to a cap of 1.5 levels. Each rank of the Legacy perk Well Rested raises the rate and the
 -- cap by 4% (values in Data.lua).
@@ -27,20 +27,14 @@ end
 
 -- Estimated rested XP for a saved character at time `now`.
 -- Returns rested, cap, secondsToCap and the time the cap is (or was) reached.
---
--- Rested XP only builds while a character is logged out (confirmed in game: nothing builds while
--- logged in, even in an inn). So the character being played keeps its live value, and its time to
--- cap means "if you log out here now".
 function Rested.Estimate(c, now)
     if Rested.IsIdle(c) then return 0, 0, 0, nil end
     local rate, capLevels = Rested.Rules(c.wellRested, c.resting)
     local perSecond = c.xpMax * rate
     local cap = c.xpMax * capLevels
     local start = math.min(c.rested or 0, cap)
-    local from = c.savedAt or now
-    if ns.db and c == ns.db.chars[ns.PlayerKey()] then from = now end
-    local cappedAt = from + (cap - start) / perSecond
-    local elapsed = math.max(0, now - from)
+    local cappedAt = (c.savedAt or now) + (cap - start) / perSecond
+    local elapsed = math.max(0, now - (c.savedAt or now))
     local rested = math.min(cap, start + perSecond * elapsed)
     return rested, cap, math.max(0, cappedAt - now), cappedAt
 end
