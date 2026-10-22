@@ -49,18 +49,19 @@ local function Pace()
     return items, L["No characters below max level yet."]
 end
 
+local trainOpen = {} -- characters collapsed on Spells to train (all open at first)
+
 local function Train()
     local items = {}
     for _, e in ipairs(Chars()) do
         local spells, total = ns.Leveling.Trainable(e.c)
         if #spells > 0 then
             -- The character, with the total cost; then each spell with its rank and price.
-            items[#items + 1] = {
-                header = true,
-                left = ns.ColoredName(e.c) .. "  |cff999999" .. format(L["%d spell(s)"], #spells) .. "|r",
-                right = total > 0 and ns.FormatMoney(total) or "",
-            }
-            for _, sp in ipairs(spells) do
+            local key = e.key
+            items[#items + 1] = ns.UI.CollapsibleHeader(trainOpen, key,
+                ns.ColoredName(e.c) .. "  |cff999999" .. format(L["%d spell(s)"], #spells) .. "|r",
+                total > 0 and ns.FormatMoney(total) or "", true)
+            for _, sp in ipairs(ns.UI.IsOpen(trainOpen, key, true) and spells or {}) do
                 items[#items + 1] = {
                     indent = 1,
                     left = sp.name .. (sp.rank and ("  |cff999999" .. sp.rank .. "|r") or ""),

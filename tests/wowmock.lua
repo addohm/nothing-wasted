@@ -396,6 +396,7 @@ function M.NewClient(opts)
     env.SOUNDKIT = { RAID_WARNING = 8959, READY_CHECK = 8960, RAID_BOSS_EMOTE_WARNING = 12197,
         UI_RAID_BOSS_WHISPER_WARNING = 37666, ALARM_CLOCK_WARNING_3 = 12889, TELL_MESSAGE = 3081, MAP_PING = 3175 }
     env.PlaySound = function(id) client.sounds[#client.sounds + 1] = id end
+    env.PlaySoundFile = function(id) client.sounds[#client.sounds + 1] = "file:" .. tostring(id) end
     env.GetLocale = function() return opts.locale or "enUS" end
     for i = 1, 8 do env["FACTION_STANDING_LABEL" .. i] = "Standing" .. i end
     env.ATTACHMENTS_MAX_SEND, env.ATTACHMENTS_MAX_RECEIVE = 12, 16

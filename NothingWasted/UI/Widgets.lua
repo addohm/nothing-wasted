@@ -203,6 +203,27 @@ function UI.OptionSelect(parent, label, values, get, set)
     return row
 end
 
+-- A text box; the value is saved when you press Enter or click away.
+function UI.OptionEdit(parent, label, get, set)
+    local row = OptionRow(parent, label)
+    local box = CreateFrame("EditBox", nil, row, "InputBoxTemplate")
+    box:SetSize(164, 22)
+    box:SetPoint("LEFT", CONTROL_X + 36, 0)
+    box:SetAutoFocus(false)
+    local function Save(self)
+        set(self:GetText() or "")
+        self:ClearFocus()
+    end
+    box:SetScript("OnEnterPressed", Save)
+    box:HookScript("OnEditFocusLost", function(self) set(self:GetText() or "") end)
+    box:SetScript("OnEscapePressed", function(self) self:ClearFocus() end)
+    row.box = box
+    row.Sync = function()
+        if not box:HasFocus() then box:SetText(get() or "") end
+    end
+    return row
+end
+
 function UI.OptionButton(parent, label, buttonText, onClick)
     local row = OptionRow(parent, label)
     local b = CreateFrame("Button", nil, row, "UIPanelButtonTemplate")

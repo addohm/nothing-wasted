@@ -45,7 +45,7 @@ local function Remind(messages)
     if #messages == 0 then return end
     for _, msg in ipairs(messages) do ns.Print(YELLOW .. msg .. "|r") end
     local settings = ns.db.settings.alerts
-    if settings.buffSound then ns.Alerts.PlaySound() end
+    if settings.buffSound then ns.Alerts.PlaySound("buff") end
     if settings.buffGlow then ns.Glow.Pulse() end
 end
 

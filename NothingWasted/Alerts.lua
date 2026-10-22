@@ -11,8 +11,33 @@ ns.Alerts = Alerts
 
 local SCAN_SECONDS = 10
 
-function Alerts.PlaySound()
-    local name = ns.db.settings.alerts.sound
+-- Plays a custom sound: a sound kit ID ("12345", as on Wowhead's sound pages) or a sound file ID
+-- ("file:12345"). Returns false if the text isn't a usable ID.
+function Alerts.PlayCustom(text)
+    text = (text or ""):gsub("%s", "")
+    local file = text:match("^file:(%d+)$")
+    if file then
+        if not PlaySoundFile then return false end
+        PlaySoundFile(tonumber(file), "Master")
+        return true
+    end
+    local kit = tonumber(text:match("^kit:(%d+)$") or text:match("^(%d+)$"))
+    if not kit then return false end
+    PlaySound(kit, "Master")
+    return true
+end
+
+-- kind "buff" plays the buff reminders' sound, which can be its own or the same as the alerts'.
+function Alerts.PlaySound(kind)
+    local s = ns.db.settings.alerts
+    local name, custom = s.sound, s.customSound
+    if kind == "buff" and s.buffSoundName ~= "SAME" then
+        name, custom = s.buffSoundName, s.buffCustomSound
+    end
+    if name == "CUSTOM" then
+        if Alerts.PlayCustom(custom) then return end
+        name = "RAID_WARNING" -- no usable ID yet
+    end
     local id = SOUNDKIT[name] or SOUNDKIT.RAID_WARNING
     if id then PlaySound(id, "Master") end
 end

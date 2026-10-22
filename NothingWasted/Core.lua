@@ -25,6 +25,9 @@ local DEFAULT_SETTINGS = {
         mailLogin = true,     -- at login, list characters with mail expiring within 7 days
         glow = true,          -- red screen-edge glow on the rested cap alert
         sound = "RAID_WARNING",
+        customSound = "",     -- the alert sound when sound is "CUSTOM": a sound kit ID or "file:<id>"
+        buffSoundName = "SAME", -- the buff reminders' sound: "SAME" as the alerts, a SOUNDKIT name or "CUSTOM"
+        buffCustomSound = "",
     },
     bars = {
         autoShow = true,      -- show the bars window when entering an inn or city, hide when leaving

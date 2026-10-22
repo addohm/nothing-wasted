@@ -149,6 +149,7 @@ return function(root)
         check(c:ChatHas("|cffffd100Not Well Fed"), "Well Fed reminder in yellow when leaving rest")
         eq(c.sounds[1], 8959, "with the alert sound")
         check(c.ns.Glow.IsPulsing(), "and the screen-edge flash")
+
         check(c:ChatHas("Sleeping Bag is ready: rest in it for"), "bag reminder when leaving rest")
 
         -- Nothing more until something changes.
@@ -209,6 +210,22 @@ return function(root)
         c:ClearChat()
         c:Slash("buffs")
         check(c:ChatHas("Bag reminder possible now: yes"), "a sleeping bag toy counts as carried")
+
+        -- Custom sounds: the reminders can use any sound kit or sound file ID.
+        local alerts = rawget(c.env, "NothingWastedDB").settings.alerts
+        alerts.buffSoundName, alerts.buffCustomSound = "CUSTOM", "file:567890"
+        c:ClearChat()
+        c.ns.Alerts.PlaySound("buff")
+        eq(c.sounds[1], "file:567890", "a sound file ID")
+        alerts.buffCustomSound = " 12345 "
+        c.ns.Alerts.PlaySound("buff")
+        eq(c.sounds[2], 12345, "a sound kit ID")
+        c.ns.Alerts.PlaySound()
+        eq(c.sounds[3], 8959, "the alert sound stays raid warning")
+        alerts.buffCustomSound = "nonsense"
+        c.ns.Alerts.PlaySound("buff")
+        eq(c.sounds[4], 8959, "an unusable ID falls back to raid warning")
+        alerts.buffSoundName, alerts.buffCustomSound = "SAME", ""
 
         -- Max level: none of it.
         local m = mock.NewClient({ root = root, player = { name = "Maxi", level = 60, xpMax = 0, items = { [211527] = 1 } } })
@@ -609,6 +626,8 @@ return function(root)
         local trainRows = c:Rows(TabPanel(c))
         check(trainRows[1].right.text:find("1"), "header shows the total cost")
         check(trainRows[2].right.text:find("60"), "spell rows show their price")
+        trainRows[1].scripts.OnClick(trainRows[1], "LeftButton")
+        eq(#c:Rows(TabPanel(c)), 1, "the character's spells collapse")
         c.ns.Window.Hide()
         eq(kyol.sleepingBag and kyol.sleepingBag.done, 2, "sleeping bag chain progress")
         check(kyol.trade and kyol.trade.commerce, "trade reputation read")

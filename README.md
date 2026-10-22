@@ -71,7 +71,9 @@ button for the bars window.
     bags (a bag in the bank can't be used) and off cooldown.
   - At logout, if the bag is ready and you don't have its buff: rest in it first to carry the buff
     into your next session.
-- You pick the alert sound. The default is the raid warning sound.
+- You pick the alert sound. The default is the raid warning sound. Any game sound works too: choose
+  "Custom" and enter its ID, either the number from a Wowhead sound page (`sound=12345`) or a sound
+  file ID as `file:12345`. The buff reminders can have their own sound (by default the same).
 
 ### Bars window
 
@@ -114,7 +116,7 @@ button for the bars window.
 - **Untrained spells:** "Kyol hit 24 and has spells to train." Forever only lists untrained spells at
   the trainer, so visit your class trainer once; after that the addon knows which spells unlock at
   which level and counts them as you level. Leveling → Spells to train lists them under each
-  character with their rank and price, and the character's total.
+  character (collapsible, open at first) with their rank and price, and the character's total.
 - **Mount gold:** gold saved toward the 100g level-40 mount as an alt gets close.
 - **Hearthstone:** where each alt is bound and when its hearthstone is ready.
 

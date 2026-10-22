@@ -13,6 +13,15 @@ local SOUNDS = {
     { "MAP_PING", L["Map ping"] },
 }
 
+local CUSTOM = { "CUSTOM", L["Custom (enter an ID below)"] }
+local ALERT_SOUNDS, BUFF_SOUNDS = {}, { { "SAME", L["Same as the alert sound"] } }
+for _, v in ipairs(SOUNDS) do
+    ALERT_SOUNDS[#ALERT_SOUNDS + 1] = v
+    BUFF_SOUNDS[#BUFF_SOUNDS + 1] = v
+end
+ALERT_SOUNDS[#ALERT_SOUNDS + 1] = CUSTOM
+BUFF_SOUNDS[#BUFF_SOUNDS + 1] = CUSTOM
+
 local EARLY = {
     { 30, L["30 minutes"] }, { 60, L["1 hour"] }, { 120, L["2 hours"] }, { 240, L["4 hours"] },
     { 480, L["8 hours"] }, { 1440, L["1 day"] },
@@ -65,7 +74,8 @@ Page("alerts", L["Alerts"], 1, function(stack)
     Check(stack, L["Alert when a character reaches the rested XP cap"], "alerts", "cap")
     Check(stack, L["Only alert once per cap"], "alerts", "once")
     Check(stack, L["Red screen-edge glow with the cap alert"], "alerts", "glow")
-    Select(stack, L["Alert sound"], SOUNDS, "alerts", "sound")
+    Select(stack, L["Alert sound"], ALERT_SOUNDS, "alerts", "sound")
+    stack:Add(UI.OptionEdit(stack.inner, L["Custom sound ID (Wowhead sound=ID, or file:ID)"], Setting("alerts", "customSound")))
     stack:Add(UI.OptionButton(stack.inner, L["Try the alert"], L["Test"], function()
         ns.Alerts.PlaySound()
         if ns.db.settings.alerts.glow then ns.Glow.Pulse() end
@@ -83,7 +93,13 @@ Page("alerts", L["Alerts"], 1, function(stack)
     Check(stack, L["Remind me when Well Fed (+5% XP) is missing"], "alerts", "wellFed")
     Check(stack, L["Remind me when my sleeping bag is ready and unused"], "alerts", "bagBuff")
     Check(stack, L["Remind me at logout to use a ready sleeping bag"], "alerts", "bagLogout")
-    Check(stack, L["Play the alert sound with these reminders"], "alerts", "buffSound")
+    Check(stack, L["Play a sound with these reminders"], "alerts", "buffSound")
+    Select(stack, L["Reminder sound"], BUFF_SOUNDS, "alerts", "buffSoundName")
+    stack:Add(UI.OptionEdit(stack.inner, L["Custom reminder sound ID"], Setting("alerts", "buffCustomSound")))
+    stack:Add(UI.OptionButton(stack.inner, L["Try the reminder"], L["Test"], function()
+        ns.Alerts.PlaySound("buff")
+        if ns.db.settings.alerts.buffGlow then ns.Glow.Pulse() end
+    end))
     Check(stack, L["Flash the screen edge with these reminders"], "alerts", "buffGlow")
 end, ResetGroup("alerts"))
 
