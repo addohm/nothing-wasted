@@ -18,8 +18,7 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
 - **Well Rested:** whether +4% per rank multiplies the cap (rank 5: 180%) or adds to it (170%). The
   addon multiplies.
 - **Interface number:** 16001, taken from the old reference addon.
-- **Cozy Sleeping Bag:** which of quests 79007 and 79008 is Alliance or Horde (either counts), and
-  whether lying in the bag counts as resting at logout.
+- **Cozy Sleeping Bag:** which of quests 79007 and 79008 is Alliance or Horde (either counts).
 - **Campfires:** whether logging out at a campfire counts as resting.
 - **Recipe tooltips:** that recipe items show the "Requires <profession> (<skill>)" line the addon
   reads, and that recipe names match the item name after "Pattern:", "Recipe:" and so on.
@@ -29,6 +28,7 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
 
 - Untrained spells don't show in the spellbook, only at the trainer (2026-10-22).
 - The first mount at level 40 costs 100g (2026-10-22).
+- Logging out in the Cozy Sleeping Bag gives no rested XP bonus; it isn't a rested area (2026-10-22).
 - At logout the game reports empty data (professions vanished from saved characters), so the addon
   doesn't re-read at logout except the XP snapshot and Well Rested, both guarded (2026-10-22).
 - A first in-game pass: the windows, alerts, tracking and saving work (2026-10-22).
