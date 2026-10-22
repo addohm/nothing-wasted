@@ -5,16 +5,16 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
 
 ## Next, in order
 
-1. **Check the rested rates in game.** The rest of the first in-game pass checked out. Measure the
-   inn rate and the away-from-rest rate with the `/run` lines in HANDOFF.md, and compare an alt's
-   estimate with its real value the next time it logs in.
+1. **Check the rested rates in game.** The rest of the first in-game pass checked out. Rested XP only
+   builds while logged out, so measure across a logout (HANDOFF.md), or compare an alt's estimate
+   with its real value the next time it logs in.
 2. **Confirm the other open game facts** below, and fix `Data.lua` where they differ.
 3. **Release** on CurseForge and Wago (see DEPLOY.md), then open translations on CurseForge.
 
 ## To confirm in game
 
-- **Rested rates (hardest to test):** 5% of a level per 8h in an inn or city, and a quarter of that
-  away from rest (the Classic rule). The `/run` lines in HANDOFF.md measure them.
+- **Rested rates (hardest to test):** 5% of a level per 8h logged out in an inn or city, and a quarter
+  of that elsewhere (the Classic rule). Measured across a logout; see HANDOFF.md.
 - **Well Rested:** whether +4% per rank multiplies the cap (rank 5: 180%) or adds to it (170%). The
   addon multiplies.
 - **Interface number:** 16001, taken from the old reference addon.
@@ -30,6 +30,7 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
 
 - Untrained spells don't show in the spellbook, only at the trainer (2026-10-22).
 - The first mount at level 40 costs 100g (2026-10-22).
+- Rested XP doesn't build while logged in, even in an inn; only while logged out (2026-10-22).
 - Logging out in the Cozy Sleeping Bag gives no rested XP bonus; it isn't a rested area (2026-10-22).
 - At logout the game reports empty data (professions vanished from saved characters), so the addon
   doesn't re-read at logout except the XP snapshot and Well Rested, both guarded (2026-10-22).

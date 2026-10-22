@@ -215,6 +215,12 @@ return function(root)
         near(ktoCap, 748800, 1, "Kyol caps in 8d 16h")
         eq(ns.FormatDuration(748800), "8d 16h", "duration format")
 
+        -- Nothing builds while logged in: the played character's estimate stays at its live value.
+        local before = ns.Rested.Estimate(kyol, c.now)
+        local later, _, laterToCap = ns.Rested.Estimate(kyol, c.now + 2 * HOUR)
+        eq(later, before, "no rested XP builds for the character being played")
+        near(laterToCap, (15000 - 2000) / (10000 * 0.05 / 28800), 1, "its time to cap counts from now")
+
         -- Early warning an hour before Oldie caps.
         c:ClearChat()
         c:Advance(toCap - HOUR)

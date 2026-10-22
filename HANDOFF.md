@@ -30,13 +30,11 @@ lupa 2.8 bundles Lua 5.1 (`import lupa.lua51`), which matches the game's Lua.
 
 ## Measuring rested rates in game
 
-The rates are the main thing left to confirm. In an inn, start with
-`/run NWR={t=time(),r=GetXPExhaustion() or 0,m=UnitXPMax("player")} print("Rested start:",NWR.r)`,
-wait 30+ minutes without leveling, then
-`/run local d,s=(GetXPExhaustion() or 0)-NWR.r,time()-NWR.t print(format("+%d XP in %d min = %.2f%% of a level per 8h",d,s/60,d/NWR.m*100*28800/s))`.
-Expected 5.00% (6.00% at Well Rested rank 5). Away from rest, rested XP only builds while logged out:
-note `GetXPExhaustion()` before logging out somewhere that isn't resting and again after some hours.
-Expected 1.25% per 8h.
+Rested XP builds only while logged out on Forever (confirmed: nothing built in 30+ minutes in an inn,
+even after relogging). So the rates can only be measured across a logout: right before logging out,
+note `/run local r,m=GetXPExhaustion() or 0,UnitXPMax("player") print(format("Rested %d / %d XP (%.2f%%) at %s",r,m,r/m*100,date("%H:%M")))`,
+then run it again after logging back in some hours later. Expected per 8 hours: 5.00% after logging out
+in an inn or city (6.00% at Well Rested rank 5), 1.25% elsewhere.
 
 ## How the tests work
 

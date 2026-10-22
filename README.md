@@ -154,8 +154,10 @@ button for the bars window.
 
 ## How the estimates work
 
-- Rested XP builds at 5% of a level per 8 hours in an inn or city, a quarter of that elsewhere, up to
-  150% of a level. Each Well Rested rank adds 4% to the rate and the cap.
+- Rested XP builds only while a character is logged out: 5% of a level per 8 hours if it logged out in
+  an inn or city, a quarter of that elsewhere, up to 150% of a level. Each Well Rested rank adds 4% to
+  the rate and the cap. Nothing builds while you're logged in, even in an inn, so the character you're
+  playing shows its live value, and its time to cap means "if you log out here now".
 - A character's numbers are exact when you log out; after that they're estimated from where it logged
   out. Logging it in shows the exact value again.
 - Some data can only be read at certain times: recipes when a profession window is open, the bank when
