@@ -22,6 +22,7 @@ local DEFAULT_SETTINGS = {
         bagLogout = true,     -- remind at logout to use a ready sleeping bag first
         buffSound = true,     -- play the alert sound with the buff reminders
         buffGlow = true,      -- flash the screen edge with the buff reminders
+        buffChat = false,     -- also print the buff reminders in chat
         mailLogin = true,     -- at login, list characters with mail expiring within 7 days
         glow = true,          -- red screen-edge glow on the rested cap alert
         sound = "RAID_WARNING",

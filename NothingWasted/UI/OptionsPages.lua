@@ -102,6 +102,7 @@ Page("alerts", L["Alerts"], 1, function(stack)
         if ns.db.settings.alerts.buffGlow then ns.Glow.Pulse() end
     end))
     Check(stack, L["Flash the screen edge with these reminders"], "alerts", "buffGlow")
+    Check(stack, L["Also print these reminders in chat"], "alerts", "buffChat")
 end, ResetGroup("alerts"))
 
 Page("barsopt", L["Bars window"], 2, function(stack)

@@ -145,6 +145,12 @@ end
 -- For the tests.
 function Meter.Frame() return frame end
 
+-- The bars window's frame, built (hidden) if it doesn't exist yet: the reminder card sits on it.
+function Meter.GetFrame()
+    if not frame then Build() end
+    return frame
+end
+
 -- Pop up while resting -----------------------------------------------------------------------------
 
 local wasResting

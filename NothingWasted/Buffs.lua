@@ -39,12 +39,20 @@ end
 
 local YELLOW = "|cffffd100"
 
--- Prints buff reminders in yellow, with one sound and one screen-edge flash for the batch; each can
--- be turned off.
-local function Remind(messages)
-    if #messages == 0 then return end
-    for _, msg in ipairs(messages) do ns.Print(YELLOW .. msg .. "|r") end
+-- Shows buff reminders on the reminder card (kinds: "wellFed", "bag", "bagLogout"), with one sound
+-- and one screen-edge flash for the batch, and optionally as yellow chat lines too.
+local CHAT = {
+    wellFed = "Not Well Fed: eat cooked food for +5% XP from kills.",
+    bag = "Your Cozy Sleeping Bag is ready: rest in it for up to +3% XP.",
+    bagLogout = "Your Cozy Sleeping Bag is ready: rest in it before logging out to keep up to +3% XP for your next session.",
+}
+local function Remind(kinds)
+    if #kinds == 0 then return end
     local settings = ns.db.settings.alerts
+    ns.Reminder.Show(kinds)
+    if settings.buffChat then
+        for _, k in ipairs(kinds) do ns.Print(YELLOW .. L[CHAT[k]] .. "|r") end
+    end
     if settings.buffSound then ns.Alerts.PlaySound("buff") end
     if settings.buffGlow then ns.Glow.Pulse() end
 end
@@ -66,16 +74,25 @@ function Buffs.Check()
     local wellFed = HasAura(ns.Data.wellFedXPSpellID)
     local bagBuff = HasAura(ns.Data.sleepingBag.buffSpellID)
 
-    local messages = {}
-    if not resting then
-        if settings.wellFed and not wellFed and (leftRest or hadWellFed) then
-            messages[#messages + 1] = L["Not Well Fed: eat cooked food for +5% XP from kills."]
-        end
-        if settings.bagBuff and not bagBuff and Buffs.BagReady() and (leftRest or hadBagBuff) then
-            messages[#messages + 1] = L["Your Cozy Sleeping Bag is ready: rest in it for up to +3% XP."]
+    -- What's missing right now, and what just became worth a reminder.
+    local missing = {
+        wellFed = not resting and settings.wellFed and not wellFed,
+        bag = not resting and settings.bagBuff and not bagBuff and Buffs.BagReady(),
+    }
+    missing.bagLogout = missing.bag
+    if resting then
+        ns.Reminder.Hide()
+    else
+        ns.Reminder.Keep(missing)
+        -- Leaving rest, or a buff wearing off, brings up the card with everything that's missing.
+        local trigger = (missing.wellFed and (leftRest or hadWellFed)) or (missing.bag and (leftRest or hadBagBuff))
+        if trigger then
+            local kinds = {}
+            if missing.wellFed then kinds[#kinds + 1] = "wellFed" end
+            if missing.bag then kinds[#kinds + 1] = "bag" end
+            Remind(kinds)
         end
     end
-    Remind(messages)
     wasResting, hadWellFed, hadBagBuff = resting, wellFed, bagBuff
 end
 
@@ -103,7 +120,7 @@ ns.On("PLAYER_UPDATE_RESTING", CheckSoon)
 ns.On("PLAYER_CAMPING", function()
     if not ns.db.settings.alerts.bagLogout or not BelowMax() or IsResting() then return end
     if Buffs.BagReady() and not HasAura(ns.Data.sleepingBag.buffSpellID) then
-        Remind({ L["Your Cozy Sleeping Bag is ready: rest in it before logging out to keep up to +3% XP for your next session."] })
+        Remind({ "bagLogout" })
     end
 end)
 

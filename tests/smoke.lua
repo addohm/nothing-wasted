@@ -140,63 +140,72 @@ return function(root)
         } })
         c:Login()
         c:Advance(6)
-        check(not c:ChatHas("Well Fed") and not c:ChatHas("Sleeping Bag"), "no reminders at login")
+        local R = c.ns.Reminder
+        local function Card() return table.concat(R.Kinds(), ",") end
+        check(not R.IsShown(), "no reminder card at login")
+        local meter = c.ns.Meter.Frame()
+        check(meter and meter.shown, "bars window up in town")
 
-        -- Leaving the city: both reminders.
+        -- Leaving the city: the bars window goes, the card takes its place.
         c.player.resting = false
         c:Fire("PLAYER_UPDATE_RESTING")
         c:Advance(2)
-        check(c:ChatHas("|cffffd100Not Well Fed"), "Well Fed reminder in yellow when leaving rest")
+        check(not meter.shown, "bars window hides on leaving rest")
+        check(R.IsShown(), "reminder card shows instead")
+        eq(Card(), "wellFed,bag", "with both missing buffs")
         eq(c.sounds[1], 8959, "with the alert sound")
         check(c.ns.Glow.IsPulsing(), "and the screen-edge flash")
+        check(not c:ChatHas("Not Well Fed"), "no chat lines by default")
 
-        check(c:ChatHas("Sleeping Bag is ready: rest in it for"), "bag reminder when leaving rest")
-
-        -- Nothing more until something changes.
-        c:ClearChat()
+        -- Rows go as the buffs come.
+        c.player.auras[1243969] = 99999
         c:Fire("UNIT_AURA", "player")
         c:Advance(2)
-        check(not c:ChatHas("Well Fed") and not c:ChatHas("Sleeping Bag"), "no repeats without a change")
-
-        -- Eat and rest in the bag, then the food wears off out in the world.
-        c.player.auras[1243969] = 99999
+        eq(Card(), "bag", "eating removes the Well Fed row")
         c.player.auras[429959] = 99999
         c:Fire("UNIT_AURA", "player")
         c:Advance(2)
+        check(not R.IsShown(), "the card hides when nothing's missing")
+
+        -- The food wears off out in the world: the card comes back with just that.
+        c.sounds = {}
         c.player.auras[1243969] = nil
         c:Fire("UNIT_AURA", "player")
         c:Advance(2)
-        check(c:ChatHas("Not Well Fed"), "reminder when Well Fed wears off out in the world")
-        check(not c:ChatHas("Sleeping Bag is ready"), "no bag reminder while its buff is on")
+        eq(Card(), "wellFed", "card when Well Fed wears off out in the world")
+        eq(#c.sounds, 1, "one sound")
 
-        -- A buff wearing off in town waits until you leave.
-        c:ClearChat()
-        c.player.auras[1243969] = 99999
-        c:Fire("UNIT_AURA", "player")
-        c:Advance(2)
+        -- Back in town the card goes; a buff wearing off there waits until you leave.
         c.player.resting = true
         c:Fire("PLAYER_UPDATE_RESTING")
         c:Advance(2)
-        c.player.auras[1243969] = nil
-        c:Fire("UNIT_AURA", "player")
-        c:Advance(2)
-        check(not c:ChatHas("Not Well Fed"), "no reminder in town")
+        check(not R.IsShown(), "card hides in a rested area")
         c.player.resting = false
         c:Fire("PLAYER_UPDATE_RESTING")
         c:Advance(2)
-        check(c:ChatHas("Not Well Fed"), "reminder once you leave town")
+        eq(Card(), "wellFed", "and shows again on leaving")
+
+        -- Chat lines can be turned on.
+        rawget(c.env, "NothingWastedDB").settings.alerts.buffChat = true
+        c.player.resting = true
+        c:Fire("PLAYER_UPDATE_RESTING")
+        c:Advance(2)
+        c.player.resting = false
+        c:Fire("PLAYER_UPDATE_RESTING")
+        c:Advance(2)
+        check(c:ChatHas("|cffffd100Not Well Fed"), "yellow chat line when turned on")
 
         -- Logging out with a ready bag and no bag buff.
         c.player.auras[429959] = nil
         c:Fire("UNIT_AURA", "player")
         c:Advance(2)
-        c:ClearChat()
+        R.Hide()
         c:Fire("PLAYER_CAMPING")
-        check(c:ChatHas("before logging out"), "logout reminder for a ready sleeping bag")
-        c:ClearChat()
+        eq(Card(), "bagLogout", "logout reminder card for a ready sleeping bag")
+        R.Hide()
         c.player.itemCooldowns[211527] = { c.env.GetTime(), 3600 }
         c:Fire("PLAYER_CAMPING")
-        check(not c:ChatHas("before logging out"), "no logout reminder while the bag is on cooldown")
+        check(not R.IsShown(), "no logout reminder while the bag is on cooldown")
 
         -- /nw buffs shows where the bag is.
         c.player.itemCooldowns[211527] = nil

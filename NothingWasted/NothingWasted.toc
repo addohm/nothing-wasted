@@ -39,6 +39,7 @@ Alerts.lua
 UI\Sections.lua
 UI\Bars.lua
 UI\Meter.lua
+UI\Reminder.lua
 UI\RestedPage.lua
 UI\CooldownsPage.lua
 UI\LevelingPages.lua
