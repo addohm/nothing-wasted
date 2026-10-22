@@ -5,8 +5,8 @@ Where the work stands, so it can carry on from another workspace. Written 2026-1
 ## Picking up
 
 ```bash
-git clone https://github.com/addohm/rested-xp.git
-cd rested-xp
+git clone https://github.com/addohm/nothing-wasting.git
+cd nothing-wasting
 pip install lupa
 python3 tests/run_tests.py
 ```
@@ -20,8 +20,7 @@ lupa 2.8 bundles Lua 5.1 (`import lupa.lua51`), which matches the game's Lua.
   checklist and the game facts still to confirm.
 - APIs were checked against Blizzard's Forever UI source (build 1.60.1) and game IDs against Wowhead's
   Forever tooltips. Where a value is a guess, `Data.lua` and ROADMAP.md say so.
-- **Repo rename:** the user will rename the GitHub repo from `rested-xp` to `nothing-wasted`.
-  Update the clone URL above once that's done.
+- The GitHub repo is `addohm/nothing-wasting` (renamed from `rested-xp` on 2026-10-22).
 - **Scope:** leveling alts and earning Legacy points. The user cut auction-house mail and item
   tooltip counts as clutter; keep new features inside that scope.
 - Key point from the user: estimates must be accurate, so nothing sits at the cap unnoticed. The Well
