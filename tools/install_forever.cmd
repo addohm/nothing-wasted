@@ -7,7 +7,7 @@ rem The repo is the folder above this script's tools folder, so it keeps working
 rem renamed or moved.
 for %%i in ("%~dp0..") do set "REPO=%%~fi"
 rem Change WOW if your client lives elsewhere (for example a beta folder).
-set "WOW=C:\Program Files (x86)\World of Warcraft\_forever_"
+set "WOW=C:\Program Files (x86)\World of Warcraft\_classic_beta_"
 set "ADDON=%WOW%\Interface\AddOns\NothingWasted"
 
 if not exist "%REPO%\NothingWasted\NothingWasted.toc" (
