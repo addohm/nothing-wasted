@@ -90,13 +90,15 @@ function RateCheck.Run(arg)
     if arg == "reset" or not mark then
         c.rateMark = { at = now, rested = live.rested, xp = live.xp, level = live.level, xpMax = live.xpMax,
             resting = live.resting, rank = rank }
-        ns.Print(L["Measuring from now. Run /nw rate again later; you can log out in between (log out where you want to measure)."])
+        ns.Print(format(L["Mark set at %s with rested %s. Run /nw rate again later; you can log out in between (log out where you want to measure)."],
+            date("%H:%M:%S", now), ns.FormatNumber(live.rested)))
     else
         local seconds = now - mark.at
         local gain = live.rested - mark.rested
-        ns.Print(format(L["Since the mark %s ago: rested +%s = %s of a level per 8h (expected %s, %s at the mark)."],
-            ns.FormatDuration(seconds), ns.FormatNumber(gain), Pct(PerEightHours(gain, mark.xpMax, seconds)),
-            Pct(ExpectedPerEightHours(mark.rank, mark.resting)), mark.resting and L["resting"] or L["not resting"]))
+        ns.Print(format(L["Since the mark at %s (%s ago, rested %s then): rested +%s = %s of a level per 8h (expected %s, %s at the mark)."],
+            date("%H:%M:%S", mark.at), ns.FormatDuration(seconds), ns.FormatNumber(mark.rested), ns.FormatNumber(gain),
+            Pct(PerEightHours(gain, mark.xpMax, seconds)), Pct(ExpectedPerEightHours(mark.rank, mark.resting)),
+            mark.resting and L["resting"] or L["not resting"]))
         if live.level ~= mark.level or live.xp ~= mark.xp then
             ns.Print(L["XP changed since the mark, which uses up rested XP, so this isn't a clean measurement. /nw rate reset starts over."])
         elseif live.rested >= live.xpMax * select(2, ns.Rested.Rules(rank, true)) then

@@ -23,6 +23,7 @@ All notable changes to this project are documented here. The format follows
   logout, a reminder to rest in a ready sleeping bag first. Each can be turned off.
 - `/nw rate`: measures the rested XP rate in game (a mark, then the rate since it, across a logout
   too) next to the expected rate, and lists automatic checks of the estimate made at each login.
+  It shows the mark's clock time and rested value.
 - Headless tests under Lua 5.1 with a strict fake WoW client.
 - Packaging for CurseForge and Wago (`.pkgmeta`), with translations from contributors.
 - `tools/install_forever.cmd`: pulls the repo and installs the addon into the Forever client on

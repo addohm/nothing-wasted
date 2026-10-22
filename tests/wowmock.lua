@@ -337,6 +337,7 @@ function M.NewClient(opts)
     env.wipe = function(t) for k in pairs(t) do t[k] = nil end return t end
     env.geterrorhandler = function() return function(err) error(err, 0) end end
     env.time = function() return client.now end
+    env.date = function(fmt, t) return os.date(fmt, t or client.now) end
     env.GetTime = function() return client.now - T0 + 1000 end
     env.hooksecurefunc = function(name, fn)
         local orig = env[name]

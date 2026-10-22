@@ -192,12 +192,12 @@ return function(root)
         c:Slash("rate")
         check(c:ChatHas("rested 6,958"), "/nw rate shows the live rested XP")
         check(c:ChatHas("Expected: 5%.00%% of a level per 8h resting %(%+243 per hour%)"), "and the expected rate")
-        check(c:ChatHas("Measuring from now"), "first run sets a mark")
+        check(c:ChatHas("Mark set at %d%d:%d%d:%d%d with rested 6,958"), "first run sets a mark and shows its time")
         c:ClearChat()
         c.now = c.now + 3600
         c.player.rested = 6958 + 243
         c:Slash("rate")
-        check(c:ChatHas("rested %+243 = 5%.00%% of a level per 8h"), "second run measures the rate since the mark")
+        check(c:ChatHas("Since the mark at %d%d:%d%d:%d%d %(1h 0m ago, rested 6,958 then%): rested %+243 = 5%.00%% of a level per 8h"), "second run measures the rate since the mark")
         check(not c:ChatHas("isn't a clean"), "clean when XP didn't change")
         c.player.xp = 20000
         c:ClearChat()
