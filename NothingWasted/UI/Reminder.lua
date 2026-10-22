@@ -9,7 +9,7 @@ local Reminder = {}
 ns.Reminder = Reminder
 
 local SIZE = 38       -- icon size
-local GAP = 22        -- space between icons (room for the labels)
+local GAP = 14        -- space between one icon's label and the next
 local YELLOW = { 1, 0.82, 0 }
 local GLOW = "Interface\\Buttons\\UI-ActionButton-Border" -- the game's yellow button highlight
 
@@ -58,7 +58,6 @@ end
 local function CreateButton(i)
     local b = CreateFrame("Button", nil, frame)
     b:SetSize(SIZE, SIZE)
-    b:SetPoint("TOPLEFT", (i - 1) * (SIZE + GAP), 0)
     b:RegisterForClicks("RightButtonUp")
 
     b.icon = b:CreateTexture(nil, "ARTWORK")
@@ -98,24 +97,30 @@ local function CreateButton(i)
 end
 
 local function Layout()
+    local x = 0
     for i, kind in ipairs(shown) do
         local b = buttons[i] or CreateButton(i)
         buttons[i] = b
-        b.kind = kind
+        b.buffKind = kind
         b.def = KINDS[kind]()
         b.icon:SetTexture(b.def.icon)
         b.label:SetText(b.def.label)
+        -- Each icon gets a slot as wide as its label (or the icon, if wider), so labels never overlap.
+        local slot = math.max(SIZE, math.ceil(b.label:GetStringWidth() or SIZE))
+        b:ClearAllPoints()
+        b:SetPoint("TOPLEFT", x + (slot - SIZE) / 2, 0)
+        x = x + slot + GAP
         b:Show()
         -- Restart every glow together, so they pulse in step.
         b.pulse:Stop()
         b.pulse:Play()
     end
     for i = #shown + 1, #buttons do
-        buttons[i].kind = nil
+        buttons[i].buffKind = nil
         buttons[i].pulse:Stop()
         buttons[i]:Hide()
     end
-    frame:SetWidth(math.max(1, #shown) * (SIZE + GAP) - GAP)
+    frame:SetWidth(math.max(SIZE, x - GAP))
 end
 
 -- Shows the icons for these kinds ("wellFed", "bag", "bagLogout").

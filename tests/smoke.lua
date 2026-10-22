@@ -153,6 +153,17 @@ return function(root)
         check(R.IsShown(), "the reminder shows at the same moment, no gap")
         c:Advance(2)
         eq(Card(), "wellFed,bag", "with both missing buffs")
+        -- The labels mustn't overlap: each icon's slot is as wide as its label.
+        local icons = {}
+        for _, f in ipairs(c.frames) do
+            if f.kind == "Button" and f.label and f.icon and f:IsVisible() then icons[#icons + 1] = f end
+        end
+        eq(#icons, 2, "two icons")
+        if #icons == 2 then
+            local x1, x2 = icons[1].points[1][2], icons[2].points[1][2]
+            local w1 = icons[1].label:GetStringWidth()
+            check(x2 - x1 >= (w1 + 38) / 2 + 14 - 1, "the second icon clears the first label")
+        end
         eq(c.sounds[1], 8959, "with the alert sound")
         check(c.ns.Glow.IsPulsing(), "and the screen-edge flash")
         check(not c:ChatHas("Not Well Fed"), "no chat lines by default")
