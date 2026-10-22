@@ -11,6 +11,7 @@ local function Help()
     ns.Print(L["  /nw options - open the options"])
     ns.Print(L["  /nw minimap - show or hide the minimap button"])
     ns.Print(L["  /nw chars - list every saved character"])
+    ns.Print(L["  /nw rate - measure the rested XP rate (/nw rate reset starts over)"])
     ns.Print(L["  /nw reset - forget every character"])
 end
 
@@ -63,6 +64,8 @@ SlashCmdList.NOTHINGWASTED = function(msg)
         StaticPopup_Show("NOTHINGWASTED_FORGET_ALL")
     elseif cmd == "chars" then
         ListCharacters()
+    elseif cmd == "rate" or cmd == "rate reset" then
+        ns.RateCheck.Run(cmd == "rate reset" and "reset" or nil)
     elseif cmd == "perks" then
         ns.Legacy.DumpPerks()
     elseif cmd == "help" or cmd == "?" then

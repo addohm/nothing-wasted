@@ -25,6 +25,7 @@ Copy the `NothingWasted` folder into your client's `Interface/AddOns` folder (fo
 | `/nw minimap` | Show or hide the minimap button |
 | `/nw reset` | Forget every character (asks first) |
 | `/nw chars` | List every saved character, what its bar shows, and which session last saved the data |
+| `/nw rate` | Measure the rested XP rate: shows the live values and expected rate, sets a mark, and on the next run shows the rate since the mark (works across a logout). Also lists automatic checks made at each login. `/nw rate reset` starts over |
 | `/nw perks` | List the Legacy perk nodes, to check perk spell IDs |
 
 `/nothingwasted` works too, in case another addon uses `/nw`. The minimap button and the game's

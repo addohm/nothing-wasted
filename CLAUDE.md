@@ -16,6 +16,8 @@ Guidance for coding assistants working in this repository.
   - `Character.lua`, `Legacy.lua`, `Cooldowns.lua`, `Professions.lua`, `Inventory.lua`, `Mail.lua`,
     `Leveling.lua`: read the game and save per character. `Alerts.lua` scans the saved data;
     `Buffs.lua` reminds about missing leveling buffs (Well Fed XP, the sleeping bag).
+    `RateCheck.lua` measures the rested rates (`/nw rate`, and a check at each login); it loads
+    before `Character.lua` so its login handler sees the old saved values.
   - `UI/`: the full window (`Window.lua`: tabs, view links under a tab, options behind the gear)
     and its pages (`*Page.lua`, `*Pages.lua`, registered with `Window.AddPage`; a page's `group`
     is its tab); the small bars window that pops up

@@ -185,6 +185,41 @@ return function(root)
         check(not m:ChatHas("Well Fed") and not m:ChatHas("Sleeping Bag"), "no buff reminders at max level")
     end)
 
+    test("1d. measuring rested rates", function()
+        local c = mock.NewClient({ root = root, player = { name = "Rater", level = 27, xp = 19455, xpMax = 38900, rested = 6958, resting = true } })
+        c:Login()
+        c:ClearChat()
+        c:Slash("rate")
+        check(c:ChatHas("rested 6,958"), "/nw rate shows the live rested XP")
+        check(c:ChatHas("Expected: 5%.00%% of a level per 8h resting %(%+243 per hour%)"), "and the expected rate")
+        check(c:ChatHas("Measuring from now"), "first run sets a mark")
+        c:ClearChat()
+        c.now = c.now + 3600
+        c.player.rested = 6958 + 243
+        c:Slash("rate")
+        check(c:ChatHas("rested %+243 = 5%.00%% of a level per 8h"), "second run measures the rate since the mark")
+        check(not c:ChatHas("isn't a clean"), "clean when XP didn't change")
+        c.player.xp = 20000
+        c:ClearChat()
+        c:Slash("rate")
+        check(c:ChatHas("isn't a clean measurement"), "flags XP gained since the mark")
+        c.player.xp = 19455
+
+        -- A login check: logged out 8h in an inn, came back with 5% of a level more.
+        local db = c:Logout()
+        local saved = db.chars["Rater-Forever"]
+        local d = mock.NewClient({ root = root, db = db, now = c.now + 8 * HOUR,
+            player = { name = "Rater", level = 27, xp = 19455, xpMax = 38900, rested = saved.rested + 1945, resting = true } })
+        d:Login()
+        local sample = rawget(d.env, "NothingWastedDB").rateSamples[1]
+        check(sample ~= nil, "a login check is recorded")
+        near(sample and sample.rate, 5.0, 0.01, "measured 5% per 8h")
+        near(sample and sample.expectedRate, 5.0, 0.01, "against an expected 5%")
+        d:ClearChat()
+        d:Slash("rate")
+        check(d:ChatHas("Checks at login"), "/nw rate lists the login checks")
+    end)
+
     test("2. rested estimates, alerts and the logout warning", function()
         local db = mock.Copy(db1)
         local now = T0 + 2 * HOUR

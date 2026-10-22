@@ -5,16 +5,15 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
 
 ## Next, in order
 
-1. **Check the rested rates in game.** The rest of the first in-game pass checked out. Measure the
-   inn rate and the away-from-rest rate with the `/run` lines in HANDOFF.md, and compare an alt's
-   estimate with its real value the next time it logs in.
+1. **Check the rested rates in game.** The rest of the first in-game pass checked out. Use
+   `/nw rate` (a mark now, the rate later, across a logout too) and the login checks it lists.
 2. **Confirm the other open game facts** below, and fix `Data.lua` where they differ.
 3. **Release** on CurseForge and Wago (see DEPLOY.md), then open translations on CurseForge.
 
 ## To confirm in game
 
 - **Rested rates (hardest to test):** 5% of a level per 8h in an inn or city, and a quarter of that
-  away from rest (the Classic rule). The `/run` lines in HANDOFF.md measure them.
+  away from rest (the Classic rule). `/nw rate` measures them.
 - **Well Rested:** whether +4% per rank multiplies the cap (rank 5: 180%) or adds to it (170%). The
   addon multiplies.
 - **Interface number:** 16001, taken from the old reference addon.

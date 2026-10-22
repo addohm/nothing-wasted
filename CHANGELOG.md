@@ -21,6 +21,8 @@ All notable changes to this project are documented here. The format follows
 - Leveling buff reminders below max level: a missing Well Fed XP Boost (+5% kill XP) and an unused,
   ready Cozy Sleeping Bag (up to +3% XP), once after login and when the buff wears off; and at
   logout, a reminder to rest in a ready sleeping bag first. Each can be turned off.
+- `/nw rate`: measures the rested XP rate in game (a mark, then the rate since it, across a logout
+  too) next to the expected rate, and lists automatic checks of the estimate made at each login.
 - Headless tests under Lua 5.1 with a strict fake WoW client.
 - Packaging for CurseForge and Wago (`.pkgmeta`), with translations from contributors.
 - `tools/install_forever.cmd`: pulls the repo and installs the addon into the Forever client on

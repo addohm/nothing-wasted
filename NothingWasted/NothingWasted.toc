@@ -25,6 +25,7 @@ UI\Tooltip.lua
 UI\Window.lua
 UI\Glow.lua
 
+RateCheck.lua
 Character.lua
 Legacy.lua
 Cooldowns.lua
