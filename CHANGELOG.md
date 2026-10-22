@@ -21,7 +21,7 @@ All notable changes to this project are documented here. The format follows
 - Packaging for CurseForge and Wago (`.pkgmeta`), with translations from contributors.
 - `install_forever.cmd`: pulls the repo and installs the addon into the Forever client on Windows,
   stamping the commit so `/nw help` shows the build.
-- The repository is now `addohm/nothing-wasting` (was `rested-xp`).
+- The repository is now `addohm/nothing-wasted` (was `rested-xp`).
 - Standard docs: README, CLAUDE, CHANGELOG, DEPLOY, SECURITY and ROADMAP.
 - HANDOFF.md: current status, plus the design for the planned headless smoke test.
 - The design for Nothing Wasted: features in README.md, plan and open questions in ROADMAP.md.
