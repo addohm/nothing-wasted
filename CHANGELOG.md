@@ -17,7 +17,8 @@ All notable changes to this project are documented here. The format follows
   search, professions, leveling and Legacy planner features. Slash command `/nw`.
 - Launch scope: all planned features. Translations: a starter set of six languages plus English,
   from contributors.
-- Window design: bars with name and time to cap, tooltips, and an icon sidebar for everything else.
+- Window design: one window with tabs. The Rested tab shows bars with name and time to cap, plus
+  tooltips.
 
 ### Removed
 

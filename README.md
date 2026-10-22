@@ -43,10 +43,10 @@ Everything below ships at launch, including mail and item search.
 
 ### Window
 
-- The main view shows only the bars: one per character, with its name and time to cap. Everything
-  else is in the tooltips or the sidebar.
-- A sidebar of icon buttons opens the other sections: cooldowns, leveling, professions, mail and
-  items, Legacy, and options. Each has its own icon so it's easy to recognize.
+- One window with tabs: Rested (the bars), Cooldowns, Leveling, Professions, Mail and items, Legacy,
+  and Options.
+- The Rested tab shows only the bars: one per character, with its name and time to cap. The details
+  are in each bar's tooltip.
 
 ### Progress bars
 
