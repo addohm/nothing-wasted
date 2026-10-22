@@ -85,8 +85,8 @@ button for the bars window.
 
 ### Leveling
 
-- **Who to play next:** ranks alts by the time you have. "You have 2h: play Oldie, caps in 3h, rested
-  covers 1.4 levels."
+- **Who to play next:** alts ranked so nothing waits: capped ones first, then the soonest to cap,
+  with how far each one's rested XP carries it ("rested to 34.6").
 - **How far rested XP carries a character:** "rested takes Kyol to about 34.6."
 - **Leveling pace:** XP per hour online (the addon keeps its own count, no /played needed), and an
   estimate of when each alt reaches 60.

@@ -79,9 +79,9 @@ function Leveling.RestedCarriesTo(c, now)
     return level
 end
 
--- Who to play next: characters ranked for a session of `hours`. Capped characters first (their
--- rested XP is being wasted), then those that will cap soonest, then the most rested.
-function Leveling.WhoToPlay(hours, now)
+-- Who to play next: capped characters first (their rested XP is being wasted), then those that
+-- will cap soonest.
+function Leveling.WhoToPlay(now)
     local me = ns.PlayerKey()
     local list = {}
     for key, c in pairs(ns.db.chars) do
@@ -90,17 +90,11 @@ function Leveling.WhoToPlay(hours, now)
             list[#list + 1] = {
                 key = key, c = c, rested = rested, cap = cap, toCap = toCap,
                 carries = Leveling.RestedCarriesTo(c, now),
-                capsDuring = toCap > 0 and toCap <= hours * 3600,
             }
         end
     end
     table.sort(list, function(a, b)
-        local ac, bc = a.toCap <= 0, b.toCap <= 0
-        if ac ~= bc then return ac end
-        if a.capsDuring ~= b.capsDuring then return a.capsDuring end
-        if a.capsDuring and a.toCap ~= b.toCap then return a.toCap < b.toCap end
-        local af, bf = a.rested / a.cap, b.rested / b.cap
-        if af ~= bf then return af > bf end
+        if a.toCap ~= b.toCap then return a.toCap < b.toCap end
         return (a.c.name or "") < (b.c.name or "")
     end)
     return list

@@ -36,6 +36,11 @@ All notable changes to this project are documented here. The format follows
 - Window design: one window with tabs. The Rested tab shows bars with name and time to cap, plus
   tooltips.
 
+### Changed
+
+- "Who to play next" no longer asks how long you'll play. It ranks alts by who's capped, then who
+  caps soonest.
+
 ### Fixed
 
 - Other characters were missing from the bars. The logout save could record empty XP data, which hid

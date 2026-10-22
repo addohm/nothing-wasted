@@ -2,7 +2,6 @@
 local _, ns = ...
 local L = ns.L
 
-local SESSION = { { 1, L["1 hour"] }, { 2, L["2 hours"] }, { 3, L["3 hours"] }, { 4, L["4 hours"] }, { 6, L["6 hours"] } }
 
 local function ByName(a, b) return (a.c.name or "") < (b.c.name or "") end
 
@@ -13,21 +12,22 @@ local function Chars()
     return list
 end
 
-local function Items(hours)
+local SOON = 24 * 3600 -- "caps in" is highlighted when it's within a day
+
+local function Items()
     local now = ns.Now()
     local items = {}
 
-    items[#items + 1] = { left = format(L["Who to play next (%d h session)"], hours), header = true }
-    local ranked = ns.Leveling.WhoToPlay(hours, now)
+    items[#items + 1] = { left = L["Who to play next"], header = true }
+    local ranked = ns.Leveling.WhoToPlay(now)
     if #ranked == 0 then items[#items + 1] = { left = "   " .. L["No alts that can gain rested XP yet."] } end
     for i, e in ipairs(ranked) do
         local why
         if e.toCap <= 0 then
             why = "|cffff4040" .. L["at cap, rested XP is going to waste"] .. "|r"
-        elseif e.capsDuring then
-            why = "|cffffd100" .. format(L["caps in %s"], ns.FormatDuration(e.toCap)) .. "|r"
         else
-            why = format(L["%d%% rested"], math.floor(e.rested / e.cap * 100))
+            why = format(L["caps in %s"], ns.FormatDuration(e.toCap))
+            if e.toCap <= SOON then why = "|cffffd100" .. why .. "|r" end
         end
         items[#items + 1] = {
             left = format("   %d. %s  %s", i, ns.ColoredName(e.c), why),
@@ -92,21 +92,9 @@ ns.Window.AddTab({
     label = L["Leveling"],
     order = 3,
     build = function(panel)
-        ns.db.settings.window.session = ns.db.settings.window.session or 2
-        panel.cycle = ns.UI.Cycle(panel, L["I have:"], SESSION,
-            function() return ns.db.settings.window.session end,
-            function(v)
-                ns.db.settings.window.session = v
-                ns.Window.Refresh()
-            end)
-        panel.cycle:SetPoint("TOPLEFT", 4, 0)
-        local body = CreateFrame("Frame", nil, panel)
-        body:SetPoint("TOPLEFT", 0, -30)
-        body:SetPoint("BOTTOMRIGHT")
-        panel.list = ns.UI.TextList(body)
+        panel.list = ns.UI.TextList(panel)
     end,
     refresh = function(panel)
-        panel.cycle:Sync()
-        panel.list:SetItems(Items(ns.db.settings.window.session))
+        panel.list:SetItems(Items())
     end,
 })
