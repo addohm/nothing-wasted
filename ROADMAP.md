@@ -6,7 +6,8 @@ What's done for Well Rested and what's next. Update it in the same commit as the
 ## Next, in order
 
 1. Finish the design. Still open:
-   - Translations: at launch, or later.
+   - Which languages, and how translations are sourced (for example CurseForge's localization tool).
+   - Which of the extra ideas below go in at launch.
    - Anything else the user wants to settle before code.
 2. Confirm the game facts the estimates depend on (see below), from the
    [Forever UI source](https://github.com/Gethe/wow-ui-source/tree/forever) and in game.
@@ -30,6 +31,19 @@ What's done for Well Rested and what's next. Update it in the same commit as the
 
 ## Ideas
 
+Not decided yet. A possible theme: "nothing wasted", using the same alerts as the rested cap.
+
+- **Cooldowns:** Dedicated Study (Legacy daily skill point), Camp Tent, profession cooldowns
+  (Mooncloth, transmutes, Salt Shaker).
+- **Mail:** record mail sent to alts (items, gold, COD) so their mailbox is known before login;
+  auction mail; expiring-mail warnings.
+- **Items:** search across alts (bags, bank, mail, mail in transit), item tooltip counts, free bag
+  space. A large feature; likely after launch.
+- **Professions:** recipe tooltips ("Kyol knows this" / "can learn at 175"), next trainer rank, alts
+  stuck at a skill cap, Merchant's Favor and trade reputations, crafts possible from alts' reagents.
+- **Leveling:** who to play next, how far rested carries a character, leveling pace and ETA to 60,
+  untrained spells, mount gold at 40, hearthstone location and cooldown.
+- **Legacy planner:** which class milestones and profession points the account still lacks.
 - Show rested XP on the character-select screen, if the client ever allows addons there.
 - Per-realm group headers for players with many alts.
 

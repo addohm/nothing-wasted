@@ -34,7 +34,8 @@ alt sits at the rested XP cap wasting time.
 - One bar per character, running from 0 to that character's rested cap, sorted with the soonest to
   cap at the top.
 - They appear when you enter an inn or city and hide when you leave. A slash command and the minimap
-  button show them anywhere.
+  button show them anywhere. A window you open yourself stays open when you leave; an option makes
+  it hide too.
 - Max-level characters can be shown or hidden.
 - Hover a bar for the details: time left to cap, level, professions and skill levels, gold, where the
   character logged out, Legacy goal progress, and more. You choose which details show.
@@ -49,6 +50,8 @@ alt sits at the rested XP cap wasting time.
 
 - Designed for a single account. Hardcore characters are ignored while they're hardcore.
 - Settings live in the addon's own options window.
+- Slash commands: `/wr`, with `/wellrested` as a fallback in case another addon uses `/wr`.
+- Translated into the game's languages at launch.
 - To be released on CurseForge and Wago.
 
 ## Repository layout

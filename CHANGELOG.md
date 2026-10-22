@@ -11,6 +11,7 @@ All notable changes to this project are documented here. The format follows
 - Standard docs: README, CLAUDE, CHANGELOG, DEPLOY, SECURITY and ROADMAP.
 - HANDOFF.md: current status, plus the design for the planned headless smoke test.
 - The design for Well Rested: features in README.md, plan and open questions in ROADMAP.md.
+  Includes slash commands, translations at launch, and the option for manually opened bars.
 
 ### Removed
 
