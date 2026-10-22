@@ -3,7 +3,8 @@ local _, ns = ...
 local L = ns.L
 
 local function Help()
-    ns.Print(format(L["v%s commands:"], ns.version))
+    local version = ns.version .. (ns.build and (" build " .. ns.build) or "")
+    ns.Print(format(L["v%s commands:"], version))
     ns.Print(L["  /nw - show or hide the window"])
     ns.Print(L["  /nw [item] - find an item on all your characters"])
     ns.Print(L["  /nw options - open the options"])

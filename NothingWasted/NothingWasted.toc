@@ -16,6 +16,7 @@ Locales\zhCN.lua
 Locales\koKR.lua
 
 Core.lua
+Build.lua
 Data.lua
 Rested.lua
 

@@ -9,4 +9,5 @@ ignore:
   - tests
   - RestedRoster
   - "*.md"
+  - "*.cmd"
   - .gitignore
