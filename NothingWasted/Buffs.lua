@@ -39,11 +39,14 @@ end
 
 local YELLOW = "|cffffd100"
 
--- Prints buff reminders in yellow, with one sound for the batch unless turned off.
+-- Prints buff reminders in yellow, with one sound and one screen-edge flash for the batch; each can
+-- be turned off.
 local function Remind(messages)
     if #messages == 0 then return end
     for _, msg in ipairs(messages) do ns.Print(YELLOW .. msg .. "|r") end
-    if ns.db.settings.alerts.buffSound then ns.Alerts.PlaySound() end
+    local settings = ns.db.settings.alerts
+    if settings.buffSound then ns.Alerts.PlaySound() end
+    if settings.buffGlow then ns.Glow.Pulse() end
 end
 
 local function BelowMax()

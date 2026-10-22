@@ -39,6 +39,10 @@ local function Build()
     anim:SetScript("OnStop", function() frame:Hide() end)
 end
 
+function Glow.IsPulsing()
+    return anim ~= nil and anim:IsPlaying()
+end
+
 function Glow.Pulse()
     if not frame then Build() end
     anim:Stop()

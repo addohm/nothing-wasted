@@ -84,6 +84,7 @@ Page("alerts", L["Alerts"], 1, function(stack)
     Check(stack, L["Remind me when my sleeping bag is ready and unused"], "alerts", "bagBuff")
     Check(stack, L["Remind me at logout to use a ready sleeping bag"], "alerts", "bagLogout")
     Check(stack, L["Play the alert sound with these reminders"], "alerts", "buffSound")
+    Check(stack, L["Flash the screen edge with these reminders"], "alerts", "buffGlow")
 end, ResetGroup("alerts"))
 
 Page("barsopt", L["Bars window"], 2, function(stack)

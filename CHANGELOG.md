@@ -29,7 +29,8 @@ All notable changes to this project are documented here. The format follows
   is, its cooldown and buff). A sleeping bag that's a toy counts as carried; one in the bank doesn't.
 - The bars window's title is "Nothing Wasted". A "Bar shows" option picks the bar text: time to cap
   (default), rested XP, rested % of a level, rested % of the cap, or the level rested XP reaches.
-- Buff reminders are yellow and play the alert sound (raid warning by default; can be turned off).
+- Buff reminders are yellow, play the alert sound (raid warning by default) and flash the screen
+  edge; the sound and the flash can each be turned off.
 - Mail expiring within 7 days is yellow, within 3 days red, and a login message lists characters with
   mail expiring within 7 days (can be turned off).
 - Crafts: character headers start open and profession headers collapsed. Choose goals: categories

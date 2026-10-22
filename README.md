@@ -63,8 +63,9 @@ button for the bars window.
 - **Cooldowns ready** and **mail about to expire** use the same alert system.
 - **Logout warning:** a chat line if you log out somewhere that isn't resting, where rested XP builds
   at a quarter of the rate.
-- **Leveling buffs** (below max level), as yellow chat lines with the alert sound (the sound can be
-  turned off) when you leave an inn or city, and when a buff wears off while you're out in the world:
+- **Leveling buffs** (below max level), as yellow chat lines with the alert sound and a screen-edge
+  flash (each can be turned off) when you leave an inn or city, and when a buff wears off while
+  you're out in the world:
   - "Not Well Fed": cooked food's Well Fed gives +5% XP from kills.
   - "Your Cozy Sleeping Bag is ready": resting in it gives up to +3% XP. Only when the bag is in your
     bags (a bag in the bank can't be used) and off cooldown.

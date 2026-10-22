@@ -148,6 +148,7 @@ return function(root)
         c:Advance(2)
         check(c:ChatHas("|cffffd100Not Well Fed"), "Well Fed reminder in yellow when leaving rest")
         eq(c.sounds[1], 8959, "with the alert sound")
+        check(c.ns.Glow.IsPulsing(), "and the screen-edge flash")
         check(c:ChatHas("Sleeping Bag is ready: rest in it for"), "bag reminder when leaving rest")
 
         -- Nothing more until something changes.
