@@ -6,17 +6,18 @@ setlocal
 rem The repo is the folder above this script's tools folder, so it keeps working if the repo is
 rem renamed or moved.
 for %%i in ("%~dp0..") do set "REPO=%%~fi"
-rem Change WOW if your client lives elsewhere (for example a beta folder).
+rem Change WOW if your client lives elsewhere (for example the live _forever_ folder).
+rem Inside ( ) blocks, always quote paths: the ) in "Program Files (x86)" would end the block.
 set "WOW=C:\Program Files (x86)\World of Warcraft\_classic_beta_"
 set "ADDON=%WOW%\Interface\AddOns\NothingWasted"
 
 if not exist "%REPO%\NothingWasted\NothingWasted.toc" (
-  echo Can't find the addon in %REPO%\NothingWasted. Is this script in the repo's tools folder?
+  echo Can't find the addon in "%REPO%\NothingWasted". Is this script in the repo's tools folder?
   set "RESULT=1"
   goto done
 )
 if not exist "%WOW%\" (
-  echo Can't find the WoW: Forever client at %WOW%. Fix WOW at the top of this script.
+  echo Can't find the WoW client at "%WOW%". Fix WOW at the top of this script.
   set "RESULT=1"
   goto done
 )
@@ -30,7 +31,7 @@ if errorlevel 1 (
 
 rem First install: create the addon folder (and Interface\AddOns if the client has none yet).
 if not exist "%ADDON%\" (
-  echo Creating %ADDON%
+  echo Creating "%ADDON%"
   mkdir "%ADDON%"
   if errorlevel 1 (
     echo Couldn't create the folder. Is the WoW folder writable? Try running this as administrator.
@@ -56,7 +57,7 @@ for /f %%s in ('git -C "%REPO%" status --porcelain -- NothingWasted') do set "BU
   echo local _, ns = ...
   echo ns.build = "%BUILD%"
 )
-echo Installed Nothing Wasted build %BUILD% into %ADDON%
+echo Installed Nothing Wasted build %BUILD% into "%ADDON%"
 echo In game: /reload, then /nw help should say build %BUILD%.
 set "RESULT=0"
 
