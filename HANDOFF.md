@@ -14,22 +14,21 @@ python -m venv .venv
 On macOS or Linux the interpreter is `.venv/bin/python`. lupa 2.8 bundles Lua 5.1
 (`import lupa.lua51`), which matches the game's Lua and includes `setfenv` and `math.atan2`.
 
-## What's done
+## Where it stands
 
-- **`RestedAlts/`** is the new addon (v0.1.0): a movable roster window with live estimates, time
-  until full, rested status icon, sorting, filters, tooltips, forget-with-confirm, a minimap button
-  that uses no libraries. [README.md](README.md) describes
-  the features; [CLAUDE.md](CLAUDE.md) covers the code layout and rules.
-- **`RestedRoster/`** is an older addon, included only as an example and inspiration. Rested Alts
+- **Planning.** The user wants to spitball ideas and flesh out the project before any code is
+  written. Don't write code until asked.
+- The `RestedAlts/` 0.1.0 draft was removed on 2026-10-22. Its feature ideas are in
+  [ROADMAP.md](ROADMAP.md), and its code is in git history (`853bebc`).
+- **`RestedRoster/`** is an older addon, included only as an example and inspiration. The new addon
   must not reference it or import from it. **Never modify it.**
-- The root docs and `.gitignore`.
-- The only check so far: a Python script confirmed every Lua block and bracket is balanced. Nothing
-  has run in the game client or under a real Lua interpreter.
+- The docs and `.gitignore` are in place.
 
-## In progress: headless smoke test
+## Parked: smoke-test design for the removed draft
 
-The goal is to load the addon under Lua 5.1 (via lupa) against a fake WoW API and drive it through
-realistic sessions. Nothing is written yet except the venv. The planned design:
+Kept for reference while planning. It was written for the 0.1.0 draft, so it will need reworking
+for whatever gets built. The idea: load the addon under Lua 5.1 (via lupa) against a fake WoW API
+and drive it through realistic sessions.
 
 ### Files
 
@@ -115,20 +114,13 @@ realistic sessions. Nothing is written yet except the venv. The planned design:
 The full-in times above come from `(cap - rested) / (xpMax * rate)`, where the inn rate is
 `0.05 / 28800` per second and the world rate is a quarter of that.
 
-### After it passes
-
-- Add `.venv/Scripts/python tests/run_smoke.py` to CLAUDE.md's Commands, and a CHANGELOG entry.
-- Fix whatever it finds, in the same commit as the test.
-
 ## Still open
 
-- **Untested in game.** The target is "WoW: Forever", Interface 16001.
-  Before relying on the code, confirm in game that these Classic-era APIs exist: `BackdropTemplate`,
-  `C_Timer.NewTicker`, `GetMaxPlayerLevel`, `UICheckButtonTemplate` and
-  `UIPanelScrollFrameTemplate`.
-- Confirm the rested rates and the 150% cap for that client. The constants are at the top of
-  `RestedAlts/Core.lua`.
-- See [ROADMAP.md](ROADMAP.md) for the rest.
+- The design. See [ROADMAP.md](ROADMAP.md).
+- WoW: Forever runs on the modern retail client with the Midnight addon API, not a Classic-era
+  client. The draft and the mock design above assumed Classic-era API. Check API choices against
+  the retail/Midnight API.
+- Confirm the rested rates and the 150% cap in game.
 
 ## Owner's standing rules
 

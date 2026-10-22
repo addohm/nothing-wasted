@@ -4,37 +4,20 @@ Guidance for coding assistants working in this repository.
 
 ## Layout
 
-- `RestedAlts/`: the addon under active development.
-  - `RestedAlts.toc`: metadata and load order (Core, UI, Minimap). `## Version` here is the only
-    version source; the code reads it with `GetAddOnMetadata`.
-  - `Core.lua`: saved data, rested XP estimates, events, popups, slash commands.
-  - `UI.lua`: the roster window (rows, sorting, filters, tooltips).
-  - `Minimap.lua`: the minimap button. It uses no libraries.
 - `RestedRoster/`: an older addon kept only as an example and inspiration. **Do not modify it.**
+- There's no addon code yet. The project is in planning; see [ROADMAP.md](ROADMAP.md).
 
 ## Rules
 
-- Rested Alts stands alone: no references to RestedRoster, no import of its data, no dependency on it.
-- Target client: Interface 16001. Use only API that Classic-era clients have.
-  Don't add feature checks for API that has always existed. Do check API that moved, such as
-  `C_AddOns.GetAddOnMetadata`.
-- No external libraries (Ace, LibDBIcon and so on). Keep the addon lightweight.
-- Files share state through the addon namespace (`local addonName, ns = ...`). Add no new globals
-  beyond `RestedAltsDB`, the named frames and the slash/popup registrations.
-- Saved data lives in `RestedAltsDB.chars` (keyed `Name-Realm`) and `RestedAltsDB.settings`. New
-  settings go in `DEFAULT_SETTINGS` in `Core.lua`, so existing installs pick them up.
+- Don't write or change code until the user asks for it. Discuss ideas first.
+- The new addon stands alone: no references to RestedRoster, no import of its data, no dependency
+  on it.
+- Target client: WoW: Forever, Interface 16001.
 
 ## Commands
 
-There's no build step. To try a change, copy `RestedAlts/` into the client's `Interface/AddOns`
-and `/reload` in game. If Lua 5.1 is installed, run a syntax check:
-
-```bash
-luac -p RestedAlts/*.lua
-```
-
-A headless smoke test with a mocked WoW API is planned but not written yet. Its design is in
-[HANDOFF.md](HANDOFF.md).
+None yet. Lua 5.1 is available here through Python's lupa (`import lupa.lua51`) for syntax checks
+and tests once there's code.
 
 ## Workflow
 

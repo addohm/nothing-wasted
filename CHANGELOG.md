@@ -13,8 +13,8 @@ All notable changes to this project are documented here. The format follows
 
 ### Removed
 
-- The one-time import from RestedRoster and the optional dependency on it. Rested Alts stands alone;
-  `RestedRoster/` is only an example.
+- The RestedAlts 0.1.0 draft (`RestedAlts/`), to plan the project before writing code. It was never
+  released or tested. Its ideas are listed in ROADMAP.md.
 
 ## [0.1.0] - 2026-10-22
 

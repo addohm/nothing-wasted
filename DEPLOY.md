@@ -1,5 +1,8 @@
 # Deploying Rested Alts
 
+There's nothing to install yet: the addon is being planned. The steps below are from the removed
+draft and apply once `RestedAlts/` exists again.
+
 Rested Alts is a World of Warcraft addon. It runs inside the game client (Interface 16001), and
 there's no server.
 
