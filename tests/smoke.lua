@@ -225,6 +225,20 @@ return function(root)
         alerts.buffCustomSound = "nonsense"
         c.ns.Alerts.PlaySound("buff")
         eq(c.sounds[4], 8959, "an unusable ID falls back to raid warning")
+        alerts.buffSoundName = "FAREWELL"
+        for _ = 1, 20 do c.ns.Alerts.PlaySound("buff") end
+        local seen = {}
+        for i = 5, #c.sounds do seen[c.sounds[i]] = true end
+        local kinds = 0
+        for id in pairs(seen) do
+            check(id == "file:552199" or id == "file:552209" or id == "file:552208" or id == "file:552205", "farewell plays one of the four lines")
+            kinds = kinds + 1
+        end
+        check(kinds > 1, "and picks at random")
+        alerts.buffSoundName, alerts.buffCustomSound = "CUSTOM", "file:1, file:2"
+        c.ns.Alerts.PlaySound("buff")
+        local last = c.sounds[#c.sounds]
+        check(last == "file:1" or last == "file:2", "comma-separated custom IDs pick one at random")
         alerts.buffSoundName, alerts.buffCustomSound = "SAME", ""
 
         -- Max level: none of it.

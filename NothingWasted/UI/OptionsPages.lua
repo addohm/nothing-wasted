@@ -11,6 +11,7 @@ local SOUNDS = {
     { "ALARM_CLOCK_WARNING_3", L["Alarm clock"] },
     { "TELL_MESSAGE", L["Whisper"] },
     { "MAP_PING", L["Map ping"] },
+    { "FAREWELL", L["Farewell (\"See ya later\", random)"] },
 }
 
 local CUSTOM = { "CUSTOM", L["Custom (enter an ID below)"] }
@@ -75,7 +76,7 @@ Page("alerts", L["Alerts"], 1, function(stack)
     Check(stack, L["Only alert once per cap"], "alerts", "once")
     Check(stack, L["Red screen-edge glow with the cap alert"], "alerts", "glow")
     Select(stack, L["Alert sound"], ALERT_SOUNDS, "alerts", "sound")
-    stack:Add(UI.OptionEdit(stack.inner, L["Custom sound ID (Wowhead sound=ID, or file:ID)"], Setting("alerts", "customSound")))
+    stack:Add(UI.OptionEdit(stack.inner, L["Custom sound ID (sound=ID or file:ID; commas for random)"], Setting("alerts", "customSound")))
     stack:Add(UI.OptionButton(stack.inner, L["Try the alert"], L["Test"], function()
         ns.Alerts.PlaySound()
         if ns.db.settings.alerts.glow then ns.Glow.Pulse() end

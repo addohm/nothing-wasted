@@ -27,6 +27,8 @@ All notable changes to this project are documented here. The format follows
 - Leveling buff reminders now come when you leave an inn or city, and when a buff wears off out in
   the world, instead of at login. `/nw buffs` shows what they see (Well Fed, where the sleeping bag
   is, its cooldown and buff). A sleeping bag that's a toy counts as carried; one in the bank doesn't.
+- A "Farewell" sound choice plays one of the four human NPC farewell lines ("See ya later" and
+  others) at random each time, and custom sound IDs can be a comma-separated list played at random.
 - Any game sound can be used: a "Custom" choice takes a sound kit ID (as on Wowhead's sound pages)
   or a sound file ID (`file:12345`). The buff reminders have their own sound setting, the same as
   the alert sound by default.

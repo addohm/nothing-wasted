@@ -73,7 +73,9 @@ button for the bars window.
     into your next session.
 - You pick the alert sound. The default is the raid warning sound. Any game sound works too: choose
   "Custom" and enter its ID, either the number from a Wowhead sound page (`sound=12345`) or a sound
-  file ID as `file:12345`. The buff reminders can have their own sound (by default the same).
+  file ID as `file:12345`; several IDs separated by commas play one at random. A built-in
+  "Farewell" choice plays one of the human NPC goodbyes ("See ya later" and others) at random. The
+  buff reminders can have their own sound (by default the same as the alerts).
 
 ### Bars window
 

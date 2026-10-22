@@ -12,9 +12,13 @@ ns.Alerts = Alerts
 local SCAN_SECONDS = 10
 
 -- Plays a custom sound: a sound kit ID ("12345", as on Wowhead's sound pages) or a sound file ID
--- ("file:12345"). Returns false if the text isn't a usable ID.
+-- ("file:12345"). Several IDs separated by commas play one at random each time. Returns false if
+-- the text isn't a usable ID.
 function Alerts.PlayCustom(text)
     text = (text or ""):gsub("%s", "")
+    local choices = {}
+    for part in text:gmatch("[^,]+") do choices[#choices + 1] = part end
+    if #choices > 1 then text = choices[math.random(#choices)] end
     local file = text:match("^file:(%d+)$")
     if file then
         if not PlaySoundFile then return false end
@@ -37,6 +41,10 @@ function Alerts.PlaySound(kind)
     if name == "CUSTOM" then
         if Alerts.PlayCustom(custom) then return end
         name = "RAID_WARNING" -- no usable ID yet
+    elseif name == "FAREWELL" and PlaySoundFile then
+        local files = ns.Data.farewellSounds
+        PlaySoundFile(files[math.random(#files)], "Master")
+        return
     end
     local id = SOUNDKIT[name] or SOUNDKIT.RAID_WARNING
     if id then PlaySound(id, "Master") end

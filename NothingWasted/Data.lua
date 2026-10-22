@@ -45,6 +45,10 @@ Data.sleepingBag = {
     chain = { { 79007, 79008 }, { 79192 }, { 79980 }, { 79974 }, { 79975 }, { 79976 } },
 }
 
+-- The standard human male NPC's four farewell lines ("See ya later" and others), as sound file IDs
+-- (from the community listfile: sound/creature/humanmalestandardnpc/humanmalestandardnpcfarewell01-04).
+Data.farewellSounds = { 552199, 552209, 552208, 552205 }
+
 -- Cooked food's Well Fed also applies Well Fed XP Boost: +5% XP from kills for 15 minutes.
 Data.wellFedXPSpellID = 1243969
 
