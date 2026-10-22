@@ -17,7 +17,6 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
   logout outside an inn or city, or the login checks it lists, will show it.
 - **Well Rested:** whether +4% per rank multiplies the cap (rank 5: 180%) or adds to it (170%). The
   addon multiplies.
-- **Interface number:** 16001, taken from the old reference addon.
 - **Cozy Sleeping Bag:** which of quests 79007 and 79008 is Alliance or Horde (either counts).
 - **Campfires:** whether logging out at a campfire counts as resting.
 - **Leveling buffs:** that eating cooked food puts Well Fed XP Boost (spell 1243969) on the player,
@@ -36,6 +35,8 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
 - At logout the game reports empty data (professions vanished from saved characters), so the addon
   doesn't re-read at logout except the XP snapshot and Well Rested, both guarded (2026-10-22).
 - A first in-game pass: the windows, alerts, tracking and saving work (2026-10-22).
+- The client is 1.60.1 (70450), so Interface 16001 is right, and it's the build of Blizzard's UI
+  source the API was checked against (2026-10-22).
 
 ## Ideas
 
