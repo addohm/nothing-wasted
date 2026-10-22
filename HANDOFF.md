@@ -21,6 +21,8 @@ On macOS or Linux the interpreter is `.venv/bin/python`. lupa 2.8 bundles Lua 5.
 - The design so far is in [README.md](README.md) (features) and [ROADMAP.md](ROADMAP.md) (plan,
   open questions and game facts to confirm). The name is Nothing Wasted: no rested XP, cooldown or
   mail left sitting unused.
+- **Repo rename:** the user will rename the GitHub repo from `rested-xp` to `nothing-wasted`.
+  Update the clone URL above once that's done.
 - **Scope:** leveling alts and earning Legacy points. The user cut auction-house mail and item
   tooltip counts as clutter; keep new features inside that scope.
 - Key point from the user: estimates must be accurate, so nothing sits at the cap unnoticed. Read the

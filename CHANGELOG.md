@@ -15,6 +15,7 @@ All notable changes to this project are documented here. The format follows
 - Renamed the planned addon from Well Rested to Nothing Wasted.
 - Design scope: leveling alts and Legacy points, with cooldowns, Cozy Sleeping Bag, mail, item
   search, professions, leveling and Legacy planner features. Slash command `/nw`.
+- Launch scope: all planned features. Translations: a starter set of six languages plus English.
 
 ### Removed
 

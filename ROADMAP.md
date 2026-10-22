@@ -6,9 +6,8 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
 ## Next, in order
 
 1. Finish the design. Still open:
-   - Which languages, and how translations are sourced (for example CurseForge's localization tool).
-   - Whether everything in README.md ships at launch, or some of it comes later. Item search is
-     the biggest piece.
+   - How translations are sourced: contributors (for example CurseForge's localization tool), or
+     machine drafts flagged for review.
    - Anything else the user wants to settle before code.
 2. Confirm the game facts the estimates depend on (see below), from the
    [Forever UI source](https://github.com/Gethe/wow-ui-source/tree/forever) and in game.
@@ -46,3 +45,5 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
 - Renamed to Nothing Wasted (2026-10-22).
 - Scope set: leveling alts and Legacy points. Added cooldowns, sleeping bag, mail, item search,
   professions, leveling and Legacy planner features (2026-10-22).
+- Launch scope: every planned feature, including mail and item search. Starter set of six
+  languages plus English (2026-10-22).

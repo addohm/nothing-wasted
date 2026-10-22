@@ -7,6 +7,7 @@ no alt sits at the rested XP cap, no cooldown sits ready unused, and no mail exp
 **Status:** design. There's no addon code yet. See [ROADMAP.md](ROADMAP.md) for the plan.
 
 **Scope:** leveling alts and earning Legacy points. Features outside that stay out, to avoid clutter.
+Everything below ships at launch, including mail and item search.
 
 ## Planned features
 
@@ -92,7 +93,8 @@ no alt sits at the rested XP cap, no cooldown sits ready unused, and no mail exp
 - Designed for a single account. Hardcore characters are ignored while they're hardcore.
 - Settings live in the addon's own options window.
 - Slash commands: `/nw`, with `/nothingwasted` as a fallback in case another addon uses `/nw`.
-- Translated into the game's languages at launch.
+- Translated at launch into a starter set: German, French, Spanish, Russian, Simplified Chinese and
+  Korean, plus English. More languages later.
 - To be released on CurseForge and Wago.
 
 ### Out of scope
