@@ -28,6 +28,16 @@ lupa 2.8 bundles Lua 5.1 (`import lupa.lua51`), which matches the game's Lua.
 - Similar addons exist: ForeverAlts, CLIAlts, Alt Ledger, Rested XP Tracker and Rested XP Helper.
   Nothing Wasted is built from scratch, with no code copied from them.
 
+## Measuring rested rates in game
+
+The rates are the main thing left to confirm. In an inn, start with
+`/run NWR={t=time(),r=GetXPExhaustion() or 0,m=UnitXPMax("player")} print("Rested start:",NWR.r)`,
+wait 30+ minutes without leveling, then
+`/run local d,s=(GetXPExhaustion() or 0)-NWR.r,time()-NWR.t print(format("+%d XP in %d min = %.2f%% of a level per 8h",d,s/60,d/NWR.m*100*28800/s))`.
+Expected 5.00% (6.00% at Well Rested rank 5). Away from rest, rested XP only builds while logged out:
+note `GetXPExhaustion()` before logging out somewhere that isn't resting and again after some hours.
+Expected 1.25% per 8h.
+
 ## How the tests work
 
 - `tests/wowmock.lua` builds a fake client per session and loads the addon's files in `.toc` order.

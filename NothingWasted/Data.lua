@@ -44,8 +44,8 @@ Data.sleepingBag = {
     chain = { { 79007, 79008 }, { 79192 }, { 79980 }, { 79974 }, { 79975 }, { 79976 } },
 }
 
--- First mount: level 40, 100g training plus a 20g mount (fan guides; not yet confirmed in game).
-Data.mount = { level = 40, cost = 120 * 10000 }
+-- First mount: level 40, 100g in total (confirmed in game, 2026-10-22).
+Data.mount = { level = 40, cost = 100 * 10000 }
 Data.RIDING_SKILL_LINE = 762
 
 -- Forever's trade economy.

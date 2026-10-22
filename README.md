@@ -102,7 +102,7 @@ button for the bars window.
 - **Untrained spells:** "Kyol hit 24 and has spells to train." Forever only lists untrained spells at
   the trainer, so visit your class trainer once; after that the addon knows which spells unlock at
   which level and counts them as you level.
-- **Mount gold:** gold saved toward the level-40 mount as an alt gets close.
+- **Mount gold:** gold saved toward the 100g level-40 mount as an alt gets close.
 - **Hearthstone:** where each alt is bound and when its hearthstone is ready.
 
 ### Professions

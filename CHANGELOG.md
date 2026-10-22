@@ -51,6 +51,8 @@ All notable changes to this project are documented here. The format follows
 
 ### Fixed
 
+- The level-40 mount costs 100g in Forever, not 120g.
+
 - "Spells to train" was wiped at every login: the addon looked for untrained spells in the
   spellbook, where Forever doesn't list them. It now saves what the class trainer lists, including
   spells for higher levels, and counts them as trainable once the character reaches their level.
