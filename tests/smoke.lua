@@ -153,6 +153,11 @@ return function(root)
         check(not meter.shown, "bars window hides on leaving rest")
         check(R.IsShown(), "reminder card shows instead")
         eq(Card(), "wellFed,bag", "with both missing buffs")
+        local flashing = 0
+        for _, f in ipairs(c.frames) do
+            if f.kind == "StatusBar" and f:IsVisible() and f.value == 1 then flashing = flashing + 1 end
+        end
+        eq(flashing, 2, "as two full yellow bars")
         eq(c.sounds[1], 8959, "with the alert sound")
         check(c.ns.Glow.IsPulsing(), "and the screen-edge flash")
         check(not c:ChatHas("Not Well Fed"), "no chat lines by default")
