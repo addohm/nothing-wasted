@@ -159,7 +159,7 @@ Run the tests with Python and lupa (`pip install lupa`):
 python3 tests/run_tests.py
 ```
 
-To try the latest pushed build on Windows, run `tools\install_forever.cmd` (or double-click it). It
+To try the latest pushed build on Windows, run `tools\install_forever.cmd` from a terminal. It
 pulls the repo, copies `NothingWasted/` into the Forever client's AddOns folder (creating it on the
 first run), and stamps the commit so `/nw help` shows which build is running. Edit `WOW` at the top if
 your client is installed elsewhere.

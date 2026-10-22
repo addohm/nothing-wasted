@@ -1,6 +1,6 @@
 @echo off
 rem Update this repo from GitHub and copy Nothing Wasted into the WoW: Forever client.
-rem Run it from anywhere (or double-click it), then restart the client, or /reload if Nothing
+rem Run it from a terminal (from any folder), then restart the client, or /reload if Nothing
 rem Wasted was already loaded. It only pulls what's on GitHub: push your commits first.
 setlocal
 rem The repo is the folder above this script's tools folder, so it keeps working if the repo is
@@ -62,6 +62,4 @@ echo In game: /reload, then /nw help should say build %BUILD%.
 set "RESULT=0"
 
 :done
-rem Keep the window open when started by double-click.
-echo %cmdcmdline% | find /i "%~nx0" >nul
 exit /b %RESULT%
