@@ -3,17 +3,40 @@ rem Update this repo from GitHub and copy Nothing Wasted into the WoW: Forever c
 rem Run it from anywhere (or double-click it), then restart the client, or /reload if Nothing
 rem Wasted was already loaded. It only pulls what's on GitHub: push your commits first.
 setlocal
-rem The repo is the folder this script is in, so it keeps working if the repo is renamed or moved.
-set "REPO=%~dp0"
-set "REPO=%REPO:~0,-1%"
-rem Change this if your client lives elsewhere (for example a beta folder).
-set "ADDON=C:\Program Files (x86)\World of Warcraft\_forever_\Interface\AddOns\NothingWasted"
+rem The repo is the folder above this script's tools folder, so it keeps working if the repo is
+rem renamed or moved.
+for %%i in ("%~dp0..") do set "REPO=%%~fi"
+rem Change WOW if your client lives elsewhere (for example a beta folder).
+set "WOW=C:\Program Files (x86)\World of Warcraft\_forever_"
+set "ADDON=%WOW%\Interface\AddOns\NothingWasted"
+
+if not exist "%REPO%\NothingWasted\NothingWasted.toc" (
+  echo Can't find the addon in %REPO%\NothingWasted. Is this script in the repo's tools folder?
+  set "RESULT=1"
+  goto done
+)
+if not exist "%WOW%\" (
+  echo Can't find the WoW: Forever client at %WOW%. Fix WOW at the top of this script.
+  set "RESULT=1"
+  goto done
+)
 
 git -C "%REPO%" pull --ff-only
 if errorlevel 1 (
   echo git pull failed, so nothing was copied.
   set "RESULT=1"
   goto done
+)
+
+rem First install: create the addon folder (and Interface\AddOns if the client has none yet).
+if not exist "%ADDON%\" (
+  echo Creating %ADDON%
+  mkdir "%ADDON%"
+  if errorlevel 1 (
+    echo Couldn't create the folder. Is the WoW folder writable? Try running this as administrator.
+    set "RESULT=1"
+    goto done
+  )
 )
 
 rem /MIR makes the installed folder an exact copy (files no longer in the repo are deleted).

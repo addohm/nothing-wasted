@@ -5,7 +5,7 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
 
 ## Next, in order
 
-1. **Test in game.** Install with `install_forever.cmd`, check `/nw help` shows the build, load
+1. **Test in game.** Install with `tools\install_forever.cmd`, check `/nw help` shows the build, load
    with no errors, then check:
    - The bars and times match the game: log out a character in an inn, check the estimate the next
      day against the real value when you log it in.

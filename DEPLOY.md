@@ -16,15 +16,20 @@ Interface 16001), and there's no server.
 2. Bump `## Version` in `NothingWasted/NothingWasted.toc`. It's the only version source.
 3. Move the CHANGELOG's Unreleased entries under the new version.
 4. Commit and tag the release (`git tag v1.0.0`).
-5. To try it locally, run `install_forever.cmd` (see below) and `/reload`.
+5. To try it locally, run `tools\install_forever.cmd` (see below) and `/reload`.
 
 ## Installing your own build on Windows
 
-`install_forever.cmd` pulls the repo from GitHub (`git pull --ff-only`), mirrors `NothingWasted/`
-into `C:\Program Files (x86)\World of Warcraft\_forever_\Interface\AddOns\NothingWasted`, and
-writes the commit into the installed `Build.lua`. `/nw help` then shows `v1.0.0 build <commit>`;
-"-dirty" means the copy included uncommitted changes. Change `ADDON` at the top of the script if the
-client is somewhere else. It only gets what's pushed, so push first.
+`tools\install_forever.cmd` pulls the repo from GitHub (`git pull --ff-only`), mirrors
+`NothingWasted/` into `<WOW>\Interface\AddOns\NothingWasted`, and writes the commit into the
+installed `Build.lua`. `WOW` at the top of the script is the client folder, by default
+`C:\Program Files (x86)\World of Warcraft\_forever_`.
+
+- On the first run it creates the addon folder (and `Interface\AddOns` if the client has none yet).
+  If `WOW` itself doesn't exist it stops instead, since the path is probably wrong.
+- `/nw help` then shows `v1.0.0 build <commit>`; "-dirty" means the copy included uncommitted changes.
+- It only gets what's pushed, so push first. If creating or copying fails, the WoW folder may need
+  the script to run as administrator.
 
 ## Releasing on CurseForge and Wago
 

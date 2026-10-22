@@ -20,7 +20,7 @@ Guidance for coding assistants working in this repository.
   - `Slash.lua`: `/nw` and the popups.
 - `tests/`: `wowmock.lua` (a strict fake WoW client), `smoke.lua` (scenarios), `run_tests.py`.
 - `.pkgmeta`: packaging for CurseForge and Wago.
-- `install_forever.cmd`: pulls and copies the addon into the user's Forever client on Windows, and
+- `tools/install_forever.cmd`: pulls and copies the addon into the user's Forever client on Windows, and
   stamps the commit into the installed `NothingWasted/Build.lua` (empty in the repo and in releases).
   Keep it CRLF (`.gitattributes`).
 - `RestedRoster/`: an older addon kept only as an example and inspiration. **Do not modify it.**
@@ -47,7 +47,7 @@ Guidance for coding assistants working in this repository.
 python3 tests/run_tests.py   # headless tests under Lua 5.1 (needs: pip install lupa)
 ```
 
-To try it in game on Windows, push, then run `install_forever.cmd` and `/reload`.
+To try it in game on Windows, push, then run `tools\install_forever.cmd` and `/reload`.
 
 ## Workflow
 
