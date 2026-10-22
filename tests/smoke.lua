@@ -139,31 +139,49 @@ return function(root)
             name = "Buffy", level = 20, xp = 0, xpMax = 10000, resting = true, items = { [211527] = 1 },
         } })
         c:Login()
-        c:Advance(11)
-        check(c:ChatHas("Not Well Fed"), "missing Well Fed mentioned after login")
-        check(not c:ChatHas("Sleeping Bag is ready"), "no bag reminder while in an inn (it can't be used there)")
-        c:ClearChat()
+        c:Advance(6)
+        check(not c:ChatHas("Well Fed") and not c:ChatHas("Sleeping Bag"), "no reminders at login")
+
+        -- Leaving the city: both reminders.
         c.player.resting = false
         c:Fire("PLAYER_UPDATE_RESTING")
         c:Advance(2)
-        check(c:ChatHas("Sleeping Bag is ready: rest in it for"), "bag reminder once out of the inn")
-        check(not c:ChatHas("Not Well Fed"), "Well Fed isn't repeated without a change")
+        check(c:ChatHas("Not Well Fed"), "Well Fed reminder when leaving rest")
+        check(c:ChatHas("Sleeping Bag is ready: rest in it for"), "bag reminder when leaving rest")
 
-        -- Eat, then let it wear off.
+        -- Nothing more until something changes.
         c:ClearChat()
+        c:Fire("UNIT_AURA", "player")
+        c:Advance(2)
+        check(not c:ChatHas("Well Fed") and not c:ChatHas("Sleeping Bag"), "no repeats without a change")
+
+        -- Eat and rest in the bag, then the food wears off out in the world.
         c.player.auras[1243969] = 99999
         c.player.auras[429959] = 99999
         c:Fire("UNIT_AURA", "player")
         c:Advance(2)
-        check(not c:ChatHas("Not Well Fed") and not c:ChatHas("Sleeping Bag"), "quiet while buffed")
         c.player.auras[1243969] = nil
         c:Fire("UNIT_AURA", "player")
         c:Advance(2)
-        check(c:ChatHas("Not Well Fed"), "reminder when Well Fed wears off")
+        check(c:ChatHas("Not Well Fed"), "reminder when Well Fed wears off out in the world")
+        check(not c:ChatHas("Sleeping Bag is ready"), "no bag reminder while its buff is on")
+
+        -- A buff wearing off in town waits until you leave.
         c:ClearChat()
+        c.player.auras[1243969] = 99999
         c:Fire("UNIT_AURA", "player")
         c:Advance(2)
-        check(not c:ChatHas("Not Well Fed"), "only once per drop")
+        c.player.resting = true
+        c:Fire("PLAYER_UPDATE_RESTING")
+        c:Advance(2)
+        c.player.auras[1243969] = nil
+        c:Fire("UNIT_AURA", "player")
+        c:Advance(2)
+        check(not c:ChatHas("Not Well Fed"), "no reminder in town")
+        c.player.resting = false
+        c:Fire("PLAYER_UPDATE_RESTING")
+        c:Advance(2)
+        check(c:ChatHas("Not Well Fed"), "reminder once you leave town")
 
         -- Logging out with a ready bag and no bag buff.
         c.player.auras[429959] = nil
@@ -177,10 +195,25 @@ return function(root)
         c:Fire("PLAYER_CAMPING")
         check(not c:ChatHas("before logging out"), "no logout reminder while the bag is on cooldown")
 
+        -- /nw buffs shows where the bag is.
+        c.player.itemCooldowns[211527] = nil
+        c.player.items[211527] = nil
+        c.player.bankItems = { [211527] = 1 }
+        c:ClearChat()
+        c:Slash("buffs")
+        check(c:ChatHas("0 in bags, 1 in the bank"), "/nw buffs shows a banked bag")
+        check(c:ChatHas("Bag reminder possible now: no"), "a banked bag can't be reminded about")
+        c.player.toys = { [211527] = true }
+        c:ClearChat()
+        c:Slash("buffs")
+        check(c:ChatHas("Bag reminder possible now: yes"), "a sleeping bag toy counts as carried")
+
         -- Max level: none of it.
         local m = mock.NewClient({ root = root, player = { name = "Maxi", level = 60, xpMax = 0, items = { [211527] = 1 } } })
         m:Login()
-        m:Advance(11)
+        m.player.resting = false
+        m:Fire("PLAYER_UPDATE_RESTING")
+        m:Advance(2)
         m:Fire("PLAYER_CAMPING")
         check(not m:ChatHas("Well Fed") and not m:ChatHas("Sleeping Bag"), "no buff reminders at max level")
     end)

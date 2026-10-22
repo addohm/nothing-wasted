@@ -26,6 +26,7 @@ Copy the `NothingWasted` folder into your client's `Interface/AddOns` folder (fo
 | `/nw reset` | Forget every character (asks first) |
 | `/nw chars` | List every saved character, what its bar shows, and which session last saved the data |
 | `/nw rate` | Measure the rested XP rate: shows the live values and expected rate, sets a mark, and on the next run shows the rate since the mark (works across a logout). Also lists automatic checks made at each login. `/nw rate reset` starts over |
+| `/nw buffs` | What the leveling buff reminders see: Well Fed, where the sleeping bag is, its cooldown and buff |
 | `/nw perks` | List the Legacy perk nodes, to check perk spell IDs |
 
 `/nothingwasted` works too, in case another addon uses `/nw`. The minimap button and the game's
@@ -62,10 +63,11 @@ button for the bars window.
 - **Cooldowns ready** and **mail about to expire** use the same alert system.
 - **Logout warning:** a chat line if you log out somewhere that isn't resting, where rested XP builds
   at a quarter of the rate.
-- **Leveling buffs** (below max level), as chat lines once after login and again when a buff wears off:
+- **Leveling buffs** (below max level), as chat lines when you leave an inn or city, and when a buff
+  wears off while you're out in the world:
   - "Not Well Fed": cooked food's Well Fed gives +5% XP from kills.
-  - "Your Cozy Sleeping Bag is ready": resting in it gives up to +3% XP. Not shown in inns and
-    cities, where the bag can't be used.
+  - "Your Cozy Sleeping Bag is ready": resting in it gives up to +3% XP. Only when the bag is in your
+    bags (a bag in the bank can't be used) and off cooldown.
   - At logout, if the bag is ready and you don't have its buff: rest in it first to carry the buff
     into your next session.
 - You pick the alert sound. The default is the raid warning sound.

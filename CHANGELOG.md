@@ -24,6 +24,9 @@ All notable changes to this project are documented here. The format follows
 - `/nw rate`: measures the rested XP rate in game (a mark, then the rate since it, across a logout
   too) next to the expected rate, and lists automatic checks of the estimate made at each login.
   It shows the mark's clock time and rested value.
+- Leveling buff reminders now come when you leave an inn or city, and when a buff wears off out in
+  the world, instead of at login. `/nw buffs` shows what they see (Well Fed, where the sleeping bag
+  is, its cooldown and buff). A sleeping bag that's a toy counts as carried; one in the bank doesn't.
 - Crafted items' tooltips say which of your characters can make them ("Can make: Kampf, Whoat").
 - Items → Mail and Professions → Crafts group their rows under collapsible character headers,
   collapsed by default.

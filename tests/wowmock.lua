@@ -401,6 +401,7 @@ function M.NewClient(opts)
     env.ATTACHMENTS_MAX_SEND, env.ATTACHMENTS_MAX_RECEIVE = 12, 16
     env.InCombatLockdown = function() return client.inCombat or false end
     env.IsShiftKeyDown = function() return client.shift or false end
+    env.PlayerHasToy = function(id) return player.toys and player.toys[id] or false end
     -- Midnight's secret values: tests mark values secret by wrapping them with mock.Secret().
     env.issecretvalue = function(v) return type(v) == "table" and getmetatable(v) == M.SecretMeta end
 
@@ -563,7 +564,9 @@ function M.NewClient(opts)
 
     -- Items, bags, bank
     env.C_Item = {
-        GetItemCount = function(id) return player.items[id] or 0 end,
+        GetItemCount = function(id, includeBank)
+            return (player.items[id] or 0) + (includeBank and (player.bankItems and player.bankItems[id] or 0) or 0)
+        end,
         GetItemInfoInstant = function(id)
             local info = client.itemInfo and client.itemInfo[id]
             if info then return id, nil, nil, nil, nil, info.classID, info.subclassID end

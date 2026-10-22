@@ -1,9 +1,9 @@
 -- Nothing Wasted: reminders for the leveling buffs, below max level.
 --
 -- Well Fed XP Boost (+5% kill XP from cooked food) and the Cozy Sleeping Bag's Well-Rested (up to
--- +3% XP). A missing buff is mentioned once after login and again each time it wears off, as a
--- chat line. At logout, a ready sleeping bag is pointed out: resting in it first carries the buff
--- into the next session.
+-- +3% XP). A missing buff is mentioned as a chat line when you leave an inn or city, and when it
+-- wears off while you're out in the world. At logout, a ready sleeping bag is pointed out: resting
+-- in it first carries the buff into the next session.
 local _, ns = ...
 local L = ns.L
 
@@ -14,13 +14,27 @@ local function HasAura(spellID)
     return C_UnitAuras.GetPlayerAuraBySpellID(spellID) ~= nil
 end
 
--- True if the character carries the sleeping bag and it's off cooldown.
-function Buffs.BagReady()
+-- Where the sleeping bag is: count in bags, count in the bank, and whether it's a toy.
+local function BagWhere()
     local itemID = ns.Data.sleepingBag.itemID
-    if (C_Item.GetItemCount(itemID) or 0) == 0 then return false end
-    local start, duration = C_Container.GetItemCooldown(itemID)
-    if not start or start == 0 or not duration or duration == 0 then return true end
-    return start + duration - GetTime() <= 0
+    local carried = C_Item.GetItemCount(itemID) or 0
+    local total = C_Item.GetItemCount(itemID, true) or 0
+    local toy = PlayerHasToy and PlayerHasToy(itemID) or false
+    return carried, total - carried, toy
+end
+
+-- Seconds until the bag is off cooldown (0 when ready).
+local function BagCooldown()
+    local start, duration = C_Container.GetItemCooldown(ns.Data.sleepingBag.itemID)
+    if not start or start == 0 or not duration or duration == 0 then return 0 end
+    return math.max(0, start + duration - GetTime())
+end
+
+-- True if the bag can be used now: in your bags (or a toy) and off cooldown. A bag in the bank
+-- can't be used.
+function Buffs.BagReady()
+    local carried, _, toy = BagWhere()
+    return (carried > 0 or toy) and BagCooldown() == 0
 end
 
 local function BelowMax()
@@ -28,30 +42,27 @@ local function BelowMax()
     return c and not c.isMax and not c.xpDisabled
 end
 
--- State between checks: whether each buff was on last time, and the once-after-login reminders.
-local hadWellFed, hadBagBuff
-local loginWellFed, loginBag = false, false
+-- State between checks. nil until the first check after login, which only records the baseline.
+local wasResting, hadWellFed, hadBagBuff
 
 function Buffs.Check()
-    -- Auras can be secret in combat; the check runs again when combat ends.
+    -- Auras can be secret in combat; the check runs again when combat ends, transitions intact.
     if InCombatLockdown() or not BelowMax() then return end
     local settings = ns.db.settings.alerts
-
+    local resting = IsResting() and true or false
+    local leftRest = wasResting == true and not resting
     local wellFed = HasAura(ns.Data.wellFedXPSpellID)
-    if not wellFed and settings.wellFed and (loginWellFed or hadWellFed) then
-        ns.Print(L["Not Well Fed: eat cooked food for +5% XP from kills."])
-    end
-    loginWellFed = false
-    hadWellFed = wellFed
-
     local bagBuff = HasAura(ns.Data.sleepingBag.buffSpellID)
-    -- The bag can't be used in inns and cities, so the login reminder waits until you're out.
-    local usable = Buffs.BagReady() and not IsResting()
-    if not bagBuff and usable and settings.bagBuff and (loginBag or hadBagBuff) then
-        ns.Print(L["Your Cozy Sleeping Bag is ready: rest in it for up to +3% XP."])
+
+    if not resting then
+        if settings.wellFed and not wellFed and (leftRest or hadWellFed) then
+            ns.Print(L["Not Well Fed: eat cooked food for +5% XP from kills."])
+        end
+        if settings.bagBuff and not bagBuff and Buffs.BagReady() and (leftRest or hadBagBuff) then
+            ns.Print(L["Your Cozy Sleeping Bag is ready: rest in it for up to +3% XP."])
+        end
     end
-    if bagBuff or usable then loginBag = false end
-    hadBagBuff = bagBuff
+    wasResting, hadWellFed, hadBagBuff = resting, wellFed, bagBuff
 end
 
 local pending
@@ -65,11 +76,10 @@ local function CheckSoon()
 end
 
 ns.On("PLAYER_ENTERING_WORLD", function(isInitialLogin, isReload)
-    if not isInitialLogin and not isReload then return end
-    loginWellFed, loginBag = true, true
-    hadWellFed, hadBagBuff = nil, nil
-    -- After the login chat settles, like the other alerts.
-    C_Timer.After(10, Buffs.Check)
+    if isInitialLogin or isReload then
+        wasResting, hadWellFed, hadBagBuff = nil, nil, nil
+    end
+    C_Timer.After(5, Buffs.Check)
 end)
 ns.On("UNIT_AURA", function(unit) if unit == "player" then CheckSoon() end end)
 ns.On("PLAYER_REGEN_ENABLED", CheckSoon)
@@ -82,3 +92,18 @@ ns.On("PLAYER_CAMPING", function()
         ns.Print(L["Your Cozy Sleeping Bag is ready: rest in it before logging out to keep up to +3% XP for your next session."])
     end
 end)
+
+-- What the reminders see right now: /nw buffs
+function Buffs.Report()
+    local function YesNo(v) return v and L["yes"] or L["no"] end
+    local carried, banked, toy = BagWhere()
+    local cd = BagCooldown()
+    ns.Print(format(L["Below max level: %s. Resting: %s. In combat: %s."], YesNo(BelowMax()),
+        YesNo(IsResting()), YesNo(InCombatLockdown())))
+    ns.Print(format(L["Well Fed XP Boost (%d): %s."], ns.Data.wellFedXPSpellID, YesNo(HasAura(ns.Data.wellFedXPSpellID))))
+    ns.Print(format(L["Cozy Sleeping Bag (%d): %d in bags, %d in the bank, toy: %s, cooldown: %s."],
+        ns.Data.sleepingBag.itemID, carried, banked, YesNo(toy), cd > 0 and ns.FormatDuration(cd) or L["ready"]))
+    ns.Print(format(L["Well-Rested buff (%d): %s. Bag reminder possible now: %s."], ns.Data.sleepingBag.buffSpellID,
+        YesNo(HasAura(ns.Data.sleepingBag.buffSpellID)),
+        YesNo(Buffs.BagReady() and not IsResting() and not HasAura(ns.Data.sleepingBag.buffSpellID))))
+end
