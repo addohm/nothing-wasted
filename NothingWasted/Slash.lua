@@ -6,6 +6,7 @@ local function Help()
     local version = ns.version .. (ns.build and (" build " .. ns.build) or "")
     ns.Print(format(L["v%s commands:"], version))
     ns.Print(L["  /nw - show or hide the window"])
+    ns.Print(L["  /nw bars - show or hide the small bars window"])
     ns.Print(L["  /nw [item] - find an item on all your characters"])
     ns.Print(L["  /nw options - open the options"])
     ns.Print(L["  /nw minimap - show or hide the minimap button"])
@@ -19,6 +20,8 @@ SlashCmdList.NOTHINGWASTED = function(msg)
     local cmd = msg:lower()
     if cmd == "" then
         ns.Window.Toggle()
+    elseif cmd == "bars" then
+        ns.Meter.Toggle()
     elseif cmd == "options" or cmd == "config" then
         ns.Window.Show("options")
     elseif cmd == "minimap" then

@@ -35,6 +35,8 @@ Leveling.lua
 Alerts.lua
 
 UI\Sections.lua
+UI\Bars.lua
+UI\Meter.lua
 UI\RestedTab.lua
 UI\CooldownsTab.lua
 UI\LevelingTab.lua

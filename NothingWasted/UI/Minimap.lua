@@ -52,6 +52,8 @@ local function Build()
     button:SetScript("OnClick", function(_, mouseButton)
         if mouseButton == "RightButton" then
             ns.Window.Toggle("options")
+        elseif IsShiftKeyDown() then
+            ns.Meter.Toggle()
         else
             ns.Window.Toggle()
         end
@@ -62,6 +64,7 @@ local function Build()
         GameTooltip:SetOwner(self, "ANCHOR_LEFT")
         GameTooltip:AddLine("Nothing Wasted")
         GameTooltip:AddLine(L["Click to show your characters."], 1, 1, 1)
+        GameTooltip:AddLine(L["Shift-click for the small bars window."], 1, 1, 1)
         GameTooltip:AddLine(L["Right-click for options."], 1, 1, 1)
         GameTooltip:AddLine(L["Drag to move this button."], 0.7, 0.7, 0.7)
         GameTooltip:Show()

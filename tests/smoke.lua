@@ -97,9 +97,10 @@ return function(root)
         local c = mock.NewClient({ root = root, db = db, now = now, player = KYOL })
         c:Login()
         check(not c:ChatHas("type /nw"), "no first-run hint on later logins")
-        local frame = c:Frame("NothingWastedFrame")
-        check(frame and frame.shown, "window pops up when logging in somewhere resting")
-        local texts = RowTexts(c, TabPanel(c))
+        check(c:Frame("NothingWastedFrame") == nil, "the full window doesn't pop up by itself")
+        local frame = c.ns.Meter.Frame()
+        check(frame and frame.shown, "the bars window pops up when logging in somewhere resting")
+        local texts = RowTexts(c, frame)
         eq(#texts, 2, "two characters that can rest")
         check(texts[1] and texts[1]:find("Kyol"), "Kyol first (caps sooner)")
         check(texts[2] and texts[2]:find("Oldie"), "Oldie second")
@@ -148,17 +149,27 @@ return function(root)
         eq(wcap, 18000, "rank 5 raises the cap by 20%")
         near(wtoCap, 768000, 1, "rank 5 builds rested XP 20% faster")
 
-        -- Leaving the inn hides a window that popped up by itself.
+        -- Hovering a bar shows the character tooltip.
+        local tip = c:Hover(c:Rows(frame)[2])
+        check(tip:Has("Time to cap"), "bar tooltip shows the time to cap")
+
+        -- Leaving the inn hides a bars window that popped up by itself.
         c:Fire("PLAYER_UPDATE_RESTING")
-        check(not frame.shown, "auto-shown window hides when leaving rest")
+        check(not frame.shown, "auto-shown bars window hides when leaving rest")
         c.player.resting = true
         c:Fire("PLAYER_UPDATE_RESTING")
-        check(frame.shown, "window pops up again when resting")
-        c:Slash("")
-        c:Slash("")
+        check(frame.shown, "bars window pops up again when resting")
+        c:Slash("bars")
+        c:Slash("bars")
         c.player.resting = false
         c:Fire("PLAYER_UPDATE_RESTING")
-        check(frame.shown, "a window opened by hand stays open when leaving")
+        check(frame.shown, "a bars window opened by hand stays open when leaving")
+
+        -- The bar count limit.
+        rawget(c.env, "NothingWastedDB").settings.meter.maxBars = 1
+        c.ns.Meter.Refresh()
+        eq(#c:Rows(frame), 1, "bars window shows at most the set number of bars")
+        rawget(c.env, "NothingWastedDB").settings.meter.maxBars = 10
         db2 = c:Logout()
         eq(db2.chars["Kyol-Forever"].wellRested, 5, "rank saved at logout")
         eq(db2.chars["Kyol-Forever"].resting, false, "logged out not resting")
@@ -317,7 +328,9 @@ return function(root)
         eq(kyol.trainable and #kyol.trainable, 1, "one spell to train at level 24")
         eq(kyol.sleepingBag and kyol.sleepingBag.done, 2, "sleeping bag chain progress")
         check(kyol.trade and kyol.trade.commerce, "trade reputation read")
-        check(c:Frame("NothingWastedFrame").shown, "window already open (logged in resting)")
+        check(c.ns.Meter.IsShown(), "bars window open (logged in resting)")
+        c:Slash("")
+        check(c:Frame("NothingWastedFrame").shown, "/nw opens the full window")
         for _, tab in ipairs({ "rested", "cooldowns", "leveling", "professions", "items", "legacy", "options" }) do
             c.ns.Window.Select(tab)
             local panel = TabPanel(c)

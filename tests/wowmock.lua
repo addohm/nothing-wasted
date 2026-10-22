@@ -381,6 +381,7 @@ function M.NewClient(opts)
     for i = 1, 8 do env["FACTION_STANDING_LABEL" .. i] = "Standing" .. i end
     env.ATTACHMENTS_MAX_SEND, env.ATTACHMENTS_MAX_RECEIVE = 12, 16
     env.InCombatLockdown = function() return client.inCombat or false end
+    env.IsShiftKeyDown = function() return client.shift or false end
 
     env.Enum = {
         BankType = { Character = 0, Account = 2 },

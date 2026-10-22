@@ -21,8 +21,8 @@ local DEFAULT_SETTINGS = {
         sound = "RAID_WARNING",
     },
     bars = {
-        autoShow = true,      -- show the window when entering an inn or city, hide when leaving
-        manualStays = true,   -- a window opened by hand stays open when leaving
+        autoShow = true,      -- show the bars window when entering an inn or city, hide when leaving
+        manualStays = true,   -- a bars window opened by hand stays open when leaving
         showMax = false,      -- show max-level characters
     },
     tooltip = {
@@ -37,6 +37,10 @@ local DEFAULT_SETTINGS = {
         bags = true,
         mail = true,
         played = true,
+    },
+    meter = {
+        maxBars = 10,         -- bars shown in the small bars window
+        locked = false,       -- stop the bars window from being dragged
     },
     window = { tab = "rested" },
     minimap = { angle = 200, hide = false },

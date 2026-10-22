@@ -11,7 +11,8 @@ All notable changes to this project are documented here. The format follows
 - Nothing Wasted 1.0.0 (not yet released): rested XP tracking with offline estimates that account
   for Well Rested; cap alerts with sound and a red screen-edge glow, early warnings, login reminders
   and a logout warning; a tabbed window (Rested, Cooldowns, Leveling, Professions, Mail and items,
-  Legacy, Options) that pops up in inns and cities; character tooltips; cooldown tracking
+  Legacy, Options) and a small damage-meter-style bars window that pops up in inns and cities
+  instead of the full window; character tooltips; cooldown tracking
   (Dedicated Study, Mooncloth, transmutes, Salt Shaker, Camp Tent, Cozy Sleeping Bag, hearthstone);
   leveling pace, who to play next, spells to train and mount gold; professions, trainer ranks,
   recipe tooltips, crafts from your alts' items, Merchant's Favor and trade reputations; mail sent to

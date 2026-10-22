@@ -17,6 +17,8 @@ local EARLY = {
     { 480, L["8 hours"] }, { 1440, L["1 day"] },
 }
 
+local BAR_COUNTS = { { 5, "5" }, { 10, "10" }, { 15, "15" }, { 20, "20" }, { 40, "40" } }
+
 local MAIL_DAYS = { { 1, L["1 day"] }, { 3, L["3 days"] }, { 7, L["7 days"] } }
 
 local function Setting(group, key)
@@ -76,10 +78,14 @@ ns.Window.AddTab({
         end)
         Place(test, 12, 30)
 
-        Header(L["Window"])
-        Check(L["Show the window in inns and cities, hide it when leaving"], "bars", "autoShow")
-        Check(L["Keep the window open when leaving if I opened it myself"], "bars", "manualStays")
+        Header(L["Bars"])
+        Check(L["Show the bars window in inns and cities, hide it when leaving"], "bars", "autoShow")
+        Check(L["Keep the bars window open when leaving if I opened it myself"], "bars", "manualStays")
+        Check(L["Lock the bars window in place"], "meter", "locked")
+        Cycle(L["Bars in the bars window:"], BAR_COUNTS, "meter", "maxBars")
         Check(L["Show max-level characters"], "bars", "showMax")
+        local showBars = ns.UI.Button(content, L["Show the bars window"], 160, function() ns.Meter.Show() end)
+        Place(showBars, 12, 30)
 
         Header(L["Tooltip details"])
         for _, def in ipairs(ns.Tooltip.Sections()) do

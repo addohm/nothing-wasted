@@ -1,7 +1,7 @@
 -- Nothing Wasted: the main window and its tabs.
 --
--- Tabs register themselves with Window.AddTab. The window pops up when you enter an inn or city
--- and hides when you leave; a window you open yourself stays open unless the option says otherwise.
+-- Tabs register themselves with Window.AddTab. It opens only when asked for; the small bars window
+-- (Meter.lua) is the one that pops up in inns and cities.
 local _, ns = ...
 local L = ns.L
 
@@ -15,7 +15,6 @@ local REFRESH_SECONDS = 5
 local frame, ticker
 local tabs, tabOrder = {}, {}
 local current
-local openedBy -- "auto" when it popped up for resting, "user" otherwise
 
 -- Tabs ---------------------------------------------------------------------------------------------
 
@@ -127,7 +126,6 @@ local function Build()
         if not ticker then ticker = C_Timer.NewTicker(REFRESH_SECONDS, Window.Refresh) end
     end)
     frame:SetScript("OnHide", function()
-        openedBy = nil
         if ticker then
             ticker:Cancel()
             ticker = nil
@@ -135,9 +133,8 @@ local function Build()
     end)
 end
 
-function Window.Show(tab, by)
+function Window.Show(tab)
     if not frame then Build() end
-    openedBy = by or "user"
     frame:Show()
     if tab then Window.Select(tab) end
 end
@@ -154,31 +151,8 @@ function Window.Toggle(tab)
     if Window.IsShown() and (not tab or tab == current) then
         Window.Hide()
     else
-        Window.Show(tab, "user")
+        Window.Show(tab)
     end
 end
-
--- Pop up while resting -----------------------------------------------------------------------------
-
-local wasResting
-
-local function UpdateResting()
-    local resting = IsResting() and true or false
-    if resting == wasResting then return end
-    wasResting = resting
-    local settings = ns.db.settings.bars
-    if not settings.autoShow then return end
-    if resting then
-        if not Window.IsShown() then Window.Show("rested", "auto") end
-    elseif Window.IsShown() and (openedBy == "auto" or not settings.manualStays) then
-        Window.Hide()
-    end
-end
-
-ns.On("PLAYER_UPDATE_RESTING", UpdateResting)
-ns.On("PLAYER_ENTERING_WORLD", function()
-    -- Don't pop up during combat lockdown or before the UI is settled.
-    C_Timer.After(2, UpdateResting)
-end)
 
 ns.On("NW_REFRESH", Window.Refresh)

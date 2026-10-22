@@ -18,7 +18,8 @@ Copy the `NothingWasted` folder into your client's `Interface/AddOns` folder (fo
 
 | Command | What it does |
 | --- | --- |
-| `/nw` | Show or hide the window |
+| `/nw` | Show or hide the full window |
+| `/nw bars` | Show or hide the small bars window |
 | `/nw [item]` | Find an item on all your characters (an item link or part of a name) |
 | `/nw options` | Open the options |
 | `/nw minimap` | Show or hide the minimap button |
@@ -26,7 +27,8 @@ Copy the `NothingWasted` folder into your client's `Interface/AddOns` folder (fo
 | `/nw perks` | List the Legacy perk nodes, to check perk spell IDs |
 
 `/nothingwasted` works too, in case another addon uses `/nw`. The minimap button and the game's
-addon menu by the minimap also open the window (right-click for options).
+addon menu by the minimap open the full window (right-click for options); shift-click the minimap
+button for the bars window.
 
 ## Features
 
@@ -60,24 +62,24 @@ addon menu by the minimap also open the window (right-click for options).
   at a quarter of the rate.
 - You pick the alert sound. The default is the raid warning sound.
 
-### Window
+### Bars window
 
-- One window with tabs: Rested (the bars), Cooldowns, Leveling, Professions, Mail and items, Legacy,
-  and Options.
-- The Rested tab shows only the bars: one per character, with its name and time to cap. The details
-  are in each bar's tooltip.
-
-### Progress bars
-
-- One bar per character, running from 0 to that character's rested cap, sorted with the soonest to
-  cap at the top.
-- They appear when you enter an inn or city and hide when you leave. A slash command and the minimap
-  button show them anywhere. A window you open yourself stays open when you leave; an option makes
-  it hide too.
+- A small window with just the rested bars, like a damage meter. It appears when you enter an inn or
+  city and hides when you leave.
+- One bar per character with its name and time to cap, running from 0 to that character's rested cap,
+  soonest to cap at the top. Shows up to 10 bars by default (5 to 40 in the options).
+- Drag the title to move it (or lock it in the options). Click the title to open the full window.
+- `/nw bars`, or shift-click the minimap button, shows it anywhere. A bars window you open yourself
+  stays open when you leave; an option makes it hide too.
 - Max-level characters can be shown or hidden.
 - Hover a bar for the details: time left to cap, level, professions and skill levels, gold, where the
   character logged out, Legacy goal progress, and more. You choose which details show.
 - Right-click a bar to forget that character.
+
+### Full window
+
+- Opens only when you ask: `/nw`, the minimap button, or the bars window's title.
+- Tabs: Rested (the same bars), Cooldowns, Leveling, Professions, Mail and items, Legacy, and Options.
 
 ### Leveling
 
