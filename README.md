@@ -64,7 +64,7 @@ button for the bars window.
 - **Logout warning:** a chat line if you log out somewhere that isn't resting, where rested XP builds
   at a quarter of the rate.
 - **Leveling buffs** (below max level): when you leave an inn or city, or a buff wears off while
-  you're out in the world, the missing buffs' **icons** appear where the bars window was, at the same
+  you're out in the world, the missing buffs' **icons** appear centered where the bars window was, at the same
   moment it closes: large, with a pulsing yellow glow and a small label under each (hover for
   details, right-click to dismiss). They come with the alert sound and a screen-edge flash (each can
   be turned off).

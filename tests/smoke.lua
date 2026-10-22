@@ -159,6 +159,9 @@ return function(root)
             if f.kind == "Button" and f.label and f.icon and f:IsVisible() then icons[#icons + 1] = f end
         end
         eq(#icons, 2, "two icons")
+        local group = icons[1].parent
+        eq(group.points[1][1], "CENTER", "the icons are centered on the bars window")
+        check(group.points[1][2] == meter, "on the bars window itself")
         if #icons == 2 then
             local x1, x2 = icons[1].points[1][2], icons[2].points[1][2]
             local w1 = icons[1].label:GetStringWidth()

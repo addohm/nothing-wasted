@@ -10,6 +10,7 @@ ns.Reminder = Reminder
 
 local SIZE = 38       -- icon size
 local GAP = 14        -- space between one icon's label and the next
+local LABEL_SPACE = 16 -- room under the icons for their labels
 local YELLOW = { 1, 0.82, 0 }
 local GLOW = "Interface\\Buttons\\UI-ActionButton-Border" -- the game's yellow button highlight
 
@@ -44,15 +45,15 @@ local KINDS = {
 
 local function Build()
     frame = CreateFrame("Frame", nil, UIParent)
-    frame:SetSize(SIZE, SIZE)
+    frame:SetSize(SIZE, SIZE + LABEL_SPACE)
     frame:SetFrameStrata("MEDIUM")
     frame:Hide()
 end
 
--- Places the icons where the bars window is (or would be).
+-- Centers the icons (with their labels) on the bars window, wherever it is and however big.
 local function Place()
     frame:ClearAllPoints()
-    frame:SetPoint("TOPLEFT", ns.Meter.GetFrame(), "TOPLEFT", 12, -12)
+    frame:SetPoint("CENTER", ns.Meter.GetFrame(), "CENTER", 0, 0)
 end
 
 local function CreateButton(i)
