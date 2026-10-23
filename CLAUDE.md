@@ -29,6 +29,8 @@ Guidance for coding assistants working in this repository.
 - `.pkgmeta`: packaging for CurseForge and Wago.
 - `LISTING.md`: the CurseForge and Wago page text (summary, description, screenshot list, release
   notes). Keep its feature list in step with README.md.
+- `release/`: `NothingWasted-<version>.zip`, built by `tools/make_release.py` from the committed
+  addon files. Rebuild it when cutting a release.
 - `art/`: the icon (512/400/256/128 px) and banner, drawn by `art/make_logo.py` (Pillow + Inter).
 - `tools/install_forever.cmd`: pulls and copies the addon into the user's Forever client on Windows, and
   stamps the commit into the installed `NothingWasted/Build.lua` (empty in the repo and in releases).
@@ -68,7 +70,7 @@ To try it in game on Windows, push, then run `tools\install_forever.cmd` and `/r
    - `SECURITY.md`: when what the addon can access or store changes.
    - `HANDOFF.md`: when work in progress moves on.
    - This file: when the layout, workflow or conventions change.
-   - `NothingWasted.toc` `## Version`: when cutting a release.
+   - `NothingWasted.toc` `## Version`: when cutting a release, then `python3 tools/make_release.py`.
 3. Run the tests, check that nothing secret-looking is staged, then commit.
 
 ## Don't

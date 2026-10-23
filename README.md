@@ -11,7 +11,8 @@ at the rested XP cap, no cooldown sits ready unused, and no mail expires unnotic
 
 ## Install
 
-Copy the `NothingWasted` folder into your client's `Interface/AddOns` folder (for Forever,
+Download `NothingWasted-<version>.zip` from the [release folder](release/) and unzip it into your
+client's `Interface/AddOns` folder, or copy the `NothingWasted` folder into your client's `Interface/AddOns` folder (for Forever,
 `_forever_/Interface/AddOns`), then log in each character once so it gets recorded.
 
 ## Commands
@@ -192,6 +193,7 @@ button for the bars window.
 - `tests/`: headless tests that run the addon against a fake WoW API under Lua 5.1.
 - `tools/`: `install_forever.cmd`, which installs your build into the game on Windows.
 - `art/`: the icon and banner, and the script that draws them.
+- `release/`: the packaged addon, `NothingWasted-<version>.zip` (unzip into `Interface/AddOns`).
 - `LISTING.md`: the CurseForge and Wago page text, screenshot list and release notes.
 
 ## Development

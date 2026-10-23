@@ -9,6 +9,7 @@ ignore:
   - tests
   - tools
   - art
+  - release
   - "*.md"
   - "*.cmd"
   - .gitignore

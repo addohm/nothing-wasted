@@ -15,8 +15,10 @@ Interface 16001), and there's no server.
 1. Run the tests: `python3 tests/run_tests.py`.
 2. Bump `## Version` in `NothingWasted/NothingWasted.toc`. It's the only version source.
 3. Move the CHANGELOG's Unreleased entries under the new version.
-4. Commit and tag the release (`git tag v1.0.0`).
-5. To try it locally, run `tools\install_forever.cmd` (see below) and `/reload`.
+4. Commit, then build the zip with `python3 tools/make_release.py` (it writes
+   `release/NothingWasted-<version>.zip` from the committed files) and commit that too.
+5. Tag the release (`git tag v1.0.0`).
+6. To try it locally, run `tools\install_forever.cmd` (see below) and `/reload`.
 
 ## Installing your own build on Windows
 
