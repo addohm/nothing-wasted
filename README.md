@@ -191,6 +191,8 @@ button for the bars window.
 - `NothingWasted/`: the addon. This folder is what gets installed.
 - `tests/`: headless tests that run the addon against a fake WoW API under Lua 5.1.
 - `tools/`: `install_forever.cmd`, which installs your build into the game on Windows.
+- `art/`: the icon and banner, and the script that draws them.
+- `LISTING.md`: the CurseForge and Wago page text, screenshot list and release notes.
 
 ## Development
 

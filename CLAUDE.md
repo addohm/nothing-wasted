@@ -27,6 +27,9 @@ Guidance for coding assistants working in this repository.
   - `Slash.lua`: `/nw` and the popups.
 - `tests/`: `wowmock.lua` (a strict fake WoW client), `smoke.lua` (scenarios), `run_tests.py`.
 - `.pkgmeta`: packaging for CurseForge and Wago.
+- `LISTING.md`: the CurseForge and Wago page text (summary, description, screenshot list, release
+  notes). Keep its feature list in step with README.md.
+- `art/`: the icon (512/400/256/128 px) and banner, drawn by `art/make_logo.py` (Pillow + Inter).
 - `tools/install_forever.cmd`: pulls and copies the addon into the user's Forever client on Windows, and
   stamps the commit into the installed `NothingWasted/Build.lua` (empty in the repo and in releases).
   Keep it CRLF (`.gitattributes`).

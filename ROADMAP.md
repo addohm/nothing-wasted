@@ -9,7 +9,8 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
    checked out. Set `/nw rate`, log out somewhere that isn't an inn or city, and run it again after
    a few hours; the login checks it lists help too.
 2. **Confirm the other open game facts** below, and fix `Data.lua` where they differ.
-3. **Release** on CurseForge and Wago (see DEPLOY.md), then open translations on CurseForge.
+3. **Release** on CurseForge and Wago (see DEPLOY.md; page text in LISTING.md, icon and banner in
+   `art/`), then open translations on CurseForge.
 
 ## To confirm in game
 

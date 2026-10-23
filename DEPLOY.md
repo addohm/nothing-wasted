@@ -42,7 +42,8 @@ the `NothingWasted/` folder and fills in translations from CurseForge's localiza
 
 First time only:
 
-1. Create the projects on CurseForge and Wago.
+1. Create the projects on CurseForge and Wago. `LISTING.md` has the page text, categories and
+   screenshot list; `art/` has the icon (`nothing-wasted-icon-400.png` for the avatar) and banner.
 2. Add their IDs to the `.toc` as `## X-Curse-Project-ID: <id>` and `## X-Wago-ID: <id>`.
 3. Set up the packager: either a GitHub Action (`BigWigsMods/packager`) with `CF_API_KEY` and
    `WAGO_API_TOKEN` as repository secrets, or the sites' own webhooks. Keep the keys out of the repo.
