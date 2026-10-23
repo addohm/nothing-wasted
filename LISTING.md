@@ -151,4 +151,4 @@ character names you're happy to show.
   and tag the release (see DEPLOY.md).
 - Add the project IDs to the `.toc` (`## X-Curse-Project-ID`, `## X-Wago-ID`) and set up the
   packager.
-- Pick a project icon: the sleeping icon (Spell_Nature_Sleep) matches the minimap button.
+- Project icon: `art/nothing-wasted-icon-400.png`, the same badge as the in-game minimap button.

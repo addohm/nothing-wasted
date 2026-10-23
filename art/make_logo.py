@@ -88,6 +88,12 @@ big = icon()
 for px in (512, 400, 256, 128):
     big.resize((px, px), Image.LANCZOS).save(os.path.join(OUT, f"nothing-wasted-icon-{px}.png"))
 
+# The in-game icon: the game reads TGA with power-of-two sizes. Used by the .toc (AddOns list and
+# the addon menu) and the minimap button.
+MEDIA = os.path.join(os.path.dirname(OUT), "NothingWasted", "Media")
+os.makedirs(MEDIA, exist_ok=True)
+big.resize((128, 128), Image.LANCZOS).save(os.path.join(MEDIA, "Icon.tga"))
+
 # Banner: icon plus the name and a tagline.
 W, H = 1600, 500
 banner = vgrad(W, H, NAVY_TOP, NAVY_BOT).convert("RGBA")

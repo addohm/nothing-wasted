@@ -31,7 +31,8 @@ Guidance for coding assistants working in this repository.
   notes). Keep its feature list in step with README.md.
 - `release/`: `NothingWasted-<version>.zip`, built by `tools/make_release.py` from the committed
   addon files. Rebuild it when cutting a release.
-- `art/`: the icon (512/400/256/128 px) and banner, drawn by `art/make_logo.py` (Pillow + Inter).
+- `art/`: the icon (512/400/256/128 px) and banner, drawn by `art/make_logo.py` (Pillow + Inter),
+  which also writes the in-game icon `NothingWasted/Media/Icon.tga` (128 px; the game needs TGA).
 - `tools/install_forever.cmd`: pulls and copies the addon into the user's Forever client on Windows, and
   stamps the commit into the installed `NothingWasted/Build.lua` (empty in the repo and in releases).
   Keep it CRLF (`.gitattributes`).

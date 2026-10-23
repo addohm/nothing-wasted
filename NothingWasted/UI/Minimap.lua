@@ -5,7 +5,7 @@ local L = ns.L
 local Minimap_ = {}
 ns.Minimap = Minimap_
 
-local ICON = "Interface\\Icons\\Spell_Nature_Sleep"
+local ICON = "Interface\\AddOns\\NothingWasted\\Media\\Icon" -- the addon's own badge (art/make_logo.py)
 
 local button
 
@@ -41,7 +41,7 @@ local function Build()
     local icon = button:CreateTexture(nil, "ARTWORK")
     icon:SetSize(17, 17)
     icon:SetTexture(ICON)
-    icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+    icon:SetTexCoord(0.04, 0.96, 0.04, 0.96)
     icon:SetPoint("TOPLEFT", 7, -6)
 
     local border = button:CreateTexture(nil, "OVERLAY")
