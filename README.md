@@ -4,8 +4,8 @@ A World of Warcraft addon for WoW: Forever (Interface 16001) for leveling alts a
 points. It tracks every character on your account and makes sure nothing goes to waste: no alt sits
 at the rested XP cap, no cooldown sits ready unused, and no mail expires unnoticed.
 
-**Status:** 1.0.0, written and passing its headless tests, but not yet run in the game client. See
-[ROADMAP.md](ROADMAP.md) for what still needs checking in game.
+**Status:** 1.0.0, released 2026-10-23. Tested in game on the WoW: Forever beta. The rested rate
+away from inns and cities is still being confirmed; see [ROADMAP.md](ROADMAP.md).
 
 **Scope:** leveling alts and earning Legacy points. Features outside that stay out, to avoid clutter.
 

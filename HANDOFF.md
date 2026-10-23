@@ -19,7 +19,8 @@ lupa 2.8 bundles Lua 5.1 (`import lupa.lua51`), which matches the game's Lua.
   2026-10-22). The first pass checked out and many refinements followed (tabbed window, bars window,
   glowing buff reminder icons, `/nw rate`, `/nw buffs`, resize grips). Still open: the
   away-from-rest rate (being measured) and the Well Rested cap (long term); see ROADMAP.md. After
-  that comes the release on CurseForge and Wago.
+  that comes the release on CurseForge and Wago. The 1.0.0 package is prepared (2026-10-23):
+  `release/NothingWasted-1.0.0.zip`, the CHANGELOG entry and LISTING.md.
 - APIs were checked against Blizzard's Forever UI source (build 1.60.1) and game IDs against Wowhead's
   Forever tooltips. Where a value is a guess, `Data.lua` and ROADMAP.md say so.
 - The GitHub repo is `addohm/nothing-wasted` (renamed from `rested-xp` on 2026-10-22).

@@ -136,11 +136,14 @@ character names you're happy to show.
 >
 > - Rested XP tracking for every character, with offline estimates that include Well Rested
 > - Cap alerts with sound and screen glow, early warnings, login reminders and a logout warning
-> - Bars window in inns and cities; glowing reminders for missing Well Fed and sleeping bag buffs
+> - Bars window in inns and cities, with a choice of bar text; resizable
+> - Glowing reminders for missing Well Fed and an unused Cozy Sleeping Bag when you leave town
 > - Leveling: who to play next, spells to train with costs, pace, mount gold
 > - Cooldowns, professions, crafts from your alts' items, recipe and crafted-item tooltips
 > - Mail sent to alts, expiring mail warnings, item search across all characters
 > - Legacy goals and an account planner
+> - Any game sound for alerts, including a random NPC farewell
+> - `/nw rate` to check the rested XP rate in game
 
 ---
 

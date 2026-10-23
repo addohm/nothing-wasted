@@ -50,6 +50,8 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
 - Standard docs (2026-10-22).
 - Removed the 0.1.0 draft to plan the project first (2026-10-22).
 - Core design: features, alerts, bars, Legacy goals and the name Well Rested (2026-10-22).
+- 1.0.0 release package prepared: changelog, listing and `release/NothingWasted-1.0.0.zip`
+  (2026-10-23).
 - Renamed to Nothing Wasted (2026-10-22).
 - Scope set: leveling alts and Legacy points. Added cooldowns, sleeping bag, mail, item search,
   professions, leveling and Legacy planner features (2026-10-22).
