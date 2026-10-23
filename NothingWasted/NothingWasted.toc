@@ -1,7 +1,7 @@
 ## Interface: 16001
 ## Title: Nothing Wasted
 ## Notes: Tracks every alt as it levels: rested XP and the rested cap, cooldowns, professions, mail, items and Legacy goals. Nothing goes to waste.
-## Author: KYOL
+## Author: addohm
 ## Version: 1.0.0
 ## IconTexture: Interface\Icons\Spell_Nature_Sleep
 ## SavedVariables: NothingWastedDB

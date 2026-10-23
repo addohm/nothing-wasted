@@ -11,10 +11,10 @@ Copy-paste material for the project pages. Placeholders are in [brackets].
 | Name | Nothing Wasted |
 | Slug | `nothing-wasted` |
 | Game version | WoW: Forever (Interface 16001, client 1.60.1) |
-| Author | KYOL |
+| Author | addohm |
 | License | [choose: All Rights Reserved, MIT, ...] |
-| Source | [GitHub link, if the repository goes public] |
-| Issues | [GitHub issues link, or the CurseForge comments] |
+| Source | https://github.com/addohm/nothing-wasted |
+| Issues | https://github.com/addohm/nothing-wasted/issues |
 
 **Categories**
 - CurseForge: Quests & Leveling (main), Professions, Bags & Inventory, Mail

@@ -53,6 +53,7 @@ All notable changes to this project are documented here. The format follows
 - Crafted items' tooltips say which of your characters can make them ("Can make: Kampf, Whoat").
 - Items → Mail and Professions → Crafts group their rows under collapsible character headers,
   collapsed by default.
+- The author is addohm (in the `.toc` and the listing).
 - `LISTING.md` (CurseForge and Wago page text) and `art/` (icon and banner, with the script that
   draws them).
 - Headless tests under Lua 5.1 with a strict fake WoW client.
