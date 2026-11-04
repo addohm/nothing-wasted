@@ -80,7 +80,7 @@ end
 
 function Inventory.TotalCount(itemID)
     local total = 0
-    for _, c in pairs(ns.db.chars) do
+    for _, c in ns.Chars() do
         local a, b, m, t = Inventory.CountFor(c, itemID)
         total = total + a + b + m + t
     end
@@ -110,7 +110,7 @@ function Inventory.Search(query)
     local results = {}
     for _, id in ipairs(Inventory.Find(query)) do
         local holders, total = {}, 0
-        for _, c in pairs(ns.db.chars) do
+        for _, c in ns.Chars() do
             local bags, bank, mailbox, transit = Inventory.CountFor(c, id)
             local sum = bags + bank + mailbox + transit
             if sum > 0 then

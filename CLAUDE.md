@@ -48,6 +48,8 @@ Guidance for coding assistants working in this repository.
   `NothingWastedDB`, `NothingWastedFrame`, `NothingWastedMinimapButton`,
   `NothingWasted_OnAddonCompartmentClick` and the slash/popup registrations. The tests enforce this.
 - New settings go in `DEFAULT_SETTINGS` in `Core.lua`, so existing installs pick them up.
+- Loop over characters with `ns.Chars()`, which skips untracked ones (`c.untracked`, set on
+  Options → Characters). Use `ns.db.chars` directly only for saving and the Characters page.
 - Game IDs go in `Data.lua`, with a note on where they were checked.
 - User-facing text goes through `L["..."]`.
 - No code copied from other addons.

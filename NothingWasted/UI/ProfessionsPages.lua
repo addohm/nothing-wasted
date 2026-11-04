@@ -7,7 +7,7 @@ local CRAFTS_PER_PROFESSION = 10
 
 local function Chars()
     local list = {}
-    for _, c in pairs(ns.db.chars) do list[#list + 1] = c end
+    for _, c in ns.Chars() do list[#list + 1] = c end
     table.sort(list, function(a, b) return (a.name or "") < (b.name or "") end)
     return list
 end

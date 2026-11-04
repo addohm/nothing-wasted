@@ -398,6 +398,25 @@ function M.NewClient(opts)
         client.popups[#client.popups + 1] = { which = which, text = d.text:format(a1, a2), data = data }
     end
     env.YES, env.NO, env.CLOSE = "Yes", "No", "Close"
+    -- Context menus: the last one opened is client.menu; client:MenuClick(text) picks an entry.
+    env.MenuUtil = {
+        CreateContextMenu = function(owner, generator)
+            local root = { owner = owner, entries = {} }
+            function root:CreateTitle(text)
+                local e = { title = text }
+                self.entries[#self.entries + 1] = e
+                return e
+            end
+            function root:CreateButton(text, fn, data)
+                local e = { text = text, fn = fn, data = data }
+                self.entries[#self.entries + 1] = e
+                return e
+            end
+            generator(owner, root)
+            client.menu = root
+            return root
+        end,
+    }
     env.SlashCmdList = {}
     env.RAID_CLASS_COLORS = setmetatable({}, { __index = function() return { r = 0.5, g = 0.6, b = 0.7 } end })
     env.GameTooltip = NewTooltip()
@@ -697,6 +716,22 @@ function M.NewClient(opts)
     function client:Slash(msg) self.env.SlashCmdList.NOTHINGWASTED(msg) end
 
     function client:Frame(name) return namedFrames[name] end
+
+    function client:MenuClick(text)
+        local menu = assert(self.menu, "no menu open")
+        self.menu = nil
+        for _, e in ipairs(menu.entries) do
+            if e.text == text then return e.fn(e.data) end
+        end
+        error("no menu entry " .. text)
+    end
+
+    -- Accepts the last popup shown.
+    function client:AcceptPopup()
+        local p = assert(table.remove(self.popups), "no popup shown")
+        self.env.StaticPopupDialogs[p.which].OnAccept(nil, p.data)
+        return p
+    end
 
     function client:ChatHas(pattern)
         for _, m in ipairs(self.chat) do

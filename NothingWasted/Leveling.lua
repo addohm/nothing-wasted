@@ -84,7 +84,7 @@ end
 function Leveling.WhoToPlay(now)
     local me = ns.PlayerKey()
     local list = {}
-    for key, c in pairs(ns.db.chars) do
+    for key, c in ns.Chars() do
         if not ns.Rested.IsIdle(c) and key ~= me then
             local rested, cap, toCap = ns.Rested.Estimate(c, now)
             list[#list + 1] = {
@@ -182,7 +182,7 @@ end)
 ns.On("NW_LEVEL_UP", function(c, level)
     C_Timer.After(3, function()
         local me = ns.Me()
-        local n = me and #Leveling.Trainable(me) or 0
+        local n = ns.IsTracked(me) and #Leveling.Trainable(me) or 0
         if n > 0 then
             ns.Print(format(L["%s reached level %d and has %d spell(s) to train."], ns.ColoredName(me), level, n))
         end

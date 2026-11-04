@@ -7,7 +7,7 @@ local GREY = "|cff999999"
 
 local function Chars()
     local list = {}
-    for key, c in pairs(ns.db.chars) do list[#list + 1] = { key = key, c = c } end
+    for key, c in ns.Chars() do list[#list + 1] = { key = key, c = c } end
     table.sort(list, function(a, b) return (a.c.name or "") < (b.c.name or "") end)
     return list
 end

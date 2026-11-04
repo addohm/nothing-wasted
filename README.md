@@ -99,7 +99,7 @@ button for the bars window.
   a character without XP data yet shows "log in to update".
 - Hover a bar for the details: time left to cap, level, professions and skill levels, gold, where the
   character logged out, Legacy goal progress, and more. You choose which details show.
-- Right-click a bar to forget that character.
+- Right-click a bar for a menu: stop tracking that character, or forget it.
 
 ### Full window
 
@@ -112,7 +112,15 @@ button for the bars window.
     typing in it switches to Search.
   - **Legacy:** Goals, Choose goals, Account planner.
 - The gear button in the title bar opens the options: Alerts, Bars window, Tooltip and Minimap, each
-  with a Defaults button.
+  with a Defaults button, and Characters.
+- **Characters** lists every saved character, tracked or not:
+  - Untick one to stop tracking it, such as a level 4 bank alt. It stays saved, but it's left out of
+    every list, alert and tooltip (bars, Who to play next, item search and counts, crafters, mail
+    warnings), and it gets no buff reminders or logout warning while you play it. Tick it to track
+    it again.
+  - **Forget** removes a character you've deleted, including max-level ones that have no bar. Logging
+    in to it adds it back. The character you're playing can't be forgotten (it would be added
+    straight back); `/nw reset` forgets everyone.
 - Each tab reopens the view you used last.
 - Drag the grip in the bottom-right corner to resize the window; the size is remembered.
 

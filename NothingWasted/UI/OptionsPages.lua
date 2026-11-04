@@ -1,4 +1,4 @@
--- Nothing Wasted: the Options pages (Alerts, Bars window, Tooltip, Minimap).
+-- Nothing Wasted: the Options pages (Alerts, Bars window, Tooltip, Minimap, Characters).
 local _, ns = ...
 local L = ns.L
 local UI = ns.UI
@@ -131,3 +131,86 @@ Page("minimap", L["Minimap"], 4, function(stack)
 end, function()
     ns.Minimap.SetShown(true)
 end)
+
+-- Characters: every saved character, tracked or not. Untick one to stop tracking it (a bank alt);
+-- Forget removes one that's been deleted.
+
+local CHAR_ROW_HEIGHT = 28
+
+local function CharacterItems()
+    local me = ns.PlayerKey()
+    local items = {}
+    for key, c in pairs(ns.db.chars) do items[#items + 1] = { key = key, c = c, isMe = key == me } end
+    table.sort(items, function(a, b)
+        if (a.c.name or "") ~= (b.c.name or "") then return (a.c.name or "") < (b.c.name or "") end
+        return (a.c.realm or "") < (b.c.realm or "")
+    end)
+    return items
+end
+
+local function CharacterRow(parent)
+    local row = CreateFrame("Button", nil, parent)
+    row:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight", "ADD")
+    row:SetScript("OnEnter", function(self)
+        if self.item then ns.Tooltip.ShowCharacter(self, self.item.c, self.item.isMe) end
+    end)
+    row:SetScript("OnLeave", GameTooltip_Hide)
+
+    row.check = CreateFrame("CheckButton", nil, row, "UICheckButtonTemplate")
+    row.check:SetSize(26, 26)
+    row.check:SetPoint("LEFT", 4, 0)
+    row.check:SetScript("OnClick", function(self)
+        if row.item then ns.Character.SetTracked(row.item.key, self:GetChecked() and true or false) end
+    end)
+
+    row.forget = CreateFrame("Button", nil, row, "UIPanelButtonTemplate")
+    row.forget:SetSize(80, 22)
+    row.forget:SetPoint("RIGHT", -4, 0)
+    row.forget:SetText(L["Forget"])
+    row.forget:SetScript("OnClick", function()
+        local item = row.item
+        if item then StaticPopup_Show("NOTHINGWASTED_FORGET", item.name, nil, item.key) end
+    end)
+
+    row.name = row:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+    row.name:SetPoint("LEFT", row.check, "RIGHT", 4, 0)
+    row.info = row:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    row.info:SetPoint("RIGHT", row.forget, "LEFT", -10, 0)
+    return row
+end
+
+local function UpdateCharacterRow(row, item)
+    local c = item.c
+    item.name = (c.name or "?") .. "-" .. (c.realm or "?")
+    local tracked = ns.IsTracked(c)
+    row.check:SetChecked(tracked)
+    local name = ns.ColoredName(c) .. " |cff999999" .. (c.realm or "?") .. "|r"
+    if item.isMe then name = name .. " |cff999999" .. L["(you)"] .. "|r" end
+    row.name:SetText(name)
+    local seen = item.isMe and L["playing now"]
+        or (c.savedAt and format(L["saved %s ago"], ns.FormatDuration(ns.Now() - c.savedAt)) or L["never saved"])
+    row.info:SetText(format("%s %d, %s", L["level"], c.level or 0, seen))
+    -- Forgetting the character being played would only add it straight back.
+    row.forget:SetShown(not item.isMe)
+end
+
+ns.Window.AddPage({
+    id = "chars",
+    group = "options",
+    label = L["Characters"],
+    order = 5,
+    build = function(panel)
+        local note = panel:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+        note:SetPoint("TOPLEFT", 4, -2)
+        note:SetPoint("TOPRIGHT", -28, -2)
+        note:SetJustifyH("LEFT")
+        note:SetText(L["Untick a character to stop tracking it: it's still saved, but left out of every list, alert and tooltip. Forget removes a deleted character (logging in to it adds it back)."])
+        local holder = CreateFrame("Frame", nil, panel)
+        holder:SetPoint("TOPLEFT", 0, -36)
+        holder:SetPoint("BOTTOMRIGHT")
+        panel.list = UI.List(holder, CHAR_ROW_HEIGHT, CharacterRow, UpdateCharacterRow)
+    end,
+    refresh = function(panel)
+        panel.list:SetItems(CharacterItems(), L["Log in to each character once to add it."])
+    end,
+})

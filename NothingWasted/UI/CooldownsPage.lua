@@ -5,7 +5,7 @@ local L = ns.L
 local function Items()
     local now = ns.Now()
     local rows = {}
-    for _, c in pairs(ns.db.chars) do
+    for _, c in ns.Chars() do
         for _, cd in ipairs(ns.Cooldowns.List(c, now)) do
             rows[#rows + 1] = { c = c, cd = cd }
         end

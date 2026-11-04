@@ -59,7 +59,7 @@ end
 
 local function BelowMax()
     local c = ns.Me()
-    return c and not c.isMax and not c.xpDisabled
+    return ns.IsTracked(c) and not c.isMax and not c.xpDisabled
 end
 
 -- State between checks. nil until the first check after login, which only records the baseline.

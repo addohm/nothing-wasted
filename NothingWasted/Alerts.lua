@@ -114,7 +114,7 @@ function Alerts.Scan(login)
     local now = ns.Now()
     local me = ns.PlayerKey()
     local out = { capped = {}, early = {}, cooldowns = {}, mail = {} }
-    for key, c in pairs(ns.db.chars) do
+    for key, c in ns.Chars() do
         if key ~= me then CheckRested(c, now, login, out) end
         CheckCooldowns(c, now, out)
         CheckMail(c, now, out)
@@ -154,6 +154,6 @@ end)
 ns.On("PLAYER_CAMPING", function()
     if not ns.db.settings.alerts.logout or IsResting() then return end
     local c = ns.Me()
-    if c and ns.Rested.IsIdle(c) then return end
+    if c and (c.untracked or ns.Rested.IsIdle(c)) then return end
     ns.Print(L["you're logging out somewhere that isn't resting: rested XP builds at a quarter of the rate. Log out in an inn or city to build it faster."])
 end)

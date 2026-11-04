@@ -33,7 +33,9 @@ local function ListCharacters()
     for _, key in ipairs(keys) do
         local c = ns.db.chars[key]
         local status
-        if c.isMax then
+        if c.untracked then
+            status = L["not tracked"]
+        elseif c.isMax then
             status = ns.db.settings.bars.showMax and L["max level"] or L["max level (hidden by the option)"]
         elseif ns.Rested.IsIdle(c) then
             status = c.xpDisabled and L["XP turned off"] or L["no XP data yet"]

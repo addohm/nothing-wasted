@@ -323,6 +323,84 @@ return function(root)
         check(d:ChatHas("Checks at login"), "/nw rate lists the login checks")
     end)
 
+    test("1e. untracking and forgetting characters", function()
+        local db
+        for _, p in ipairs({
+            { name = "Alpha", level = 10, xp = 0, xpMax = 5000, resting = true },
+            { name = "Banky", level = 4, xp = 0, xpMax = 1000, resting = true, bagSlots = { { 2589, 20, "Linen Cloth" } } },
+            { name = "Gone", level = 30, xp = 0, xpMax = 20000, resting = true },
+        }) do
+            local cl = mock.NewClient({ root = root, db = db, player = p })
+            cl:Login()
+            db = cl:Logout()
+        end
+        local c = mock.NewClient({ root = root, db = db, now = T0 + HOUR, player = { name = "Alpha", level = 10, xp = 0, xpMax = 5000, resting = true } })
+        c:Login()
+        local saved = rawget(c.env, "NothingWastedDB").chars
+        local meter = c.ns.Meter.Frame()
+        eq(#c:Rows(meter), 3, "three bars")
+        eq(c.ns.Inventory.TotalCount(2589), 20, "the bank alt's cloth is counted")
+
+        -- Right-click a bar: a menu to stop tracking it or forget it.
+        local bankRow
+        for _, row in ipairs(c:Rows(meter)) do
+            if row.item.c.name == "Banky" then bankRow = row end
+        end
+        bankRow.scripts.OnClick(bankRow, "RightButton")
+        check(c.menu and c.menu.entries[1].title == "Banky-Forever", "the menu is titled with the character")
+        c:ClearChat()
+        c:MenuClick("Stop tracking")
+        check(saved["Banky-Forever"].untracked, "the character is untracked")
+        check(saved["Banky-Forever"].level == 4, "but still saved")
+        check(c:ChatHas("Banky%-Forever is no longer tracked"), "chat says so and how to undo it")
+        eq(#c:Rows(meter), 2, "its bar goes")
+        eq(c.ns.Inventory.TotalCount(2589), 0, "its items aren't counted")
+        eq(#c.ns.Alts(), 1, "it isn't an alt any more")
+        c:Slash("chars")
+        check(c:ChatHas("Banky%-Forever.-not tracked"), "/nw chars still lists it, as not tracked")
+
+        -- Options, Characters lists every saved character, tracked or not.
+        c.ns.Window.Show("chars")
+        local rows = c:Rows(TabPanel(c))
+        eq(#rows, 3, "the Characters page lists all three")
+        local byName = {}
+        for _, row in ipairs(rows) do byName[row.item.c.name] = row end
+        check(byName.Banky and not byName.Banky.check:GetChecked(), "the untracked one is unticked")
+        check(byName.Alpha.check:GetChecked(), "the others are ticked")
+        check(not byName.Alpha.forget:IsShown(), "the character being played can't be forgotten")
+        byName.Banky.check:Click()
+        check(not saved["Banky-Forever"].untracked, "ticking it tracks it again")
+        eq(#c:Rows(meter), 3, "and its bar is back")
+
+        -- Forget a deleted character, from the page or from a bar.
+        byName.Gone.forget:Click()
+        local popup = c:AcceptPopup()
+        eq(popup.text, "Forget Gone-Forever?", "Forget asks first")
+        check(saved["Gone-Forever"] == nil, "the character is gone")
+        eq(#c:Rows(TabPanel(c)), 2, "and off the Characters page")
+        for _, row in ipairs(c:Rows(meter)) do
+            if row.item.c.name == "Banky" then bankRow = row end
+        end
+        bankRow.scripts.OnClick(bankRow, "RightButton")
+        c:MenuClick("Forget")
+        c:AcceptPopup()
+        check(saved["Banky-Forever"] == nil, "forgotten from a bar's menu")
+        eq(#c:Rows(meter), 1, "one bar left")
+
+        -- Playing an untracked character: no leveling buff reminders or logout warning for it.
+        c.ns.Character.SetTracked("Alpha-Forever", false)
+        eq(#c:Rows(meter), 0, "the untracked character has no bar while played")
+        c.player.resting = false
+        c:Fire("PLAYER_UPDATE_RESTING")
+        c:Advance(2)
+        check(not c.ns.Reminder.IsShown(), "no buff reminders")
+        c:ClearChat()
+        c:Fire("PLAYER_CAMPING")
+        check(not c:ChatHas("isn't resting"), "no logout warning")
+        saved = c:Logout().chars
+        check(saved["Alpha-Forever"] and saved["Alpha-Forever"].untracked, "it's still saved, untracked, at logout")
+    end)
+
     test("2. rested estimates, alerts and the logout warning", function()
         local db = mock.Copy(db1)
         local now = T0 + 2 * HOUR
@@ -703,7 +781,7 @@ return function(root)
         c:Slash("")
         check(c:Frame("NothingWastedFrame").shown, "/nw opens the full window")
         local expectRows = { rested = true, cooldowns = true, pace = true, train = true, skills = true,
-            bags = true, goals = true, choose = true, planner = true, alerts = false }
+            bags = true, goals = true, choose = true, planner = true, chars = true, alerts = false }
         local ids = c.ns.Window.PageIDs()
         check(#ids >= 18, "every page has a tab or view")
         for _, id in ipairs(ids) do

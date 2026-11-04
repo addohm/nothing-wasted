@@ -106,9 +106,18 @@ for _, event in ipairs({ "PLAYER_XP_UPDATE", "UPDATE_EXHAUSTION", "PLAYER_UPDATE
     ns.On(event, SaveSoon)
 end
 
--- Removes a character from the saved data.
+-- Removes a character from the saved data. Logging in to it adds it back.
 function Character.Forget(key)
     ns.db.chars[key] = nil
     if key == ns.PlayerKey() then Character.Save() end
+    ns.Fire("NW_REFRESH")
+end
+
+-- Tracks a character again, or stops tracking it: an untracked character is still saved but left
+-- out of every list, alert and tooltip (see ns.Chars).
+function Character.SetTracked(key, tracked)
+    local c = ns.db.chars[key]
+    if not c then return end
+    c.untracked = not tracked or nil
     ns.Fire("NW_REFRESH")
 end

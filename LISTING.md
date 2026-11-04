@@ -103,7 +103,8 @@ no mail left to expire.
 
 #### Good to know
 
-- Log in each character once so it gets recorded.
+- Log in each character once so it gets recorded. Untrack a bank alt, or forget a deleted
+  character, under Options → Characters.
 - Everything stays on your computer in the game's own saved data. No network access, no libraries.
 - Hardcore characters aren't tracked while they're hardcore.
 - **Translations welcome:** German, French, Spanish, Russian, Simplified Chinese and Korean, through

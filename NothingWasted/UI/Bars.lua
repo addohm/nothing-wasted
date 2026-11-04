@@ -11,13 +11,13 @@ local COLOR_FILLING = { 0.25, 0.5, 1 }
 local COLOR_CAPPED = { 0.85, 0.15, 0.15 }
 local COLOR_IDLE = { 0.4, 0.4, 0.4 }
 
--- Every saved character, capped first, then soonest to cap, then those that can't rest. Only
+-- Every tracked character, capped first, then soonest to cap, then those that can't rest. Only
 -- max-level characters can be hidden (by the option); everyone else always gets a bar.
 function Bars.Items()
     local now, me = ns.Now(), ns.PlayerKey()
     local showMax = ns.db.settings.bars.showMax
     local items = {}
-    for key, c in pairs(ns.db.chars) do
+    for key, c in ns.Chars() do
         local idle = ns.Rested.IsIdle(c)
         if showMax or not c.isMax then
             local rested, cap, toCap = ns.Rested.Estimate(c, now)
@@ -68,11 +68,22 @@ function Bars.CreateRow(parent, font)
         if self.item then ns.Tooltip.ShowCharacter(self, self.item.c, self.item.isMe) end
     end)
     row:SetScript("OnLeave", GameTooltip_Hide)
-    -- Right-click to forget a character.
+    -- Right-click for a menu: stop tracking the character, or forget it.
     row:RegisterForClicks("RightButtonUp")
     row:SetScript("OnClick", function(self)
-        local c = self.item and self.item.c
-        if c then StaticPopup_Show("NOTHINGWASTED_FORGET", (c.name or "?") .. "-" .. (c.realm or "?"), nil, self.item.key) end
+        local item = self.item
+        if not item then return end
+        local key, name = item.key, (item.c.name or "?") .. "-" .. (item.c.realm or "?")
+        MenuUtil.CreateContextMenu(self, function(_, root)
+            root:CreateTitle(name)
+            root:CreateButton(L["Stop tracking"], function()
+                ns.Character.SetTracked(key, false)
+                ns.Print(format(L["%s is no longer tracked. Track it again under Options, Characters."], name))
+            end)
+            root:CreateButton(L["Forget"], function()
+                StaticPopup_Show("NOTHINGWASTED_FORGET", name, nil, key)
+            end)
+        end)
     end)
     return row
 end

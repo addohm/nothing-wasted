@@ -20,6 +20,7 @@ local function MailOf(c)
 end
 
 -- The saved character a mail recipient refers to ("Name" or "Name-Realm"), if it's one of ours.
+-- Untracked characters count too, so their mail is right if they're tracked again.
 local function FindRecipient(recipient)
     if not recipient or recipient == "" then return end
     local name, realm = recipient:match("^([^%-]+)%-?(.*)$")
@@ -153,7 +154,7 @@ ns.On("PLAYER_ENTERING_WORLD", function(isInitialLogin)
         if not ns.db.settings.alerts.mailLogin then return end
         local now = ns.Now()
         local lines = {}
-        for _, c in pairs(ns.db.chars) do
+        for _, c in ns.Chars() do
             local count, soonest = 0, nil
             for _, m in ipairs(Mail.Pending(c)) do
                 if m.expiresAt and m.expiresAt > now and m.expiresAt - now <= SOON then

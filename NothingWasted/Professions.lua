@@ -201,7 +201,7 @@ local function Crafters(itemID)
     end
     if #recipeIDs == 0 then return {} end
     local list = {}
-    for _, c in pairs(ns.db.chars) do
+    for _, c in ns.Chars() do
         local knows = false
         for _, set in pairs(c.recipes or {}) do
             for _, id in ipairs(recipeIDs) do
@@ -226,7 +226,7 @@ local function RecipeLines(data, lines)
     local itemName = C_Item.GetItemNameByID(data.id)
     local recipeName = itemName and (itemName:match("^[^:]+:%s*(.+)$") or itemName)
     local required = RequiredSkill(data)
-    for _, c in pairs(ns.db.chars) do
+    for _, c in ns.Chars() do
         for _, p in ipairs(c.professions or {}) do
             if p.skillLine == skillLine then
                 local text

@@ -6,6 +6,17 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **Characters page** (Options → Characters): every saved character, tracked or not. Untick one to
+  stop tracking it, such as a bank alt: it stays saved but is left out of every list, alert and
+  tooltip, and gets no buff reminders or logout warning while you play it. Tick it again to bring it
+  back. **Forget** removes a deleted character, including max-level ones that have no bar.
+
+### Changed
+
+- Right-clicking a bar opens a menu: Stop tracking, or Forget (which still asks first).
+
 ## [1.0.0] - 2026-10-23
 
 First release, for WoW: Forever (client 1.60.1, Interface 16001).

@@ -21,6 +21,8 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
 - **Cozy Sleeping Bag:** which of quests 79007 and 79008 is Alliance or Horde (either counts).
 - **Leveling buffs:** that eating cooked food puts Well Fed XP Boost (spell 1243969) on the player,
   and that the sleeping bag's buff is Well-Rested (429959). Wowhead lists both; not yet seen in game.
+- **Characters page and the bar menu:** that right-clicking a bar opens the Stop tracking / Forget
+  menu (`MenuUtil.CreateContextMenu`), and the page's tick boxes and Forget buttons line up.
 - **Recipe tooltips:** on a recipe item (Pattern:, Recipe:, …), the "Requires <profession> (<skill>)"
   line the addon reads, and recipe names matching the item name after the prefix. Also the new
   "Can make" line on crafted items, such as the Basic Campfire Kit.
@@ -47,6 +49,8 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
 
 ## Done
 
+- Untrack characters (a bank alt) and forget deleted ones: Options → Characters, and a right-click
+  menu on the bars (2026-11-04).
 - Standard docs (2026-10-22).
 - Removed the 0.1.0 draft to plan the project first (2026-10-22).
 - Core design: features, alerts, bars, Legacy goals and the name Well Rested (2026-10-22).

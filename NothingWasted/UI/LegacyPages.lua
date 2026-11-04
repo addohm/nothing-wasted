@@ -15,6 +15,7 @@ end
 local function SummaryItems(items)
     local acc = ns.db.legacy
     local me = ns.Me()
+    if not ns.IsTracked(me) then me = nil end
     if acc and acc.earned then
         items[#items + 1] = { left = L["Legacy points earned by the account"], right = acc.max and format("%d / %d", acc.earned, acc.max) or tostring(acc.earned) }
     end
@@ -28,7 +29,7 @@ local function GoalItems()
     local items = {}
     SummaryItems(items)
     local list = {}
-    for key, c in pairs(ns.db.chars) do list[#list + 1] = { key = key, c = c } end
+    for key, c in ns.Chars() do list[#list + 1] = { key = key, c = c } end
     table.sort(list, function(a, b) return (a.c.name or "") < (b.c.name or "") end)
     local any = false
     for _, e in ipairs(list) do
@@ -54,6 +55,10 @@ local function ChooseItems()
     local items = {}
     local me = ns.Me()
     if not me then return items end
+    if me.untracked then
+        items[#items + 1] = { left = format(L["%s isn't tracked. Track it again under Options, Characters."], ns.ColoredName(me)) }
+        return items
+    end
     items[#items + 1] = { left = format(L["Click a challenge to make it a goal for %s."], ns.ColoredName(me)) }
     local goals = me.legacyGoals or {}
     local query = chooseQuery:lower()

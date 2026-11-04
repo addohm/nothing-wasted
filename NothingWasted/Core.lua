@@ -143,11 +143,28 @@ function ns.Me()
     return ns.db.chars[ns.PlayerKey()]
 end
 
--- Characters other than the one being played, as key, entry pairs.
+-- Untracked characters (c.untracked, set on the Characters options page) are still saved, so they
+-- can be tracked again, but are left out of every list, alert and tooltip.
+function ns.IsTracked(c)
+    return c ~= nil and not c.untracked
+end
+
+local function NextTracked(chars, key)
+    local c
+    repeat key, c = next(chars, key) until key == nil or not c.untracked
+    return key, c
+end
+
+-- The tracked characters, as key, entry pairs: for key, c in ns.Chars() do ... end
+function ns.Chars()
+    return NextTracked, ns.db.chars
+end
+
+-- Tracked characters other than the one being played, as key, entry pairs.
 function ns.Alts()
     local me = ns.PlayerKey()
     local list = {}
-    for key, c in pairs(ns.db.chars) do
+    for key, c in ns.Chars() do
         if key ~= me then list[#list + 1] = { key = key, c = c } end
     end
     return list
