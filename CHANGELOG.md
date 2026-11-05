@@ -17,6 +17,12 @@ All notable changes to this project are documented here. The format follows
 
 - Right-clicking a bar opens a menu: Stop tracking, or Forget (which still asks first).
 
+### Fixed
+
+- The "Not Well Fed" reminder showed even after eating. It looked for one hidden XP buff by its spell
+  ID; it now looks for any buff named Well Fed, since foods use different Well Fed spells. `/nw buffs`
+  shows which Well Fed spell you have.
+
 ## [1.0.0] - 2026-10-23
 
 First release, for WoW: Forever (client 1.60.1, Interface 16001).

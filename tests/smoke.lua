@@ -137,7 +137,7 @@ return function(root)
     test("1c. leveling buff reminders", function()
         local c = mock.NewClient({ root = root, player = {
             name = "Buffy", level = 20, xp = 0, xpMax = 10000, resting = true, items = { [211527] = 1 },
-        } })
+        }, spellNames = { [1248420] = "Well Fed", [1248421] = "Well Fed", [1243969] = "Well Fed XP Boost" } })
         c:Login()
         c:Advance(6)
         local R = c.ns.Reminder
@@ -171,11 +171,15 @@ return function(root)
         check(c.ns.Glow.IsPulsing(), "and the screen-edge flash")
         check(not c:ChatHas("Not Well Fed"), "no chat lines by default")
 
-        -- Rows go as the buffs come.
+        -- Rows go as the buffs come. Only a buff named Well Fed counts, from any food.
         c.player.auras[1243969] = 99999
         c:Fire("UNIT_AURA", "player")
         c:Advance(2)
-        eq(Card(), "bag", "eating removes the Well Fed row")
+        eq(Card(), "wellFed,bag", "Well Fed XP Boost alone isn't Well Fed")
+        c.player.auras[1248421] = 99999
+        c:Fire("UNIT_AURA", "player")
+        c:Advance(2)
+        eq(Card(), "bag", "eating removes the Well Fed row, whichever food's Well Fed it is")
         c.player.auras[429959] = 99999
         c:Fire("UNIT_AURA", "player")
         c:Advance(2)
@@ -183,7 +187,7 @@ return function(root)
 
         -- The food wears off out in the world: the card comes back with just that.
         c.sounds = {}
-        c.player.auras[1243969] = nil
+        c.player.auras[1248421] = nil
         c:Fire("UNIT_AURA", "player")
         c:Advance(2)
         eq(Card(), "wellFed", "card when Well Fed wears off out in the world")
@@ -228,6 +232,11 @@ return function(root)
         c:ClearChat()
         c:Slash("buffs")
         check(c:ChatHas("0 in bags, 1 in the bank"), "/nw buffs shows a banked bag")
+        check(c:ChatHas("Well Fed: no%."), "/nw buffs says when you're not Well Fed")
+        c.player.auras[1248420] = 99999
+        c:ClearChat()
+        c:Slash("buffs")
+        check(c:ChatHas("Well Fed: yes %(spell 1248420%)"), "and which Well Fed you have")
         check(c:ChatHas("Bag reminder possible now: no"), "a banked bag can't be reminded about")
         c.player.toys = { [211527] = true }
         c:ClearChat()

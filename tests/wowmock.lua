@@ -334,6 +334,7 @@ function M.NewClient(opts)
         trainer = opts.trainer or {},
         recipes = opts.recipes or {},
         catalog = opts.catalog or { { id = 15579, name = "Mage", achievements = {} } },
+        spellNames = opts.spellNames or {},   -- [spellID] = name; others are "Spell<id>"
     }
     local player = Copy(DEFAULT_PLAYER)
     for k, v in pairs(opts.player or {}) do player[k] = Copy(v) end
@@ -505,7 +506,7 @@ function M.NewClient(opts)
     }
     env.C_MajorFactions = { GetCurrentRenownLevel = function() return 6 end }
     env.C_Spell = {
-        GetSpellName = function(id) return "Spell" .. id end,
+        GetSpellName = function(id) return client.spellNames[id] or ("Spell" .. id) end,
         GetSpellCooldown = function(id)
             local cd = player.spellCooldowns[id]
             return { startTime = cd and cd[1] or 0, duration = cd and cd[2] or 0, isEnabled = true, isActive = cd ~= nil }
@@ -630,7 +631,20 @@ function M.NewClient(opts)
         end,
     }
     env.C_Bank = { FetchPurchasedBankTabData = function() return { { ID = 6 } } end }
-    env.C_UnitAuras = { GetPlayerAuraBySpellID = function(id) local exp = player.auras[id] if exp then return { expirationTime = exp } end end }
+    env.C_UnitAuras = {
+        GetPlayerAuraBySpellID = function(id) local exp = player.auras[id] if exp then return { expirationTime = exp } end end,
+        -- The player's buffs in spell ID order, named by client.spellNames.
+        GetAuraDataByIndex = function(unit, index, filter)
+            assert(unit == "player" and filter == "HELPFUL", "only the player's buffs are faked")
+            local ids = {}
+            for id in pairs(player.auras) do ids[#ids + 1] = id end
+            table.sort(ids)
+            local id = ids[index]
+            if id then
+                return { spellId = id, name = env.C_Spell.GetSpellName(id), expirationTime = player.auras[id] }
+            end
+        end,
+    }
     env.C_QuestLog = { IsQuestFlaggedCompleted = function(id) return player.quests[id] or false end }
 
     -- Mail

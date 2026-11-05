@@ -19,8 +19,10 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
 - **Well Rested cap:** whether +4% per rank multiplies the cap (rank 5: 180%) or adds to it (170%). The
   addon multiplies. Long term: it only shows once a character with Well Rested reaches the cap.
 - **Cozy Sleeping Bag:** which of quests 79007 and 79008 is Alliance or Horde (either counts).
-- **Leveling buffs:** that eating cooked food puts Well Fed XP Boost (spell 1243969) on the player,
-  and that the sleeping bag's buff is Well-Rested (429959). Wowhead lists both; not yet seen in game.
+- **Well Fed:** that eating cooked food clears the "Not Well Fed" reminder now that it looks for any
+  buff named Well Fed (the name comes from spell 1248420). `/nw buffs` while fed shows the spell
+  found; try two different foods. Looking for Well Fed XP Boost (1243969) by ID never found it.
+- **Sleeping bag buff:** that it's Well-Rested (429959). Wowhead lists it; not yet seen in game.
 - **Characters page and the bar menu:** that right-clicking a bar opens the Stop tracking / Forget
   menu (`MenuUtil.CreateContextMenu`), and the page's tick boxes and Forget buttons line up.
 - **Recipe tooltips:** on a recipe item (Pattern:, Recipe:, …), the "Requires <profession> (<skill>)"

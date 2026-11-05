@@ -1,6 +1,6 @@
 -- Nothing Wasted: reminders for the leveling buffs, below max level.
 --
--- Well Fed XP Boost (+5% kill XP from cooked food) and the Cozy Sleeping Bag's Well-Rested (up to
+-- Well Fed (+5% kill XP from cooked food) and the Cozy Sleeping Bag's Well-Rested (up to
 -- +3% XP). A missing buff is mentioned as a chat line when you leave an inn or city, and when it
 -- wears off while you're out in the world. At logout, a ready sleeping bag is pointed out: resting
 -- in it first carries the buff into the next session.
@@ -12,6 +12,17 @@ ns.Buffs = Buffs
 
 local function HasAura(spellID)
     return C_UnitAuras.GetPlayerAuraBySpellID(spellID) ~= nil
+end
+
+-- The spell ID of the player's Well Fed buff, or nil. Foods use different Well Fed spells, so this
+-- goes by the name. Returns nil when the names are secret (in combat).
+local function WellFedSpell()
+    local name = C_Spell.GetSpellName(ns.Data.wellFedSpellID) or L["Well Fed"]
+    for i = 1, 255 do
+        local aura = C_UnitAuras.GetAuraDataByIndex("player", i, "HELPFUL")
+        if not aura or (issecretvalue and issecretvalue(aura.name)) then return nil end
+        if aura.name == name then return aura.spellId end
+    end
 end
 
 -- Where the sleeping bag is: count in bags, count in the bank, and whether it's a toy.
@@ -71,7 +82,7 @@ function Buffs.Check()
     local settings = ns.db.settings.alerts
     local resting = IsResting() and true or false
     local leftRest = wasResting == true and not resting
-    local wellFed = HasAura(ns.Data.wellFedXPSpellID)
+    local wellFed = WellFedSpell() ~= nil
     local bagBuff = HasAura(ns.Data.sleepingBag.buffSpellID)
 
     -- What's missing right now, and what just became worth a reminder.
@@ -132,7 +143,8 @@ function Buffs.Report()
     local cd = BagCooldown()
     ns.Print(format(L["Below max level: %s. Resting: %s. In combat: %s."], YesNo(BelowMax()),
         YesNo(IsResting()), YesNo(InCombatLockdown())))
-    ns.Print(format(L["Well Fed XP Boost (%d): %s."], ns.Data.wellFedXPSpellID, YesNo(HasAura(ns.Data.wellFedXPSpellID))))
+    local wellFedSpell = WellFedSpell()
+    ns.Print(wellFedSpell and format(L["Well Fed: yes (spell %d)."], wellFedSpell) or L["Well Fed: no."])
     ns.Print(format(L["Cozy Sleeping Bag (%d): %d in bags, %d in the bank, toy: %s, cooldown: %s."],
         ns.Data.sleepingBag.itemID, carried, banked, YesNo(toy), cd > 0 and ns.FormatDuration(cd) or L["ready"]))
     ns.Print(format(L["Well-Rested buff (%d): %s. Bag reminder possible now: %s."], ns.Data.sleepingBag.buffSpellID,

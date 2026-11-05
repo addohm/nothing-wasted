@@ -30,7 +30,7 @@ end
 -- The kinds of reminder: icon, short label, and the details shown on hover.
 local KINDS = {
     wellFed = function()
-        return { icon = SpellIcon(ns.Data.wellFedXPSpellID), label = L["Well Fed"],
+        return { icon = SpellIcon(ns.Data.wellFedSpellID), label = L["Well Fed"],
             title = L["Not Well Fed"], hint = L["Eat cooked food: Well Fed gives +5% XP from kills."] }
     end,
     bag = function()

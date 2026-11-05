@@ -49,8 +49,12 @@ Data.sleepingBag = {
 -- (from the community listfile: sound/creature/humanmalestandardnpc/humanmalestandardnpcfarewell01-04).
 Data.farewellSounds = { 552199, 552209, 552208, 552205 }
 
--- Cooked food's Well Fed also applies Well Fed XP Boost: +5% XP from kills for 15 minutes.
-Data.wellFedXPSpellID = 1243969
+-- Cooked food's Well Fed gives +5% XP from kills. Foods use different Well Fed spells, more than
+-- one of them with the XP bonus (seen in game, 2026-11-05), so the reminder looks for a buff named
+-- Well Fed. Looking for the XP part, Well Fed XP Boost (1243969, a hidden aura), by ID reported
+-- "Not Well Fed" all the time in game. This Well Fed (1248420, Wowhead Forever) only gives the name
+-- in the client's language and the icon.
+Data.wellFedSpellID = 1248420
 
 -- First mount: level 40, 100g in total (confirmed in game, 2026-10-22).
 Data.mount = { level = 40, cost = 100 * 10000 }
