@@ -20,6 +20,7 @@ local DEFAULT_SETTINGS = {
         wellFed = true,       -- remind when the Well Fed XP buff is missing (below max level)
         bagBuff = true,       -- remind when the sleeping bag is ready and its buff is missing
         bagLogout = true,     -- remind at logout to use a ready sleeping bag first
+        buffAtLogin = true,   -- also remind at login or after a reload out in the world, not only on leaving rest
         buffSound = true,     -- play the alert sound with the buff reminders
         buffGlow = true,      -- flash the screen edge with the buff reminders
         buffChat = false,     -- also print the buff reminders in chat

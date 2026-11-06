@@ -511,6 +511,26 @@ return function(root)
         check(Secure().bag == nil, "no click buttons when turned off")
     end)
 
+    test("1c5. reminders at login out in the world", function()
+        local c = mock.NewClient({ root = root, player = { name = "Outside", level = 20, xp = 0, xpMax = 10000, resting = false },
+            spellNames = { [1248420] = "Well Fed" } })
+        c:Login()
+        local R = c.ns.Reminder
+        eq(table.concat(R.Kinds(), ","), "wellFed", "icons at login out in the world")
+        R.Hide()
+        c:Fire("PLAYER_ENTERING_WORLD", false, false)
+        c:Advance(6)
+        check(not R.IsShown(), "not again on zoning")
+        c:Fire("PLAYER_ENTERING_WORLD", false, true)
+        c:Advance(6)
+        check(R.IsShown(), "again after a reload")
+
+        local off = mock.NewClient({ root = root, player = { name = "Quiet", level = 20, xp = 0, xpMax = 10000, resting = false },
+            db = { settings = { alerts = { buffAtLogin = false } } } })
+        off:Login()
+        check(not off.ns.Reminder.IsShown(), "not when turned off")
+    end)
+
     test("1d. measuring rested rates", function()
         local c = mock.NewClient({ root = root, player = { name = "Rater", level = 27, xp = 19455, xpMax = 38900, rested = 6958, resting = true } })
         c:Login()

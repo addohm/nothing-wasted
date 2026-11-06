@@ -185,7 +185,8 @@ local function BelowMax()
     return ns.IsTracked(c) and not c.isMax and not c.xpDisabled
 end
 
--- State between checks. nil until the first check after login, which only records the baseline.
+-- State between checks. nil until the first check after login or a reload: that one reminds only
+-- if you're out in the world (and that's turned on), then sets the baseline.
 local wasResting, hadWellFed, hadBagBuff
 
 -- Kill XP and what Well Fed would have added to it. Kill XP is worked out as XP gained minus quest
@@ -250,6 +251,8 @@ function Buffs.Check()
     local settings = ns.db.settings.alerts
     local resting = IsResting() and true or false
     local leftRest = wasResting == true and not resting
+    -- The first check after logging in or a reload, out in the world, counts as leaving rest.
+    local firstOut = wasResting == nil and not resting and settings.buffAtLogin
     local wellFed = WellFedSpell() ~= nil
     local bagBuff = HasAura(ns.Data.sleepingBag.buffSpellID)
     local killed = killedSinceCheck
@@ -274,7 +277,8 @@ function Buffs.Check()
     else
         ns.Reminder.Keep(missing)
         -- Leaving rest, or a buff wearing off, brings up the card with everything that's missing.
-        local trigger = (missing.wellFed and (leftRest or hadWellFed)) or (missing.bag and (leftRest or hadBagBuff))
+        local trigger = (missing.wellFed and (leftRest or firstOut or hadWellFed))
+            or (missing.bag and (leftRest or firstOut or hadBagBuff))
         -- A kill without a buff brings the icons back if they were dismissed, now and then.
         if not trigger and killed and settings.buffOnKill and (missing.wellFed or missing.bag)
             and not ns.Reminder.IsShown()
