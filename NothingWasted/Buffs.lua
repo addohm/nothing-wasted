@@ -121,6 +121,62 @@ end
 -- State between checks. nil until the first check after login, which only records the baseline.
 local wasResting, hadWellFed, hadBagBuff
 
+-- Kill XP and what Well Fed would have added to it. Kill XP is worked out as XP gained minus quest
+-- rewards (QUEST_TURNED_IN), so it's rough: exploration XP counts as kills too.
+local KILL_NUDGE_SECONDS = 300 -- a kill brings the icons back at most this often
+local missedXP = 0             -- Well Fed's share of the kill XP gained without it, since it was last on
+local killedSinceCheck = false
+local lastKillNudge
+local lastXP, lastXPMax, lastLevel
+local gainedXP, questXP = 0, 0
+local CheckSoon
+
+-- About how much XP Well Fed would have added since it was last on (this session).
+function Buffs.MissedXP()
+    return missedXP
+end
+
+local function OnKillXP(xp)
+    if not BelowMax() then return end
+    killedSinceCheck = true
+    if hadWellFed == false then
+        missedXP = missedXP + xp * ns.Data.wellFedXPBonus
+        ns.Reminder.Refresh()
+    end
+    CheckSoon()
+end
+
+local function FlushXP()
+    local kill = gainedXP - questXP
+    gainedXP, questXP = 0, 0
+    if kill > 0 then OnKillXP(kill) end
+end
+
+local function AddXP(xp, quest)
+    if gainedXP == 0 and questXP == 0 then C_Timer.After(1, FlushXP) end
+    if xp then gainedXP = gainedXP + xp end
+    if quest then questXP = questXP + quest end
+end
+
+ns.On("PLAYER_XP_UPDATE", function(unit)
+    if unit and unit ~= "player" then return end
+    local xp, xpMax, level = UnitXP("player"), UnitXPMax("player"), UnitLevel("player")
+    if issecretvalue and (issecretvalue(xp) or issecretvalue(xpMax)) then return end
+    if lastXP then
+        local gained
+        if level == lastLevel then
+            gained = xp - lastXP
+        elseif level > lastLevel then
+            gained = (lastXPMax - lastXP) + xp
+        end
+        if gained and gained > 0 then AddXP(gained) end
+    end
+    lastXP, lastXPMax, lastLevel = xp, xpMax, level
+end)
+ns.On("QUEST_TURNED_IN", function(_, xpReward)
+    if type(xpReward) == "number" and xpReward > 0 then AddXP(nil, xpReward) end
+end)
+
 function Buffs.Check()
     -- Auras can be secret in combat; the check runs again when combat ends, transitions intact.
     if InCombatLockdown() or not BelowMax() then return end
@@ -129,6 +185,16 @@ function Buffs.Check()
     local leftRest = wasResting == true and not resting
     local wellFed = WellFedSpell() ~= nil
     local bagBuff = HasAura(ns.Data.sleepingBag.buffSpellID)
+    local killed = killedSinceCheck
+    killedSinceCheck = false
+
+    -- Fed again: say what going without cost.
+    if wellFed then
+        if hadWellFed == false and missedXP >= 1 and settings.buffMissedXP then
+            ns.Print(YELLOW .. format(L["Well Fed again. Without it you missed about %s XP."], ns.FormatNumber(missedXP)) .. "|r")
+        end
+        missedXP = 0
+    end
 
     -- What's missing right now, and what just became worth a reminder.
     local missing = {
@@ -142,6 +208,13 @@ function Buffs.Check()
         ns.Reminder.Keep(missing)
         -- Leaving rest, or a buff wearing off, brings up the card with everything that's missing.
         local trigger = (missing.wellFed and (leftRest or hadWellFed)) or (missing.bag and (leftRest or hadBagBuff))
+        -- A kill without a buff brings the icons back if they were dismissed, now and then.
+        if not trigger and killed and settings.buffOnKill and (missing.wellFed or missing.bag)
+            and not ns.Reminder.IsShown()
+            and (not lastKillNudge or GetTime() - lastKillNudge >= KILL_NUDGE_SECONDS) then
+            trigger = true
+            lastKillNudge = GetTime()
+        end
         if trigger then
             local kinds = {}
             if missing.wellFed then kinds[#kinds + 1] = "wellFed" end
@@ -153,7 +226,7 @@ function Buffs.Check()
 end
 
 local pending
-local function CheckSoon()
+function CheckSoon()
     if pending then return end
     pending = true
     C_Timer.After(1, function()
@@ -166,6 +239,7 @@ ns.On("PLAYER_ENTERING_WORLD", function(isInitialLogin, isReload)
     if isInitialLogin or isReload then
         wasResting, hadWellFed, hadBagBuff = nil, nil, nil
     end
+    lastXP, lastXPMax, lastLevel = UnitXP("player"), UnitXPMax("player"), UnitLevel("player")
     C_Timer.After(5, Buffs.Check)
 end)
 ns.On("UNIT_AURA", function(unit) if unit == "player" then CheckSoon() end end)

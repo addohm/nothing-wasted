@@ -32,8 +32,15 @@ end
 -- The kinds of reminder: icon, short label, and the details shown on hover.
 local KINDS = {
     wellFed = function()
-        return { icon = SpellIcon(ns.Data.wellFedSpellID), label = L["Well Fed"],
+        local def = { icon = SpellIcon(ns.Data.wellFedSpellID), label = L["Well Fed"],
             title = L["Not Well Fed"], hint = L["Eat cooked food: Well Fed gives +5% XP from kills."] }
+        local missed = ns.Buffs.MissedXP()
+        if ns.db.settings.alerts.buffMissedXP and missed >= 1 then
+            local n = ns.FormatNumber(missed)
+            def.label = format(L["Well Fed (-%s XP)"], n)
+            def.extra = format(L["Missed so far: about %s XP."], n)
+        end
+        return def
     end,
     bag = function()
         return { icon = ItemIcon(ns.Data.sleepingBag.itemID), label = L["Sleeping bag"],
@@ -91,6 +98,7 @@ local function CreateButton(i)
         GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
         GameTooltip:AddLine(self.def.title, YELLOW[1], YELLOW[2], YELLOW[3])
         GameTooltip:AddLine(self.def.hint, 1, 1, 1, true)
+        if self.def.extra then GameTooltip:AddLine(self.def.extra, 1, 0.4, 0.4, true) end
         GameTooltip:AddLine(L["Right-click to dismiss."], 0.6, 0.6, 0.6)
         GameTooltip:Show()
     end)
@@ -99,7 +107,8 @@ local function CreateButton(i)
     return b
 end
 
-local function Layout()
+-- Lays out the icons; `keepPulse` leaves the glows pulsing as they are (a label update).
+local function Layout(keepPulse)
     local x = 0
     for i, kind in ipairs(shown) do
         local b = buttons[i] or CreateButton(i)
@@ -115,8 +124,10 @@ local function Layout()
         x = x + slot + GAP
         b:Show()
         -- Restart every glow together, so they pulse in step.
-        b.pulse:Stop()
-        b.pulse:Play()
+        if not keepPulse then
+            b.pulse:Stop()
+            b.pulse:Play()
+        end
     end
     for i = #shown + 1, #buttons do
         buttons[i].buffKind = nil
@@ -163,6 +174,11 @@ function Reminder.Hide()
         frame:Hide()
     end
     if was then ns.Fire("NW_REMINDER") end
+end
+
+-- Updates the labels of the icons that are up (the XP missed changes as you kill).
+function Reminder.Refresh()
+    if frame and frame:IsShown() and #shown > 0 then Layout(true) end
 end
 
 -- GetTime() when the icons came up, or nil while they're not up.

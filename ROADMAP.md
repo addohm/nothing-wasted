@@ -22,6 +22,8 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
 - **Buff reminder extras:** how the gold and class-colour screen borders look (a grey copy of the
   low-health texture, tinted), the large text (`GameFontNormalHuge3`) and the taskbar flash
   (`FlashClientIcon`).
+- **XP missed:** that XP gained minus `QUEST_TURNED_IN`'s XP reward matches the kill XP in chat, and
+  that the 5% looks right next to the Well Fed tooltip.
 - **Sleeping bag buff:** that it's Well-Rested (429959). Wowhead lists it; not yet seen in game.
 - **Characters page and the bar menu:** that right-clicking a bar opens the Stop tracking / Forget
   menu (`MenuUtil.CreateContextMenu`), and the page's tick boxes and Forget buttons line up.
@@ -55,6 +57,7 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
 
 - Buff reminder extras: pulsing screen border, repeated sound, build up, large text, taskbar
   flash (2026-11-06).
+- XP missed without Well Fed on its icon, and a kill bringing dismissed icons back (2026-11-06).
 - Untrack characters (a bank alt) and forget deleted ones: Options → Characters, and a right-click
   menu on the bars (2026-11-04).
 - Standard docs (2026-10-22).

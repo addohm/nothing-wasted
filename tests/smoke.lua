@@ -360,6 +360,90 @@ return function(root)
         check(not Glow.IsSteady(), "border goes in a rested area")
     end)
 
+    test("1c3. XP missed without Well Fed, and a kill bringing the icons back", function()
+        local c = mock.NewClient({ root = root, player = {
+            name = "Hungry", level = 20, xp = 0, xpMax = 10000, resting = true,
+        }, spellNames = { [1248420] = "Well Fed" } })
+        c:Login()
+        local s = rawget(c.env, "NothingWastedDB").settings.alerts
+        local R = c.ns.Reminder
+        local function Kill(xp, quest)
+            c.player.xp = c.player.xp + xp
+            c:Fire("PLAYER_XP_UPDATE", "player")
+            if quest then c:Fire("QUEST_TURNED_IN", 123, quest, 0) end
+            c:Advance(1) -- the XP is added up
+            c:Advance(1) -- then the check runs
+        end
+        local function Label()
+            for _, f in ipairs(c.frames) do
+                if f.buffKind == "wellFed" and f:IsVisible() then return f.label:GetText(), f end
+            end
+        end
+        c.player.resting = false
+        c:Fire("PLAYER_UPDATE_RESTING")
+        c:Advance(1)
+        eq(Label(), "Well Fed", "nothing missed yet")
+
+        Kill(400)
+        eq(c.ns.Buffs.MissedXP(), 20, "5% of a kill's XP")
+        eq(Label(), "Well Fed (-20 XP)", "shown on the icon")
+        local _, icon = Label()
+        check(c:Hover(icon):Has("Missed so far: about 20 XP"), "and in its tooltip")
+        Kill(1200, 1000)
+        eq(c.ns.Buffs.MissedXP(), 30, "quest XP doesn't count")
+        -- A level-up in between.
+        c.player.xp, c.player.level = 9800, 20
+        c:Fire("PLAYER_XP_UPDATE", "player")
+        c:Advance(2)
+        eq(c.ns.Buffs.MissedXP(), 30 + 0.05 * (9800 - 1600), "a bigger gain")
+        c.player.level, c.player.xp, c.player.xpMax = 21, 100, 11000
+        c:Fire("PLAYER_XP_UPDATE", "player")
+        c:Advance(2)
+        eq(c.ns.Buffs.MissedXP(), 30 + 0.05 * 8200 + 0.05 * 300, "and across a level-up")
+
+        -- Eating: the total goes to chat and starts over.
+        c:ClearChat()
+        c.player.auras[1248420] = 99999
+        c:Fire("UNIT_AURA", "player")
+        c:Advance(2)
+        check(c:ChatHas("Without it you missed about 455 XP"), "chat line when fed again")
+        eq(c.ns.Buffs.MissedXP(), 0, "and the count starts over")
+        Kill(1000)
+        eq(c.ns.Buffs.MissedXP(), 0, "nothing missed while fed")
+
+        -- Turned off: no label and no chat line.
+        s.buffMissedXP = false
+        c.player.auras[1248420] = nil
+        c:Fire("UNIT_AURA", "player")
+        c:Advance(2)
+        Kill(1000)
+        eq(Label(), "Well Fed", "no XP on the icon when turned off")
+
+        -- A kill brings dismissed icons back, at most every 5 minutes.
+        R.Hide()
+        Kill(100)
+        check(not R.IsShown(), "off by default")
+        s.buffOnKill = true
+        Kill(100)
+        check(R.IsShown(), "a kill brings the icons back")
+        R.Hide()
+        Kill(100)
+        check(not R.IsShown(), "not again straight away")
+        c:Advance(300)
+        Kill(100)
+        check(R.IsShown(), "again after 5 minutes")
+        -- In combat it waits for the fight to end.
+        R.Hide()
+        c:Advance(300)
+        c.inCombat = true
+        Kill(100)
+        check(not R.IsShown(), "not during the fight")
+        c.inCombat = false
+        c:Fire("PLAYER_REGEN_ENABLED")
+        c:Advance(2)
+        check(R.IsShown(), "when it ends")
+    end)
+
     test("1d. measuring rested rates", function()
         local c = mock.NewClient({ root = root, player = { name = "Rater", level = 27, xp = 19455, xpMax = 38900, rested = 6958, resting = true } })
         c:Login()

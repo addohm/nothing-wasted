@@ -25,8 +25,8 @@ lupa 2.8 bundles Lua 5.1 (`import lupa.lua51`), which matches the game's Lua.
   menu on the bars (2026-11-04). Not yet tried in game. The Well Fed reminder now looks for the
   buff by name, since it showed all the time on the live client (2026-11-05); works in game.
 - In progress (2026-11-06): optional extras for the buff reminders. Done: screen border, repeated
-  sound, build up, large text, taskbar flash (untried in game). Next: the XP missed without Well
-  Fed and a reminder at the first kill, then click an icon to eat or use the sleeping bag.
+  sound, build up, large text, taskbar flash, the XP missed without Well Fed and a kill bringing
+  the icons back (all untried in game). Next: click an icon to eat or use the sleeping bag.
 - APIs were checked against Blizzard's Forever UI source (build 1.60.1) and game IDs against Wowhead's
   Forever tooltips. Where a value is a guess, `Data.lua` and ROADMAP.md say so.
 - The GitHub repo is `addohm/nothing-wasted` (renamed from `rested-xp` on 2026-10-22).

@@ -21,6 +21,9 @@ All notable changes to this project are documented here. The format follows
   (red, gold or class colour; three strengths), the reminder sound again every few minutes, a
   "build up" delay before those two start, large text near the top of the screen, and a flash of
   the game's taskbar icon. The Test button tries whatever is turned on.
+- **XP missed without Well Fed:** the Well Fed icon shows about how much kill XP you've missed by
+  not eating, and a chat line gives the total when you're fed again (can be turned off).
+- Optionally, a kill without a buff brings dismissed reminder icons back, at most every 5 minutes.
 
 ### Fixed
 

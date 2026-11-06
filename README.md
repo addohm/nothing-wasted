@@ -76,7 +76,12 @@ button for the bars window.
     into your next session.
   - An icon goes away when you get that buff; they all go when none are left, when you right-click
     one, or when you're back in a rested area. Chat lines can be turned on as well.
-  - Optional extras, all off by default (Options → Alerts): large text near the top of the screen,
+  - **XP missed:** the Well Fed icon shows about how much XP you've missed by not eating (5% of
+    the kill XP since Well Fed was last on, this session), and a chat line gives the total when
+    you're fed again. Kill XP is your XP gained minus quest rewards, so exploration XP counts too.
+    Can be turned off.
+  - Optional extras, all off by default (Options → Alerts): a kill without a buff brings dismissed
+    icons back (at most every 5 minutes; after the fight), large text near the top of the screen,
     a flash of the game's taskbar icon (for when you're alt-tabbed), and, while the icons are up, a
     **pulsing border around the screen** (red like low health, gold or your class colour; low,
     medium or high) and the reminder sound again every 1 to 10 minutes. **Build up** holds the

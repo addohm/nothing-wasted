@@ -55,6 +55,7 @@ Data.farewellSounds = { 552199, 552209, 552208, 552205 }
 -- "Not Well Fed" all the time in game. This Well Fed (1248420, Wowhead Forever) only gives the name
 -- in the client's language and the icon.
 Data.wellFedSpellID = 1248420
+Data.wellFedXPBonus = 0.05 -- the buff's tooltip: +5% XP from kills
 
 -- First mount: level 40, 100g in total (confirmed in game, 2026-10-22).
 Data.mount = { level = 40, cost = 100 * 10000 }
