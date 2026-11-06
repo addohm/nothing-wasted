@@ -12,7 +12,9 @@ character's name, realm, class, level, XP, rested XP, rested status, zone, gold,
 levels and known recipes, reputations and currencies, cooldowns, your own buffs, quest progress, Legacy perks and
 challenge progress, the contents of bags, bank and mailbox, and the mail you send to your own
 characters. It has no network, file system or chat-sending access beyond printing messages to
-your own chat frame and playing sounds.
+your own chat frame and playing sounds. It reads item tooltips in your bags to find food that gives
+Well Fed. The only thing it ever uses is an item you click on its reminder icons (that food, or the
+Cozy Sleeping Bag), through the game's secure click buttons; it can't use anything by itself.
 
 ## Repository access
 

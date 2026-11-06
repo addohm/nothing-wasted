@@ -444,6 +444,73 @@ return function(root)
         check(R.IsShown(), "when it ends")
     end)
 
+    test("1c4. clicking a reminder icon eats or uses the sleeping bag", function()
+        local c = mock.NewClient({ root = root, player = {
+            name = "Clicky", level = 20, xp = 0, xpMax = 10000, resting = true, items = { [211527] = 1 },
+            bagSlots = { [1] = { 4540, 10, "Tough Hunk of Bread" }, [2] = { 211527, 1, "Cozy Sleeping Bag" },
+                [3] = { 2684, 5, "Coyote Steak" } },
+        }, spellNames = { [1248420] = "Well Fed" } })
+        c.itemInfo = { [4540] = { classID = 0, name = "Tough Hunk of Bread" }, [2684] = { classID = 0, name = "Coyote Steak" } }
+        c.itemTooltips = {
+            [4540] = { "Tough Hunk of Bread", "Use: Restores 61 health over 18 sec." },
+            [2684] = { "Coyote Steak", "Use: Restores 243 health over 21 sec. If you spend at least 10 seconds eating you will become well fed." },
+        }
+        c:Login()
+        local R = c.ns.Reminder
+        local function Secure()
+            local out = {}
+            for _, f in ipairs(c.frames) do
+                if f.templates.SecureActionButtonTemplate and f.shown and f.icon then out[f.icon.buffKind] = f end
+            end
+            return out
+        end
+        c.player.resting = false
+        c:Fire("PLAYER_UPDATE_RESTING")
+        c:Advance(1)
+        eq(table.concat(R.Kinds(), ","), "wellFed,bag", "both icons")
+        local secure = Secure()
+        check(secure.wellFed and secure.bag, "a click button over each icon")
+        eq(secure.wellFed.points[1][2], c.UIParent, "placed on UIParent, not on the icon")
+        secure.wellFed:Click("LeftButton")
+        secure.bag:Click("LeftButton")
+        eq(c.used and table.concat(c.used, ","), "item:item:2684,item:item:211527", "eats the food that gives Well Fed, uses the bag")
+        check(c:Hover(secure.wellFed):Has("Left%-click to eat Coyote Steak"), "the tooltip says what a click does")
+
+        -- No such food: no click, and the tooltip says why.
+        c.player.bagSlots[3] = nil
+        c:Fire("BAG_UPDATE_DELAYED")
+        secure = Secure()
+        check(not secure.wellFed and secure.bag, "no click button without food")
+        local icon
+        for _, f in ipairs(c.frames) do if f.buffKind == "wellFed" and f:IsVisible() then icon = f end end
+        check(c:Hover(icon):Has("No food that gives Well Fed"), "and the tooltip says so")
+        c:ClearChat()
+        c:Slash("buffs")
+        check(c:ChatHas("Food that gives Well Fed in your bags: none found"), "/nw buffs says so too")
+
+        -- The sleeping bag as a toy.
+        c.player.items[211527], c.player.bagSlots[2] = nil, nil
+        c.player.toys = { [211527] = true }
+        c:Fire("BAG_UPDATE_DELAYED")
+        c.used = nil
+        Secure().bag:Click("LeftButton")
+        eq(c.used and c.used[1], "toy:211527", "uses the toy")
+
+        -- Dismissed in combat: the click buttons wait for the fight to end.
+        c.inCombat = true
+        Secure().bag:Click("RightButton")
+        check(not R.IsShown(), "right-click still dismisses in combat")
+        check(Secure().bag ~= nil, "the click button stays until the fight ends")
+        c.inCombat = false
+        c:Fire("PLAYER_REGEN_ENABLED")
+        check(Secure().bag == nil, "and goes after")
+
+        -- Turned off.
+        rawget(c.env, "NothingWastedDB").settings.alerts.buffClick = false
+        R.Show({ "bag" })
+        check(Secure().bag == nil, "no click buttons when turned off")
+    end)
+
     test("1d. measuring rested rates", function()
         local c = mock.NewClient({ root = root, player = { name = "Rater", level = 27, xp = 19455, xpMax = 38900, rested = 6958, resting = true } })
         c:Login()

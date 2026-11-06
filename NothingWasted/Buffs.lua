@@ -16,8 +16,12 @@ end
 
 -- The spell ID of the player's Well Fed buff, or nil. Foods use different Well Fed spells, so this
 -- goes by the name. Returns nil when the names are secret (in combat).
+local function WellFedName()
+    return C_Spell.GetSpellName(ns.Data.wellFedSpellID) or L["Well Fed"]
+end
+
 local function WellFedSpell()
-    local name = C_Spell.GetSpellName(ns.Data.wellFedSpellID) or L["Well Fed"]
+    local name = WellFedName()
     for i = 1, 255 do
         local aura = C_UnitAuras.GetAuraDataByIndex("player", i, "HELPFUL")
         if not aura or (issecretvalue and issecretvalue(aura.name)) then return nil end
@@ -39,6 +43,60 @@ local function BagCooldown()
     local start, duration = C_Container.GetItemCooldown(ns.Data.sleepingBag.itemID)
     if not start or start == 0 or not duration or duration == 0 then return 0 end
     return math.max(0, start + duration - GetTime())
+end
+
+-- What clicking the sleeping bag icon does: use the bag from your bags, or the toy. nil if neither.
+function Buffs.BagAction()
+    local carried, _, toy = BagWhere()
+    local itemID = ns.Data.sleepingBag.itemID
+    if carried > 0 then return { type = "item", item = "item:" .. itemID } end
+    if toy then return { type = "toy", toy = itemID } end
+end
+
+-- Food in your bags that gives Well Fed: a consumable whose tooltip mentions Well Fed by name.
+local FOOD_BAGS = { 0, 1, 2, 3, 4 }
+local CONSUMABLE = 0       -- Enum.ItemClass.Consumable
+local foodCache = {}       -- [itemID] = whether it gives Well Fed
+local lastFoodID, lastFoodName
+
+local function GivesWellFed(bag, slot, itemID)
+    if foodCache[itemID] ~= nil then return foodCache[itemID] end
+    local classID = select(6, C_Item.GetItemInfoInstant(itemID))
+    if classID ~= CONSUMABLE then
+        foodCache[itemID] = false
+        return false
+    end
+    local data = C_TooltipInfo.GetBagItem(bag, slot)
+    local lines = data and data.lines
+    if not lines or #lines == 0 then return false end -- not loaded yet; try again next time
+    local name = WellFedName()
+    local lower = name:lower()
+    local yes = false
+    for _, line in ipairs(lines) do
+        local text = line.leftText
+        if type(text) == "string" and not (issecretvalue and issecretvalue(text))
+            and (text:find(name, 1, true) or text:lower():find(lower, 1, true)) then
+            yes = true
+            break
+        end
+    end
+    foodCache[itemID] = yes
+    return yes
+end
+
+-- The item ID and name of a food in your bags that gives Well Fed, or nil. In combat, the last answer.
+function Buffs.WellFedFood()
+    if InCombatLockdown() then return lastFoodID, lastFoodName end
+    lastFoodID, lastFoodName = nil, nil
+    for _, bag in ipairs(FOOD_BAGS) do
+        for slot = 1, C_Container.GetContainerNumSlots(bag) or 0 do
+            local info = C_Container.GetContainerItemInfo(bag, slot)
+            if info and info.itemID and GivesWellFed(bag, slot, info.itemID) then
+                lastFoodID, lastFoodName = info.itemID, info.itemName
+                return lastFoodID, lastFoodName
+            end
+        end
+    end
 end
 
 -- True if the bag can be used now: in your bags (or a toy) and off cooldown. A bag in the bank
@@ -97,8 +155,17 @@ ns.On("NW_REMINDER", function()
     nextSoundAt = nil
     UpdateAttention()
 end)
-ns.On("NW_REFRESH", UpdateAttention)
-ns.On("NW_INIT", function() C_Timer.NewTicker(5, UpdateAttention) end)
+ns.On("NW_REFRESH", function()
+    UpdateAttention()
+    ns.Reminder.Refresh()
+end)
+ns.On("NW_INIT", function()
+    C_Timer.NewTicker(5, function()
+        UpdateAttention()
+        ns.Reminder.SyncActions() -- the bars window may have been moved
+    end)
+end)
+ns.On("BAG_UPDATE_DELAYED", function() ns.Reminder.Refresh() end)
 
 -- The Test button: everything that's turned on, with the border for a few seconds.
 function Buffs.Preview()
@@ -269,4 +336,6 @@ function Buffs.Report()
     ns.Print(format(L["Well-Rested buff (%d): %s. Bag reminder possible now: %s."], ns.Data.sleepingBag.buffSpellID,
         YesNo(HasAura(ns.Data.sleepingBag.buffSpellID)),
         YesNo(Buffs.BagReady() and not IsResting() and not HasAura(ns.Data.sleepingBag.buffSpellID))))
+    local _, food = Buffs.WellFedFood()
+    ns.Print(food and format(L["Food that gives Well Fed in your bags: %s."], food) or L["Food that gives Well Fed in your bags: none found."])
 end

@@ -22,6 +22,10 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
 - **Buff reminder extras:** how the gold and class-colour screen borders look (a grey copy of the
   low-health texture, tinted), the large text (`GameFontNormalHuge3`) and the taskbar flash
   (`FlashClientIcon`).
+- **Click to fix:** that clicking the icons eats and uses the bag (`SecureActionButtonTemplate`,
+  `type1` item or toy), that the click buttons sit right over the icons (placed by `GetCenter`),
+  and that food tooltips name Well Fed (English: "you will become well fed"). In other languages
+  the tooltip may word it differently; `/nw buffs` shows the food found.
 - **XP missed:** that XP gained minus `QUEST_TURNED_IN`'s XP reward matches the kill XP in chat, and
   that the 5% looks right next to the Well Fed tooltip.
 - **Sleeping bag buff:** that it's Well-Rested (429959). Wowhead lists it; not yet seen in game.
@@ -58,6 +62,7 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
 - Buff reminder extras: pulsing screen border, repeated sound, build up, large text, taskbar
   flash (2026-11-06).
 - XP missed without Well Fed on its icon, and a kill bringing dismissed icons back (2026-11-06).
+- Click a reminder icon to eat food that gives Well Fed or use the sleeping bag (2026-11-06).
 - Untrack characters (a bank alt) and forget deleted ones: Options → Characters, and a right-click
   menu on the bars (2026-11-04).
 - Standard docs (2026-10-22).

@@ -27,7 +27,7 @@ client's `Interface/AddOns` folder, or copy the `NothingWasted` folder into your
 | `/nw reset` | Forget every character (asks first) |
 | `/nw chars` | List every saved character, what its bar shows, and which session last saved the data |
 | `/nw rate` | Measure the rested XP rate: shows the live values and expected rate, sets a mark, and on the next run shows the rate since the mark (works across a logout). Also lists automatic checks made at each login. `/nw rate reset` starts over |
-| `/nw buffs` | What the leveling buff reminders see: Well Fed, where the sleeping bag is, its cooldown and buff |
+| `/nw buffs` | What the leveling buff reminders see: Well Fed, where the sleeping bag is, its cooldown and buff, food that gives Well Fed |
 | `/nw perks` | List the Legacy perk nodes, to check perk spell IDs |
 
 `/nothingwasted` works too, in case another addon uses `/nw`. The minimap button and the game's
@@ -76,6 +76,9 @@ button for the bars window.
     into your next session.
   - An icon goes away when you get that buff; they all go when none are left, when you right-click
     one, or when you're back in a rested area. Chat lines can be turned on as well.
+  - **Click to fix:** left-click the Well Fed icon to eat food from your bags that gives Well Fed
+    (food whose tooltip mentions Well Fed), or the sleeping bag icon to use the bag. Hover to see
+    what a click will do. Out of combat only. Can be turned off.
   - **XP missed:** the Well Fed icon shows about how much XP you've missed by not eating (5% of
     the kill XP since Well Fed was last on, this session), and a chat line gives the total when
     you're fed again. Kill XP is your XP gained minus quest rewards, so exploration XP counts too.

@@ -20,6 +20,7 @@ local ALLOWED_GLOBALS = {
 local TEMPLATES = {
     BackdropTemplate = true, UIPanelCloseButton = true, UIPanelButtonTemplate = true,
     UICheckButtonTemplate = true, UIPanelScrollFrameTemplate = true, InputBoxTemplate = true,
+    SecureActionButtonTemplate = true,
 }
 
 local function IsBadNumber(v)
@@ -46,8 +47,15 @@ M.Copy = Copy
 local Region = {}
 Region.__index = Region
 
-function Region:SetPoint(...) self.points[#self.points + 1] = { ... } end
-function Region:ClearAllPoints() self.points = {} end
+-- Secure frames can't be moved, shown, hidden or changed in combat.
+local function Unlocked(self)
+    if self.templates and self.templates.SecureActionButtonTemplate and self.client.inCombat then
+        error("secure frame changed in combat", 3)
+    end
+end
+
+function Region:SetPoint(...) Unlocked(self) self.points[#self.points + 1] = { ... } end
+function Region:ClearAllPoints() Unlocked(self) self.points = {} end
 function Region:GetPoint(i)
     local p = self.points[i or 1]
     if not p then return end
@@ -56,6 +64,7 @@ function Region:GetPoint(i)
 end
 function Region:SetAllPoints() self.points = { { "ALL" } } end
 function Region:SetSize(w, h)
+    Unlocked(self)
     CheckValue("SetSize", w)
     CheckValue("SetSize", h)
     self.width, self.height = w, h
@@ -66,11 +75,13 @@ function Region:SetHeight(h) CheckValue("SetHeight", h) self.height = h end
 function Region:GetWidth() return self.width or 300 end
 function Region:GetHeight() return self.height or 20 end
 function Region:Show()
+    Unlocked(self)
     local was = self.shown
     self.shown = true
     if not was and self.scripts and self.scripts.OnShow then self.scripts.OnShow(self) end
 end
 function Region:Hide()
+    Unlocked(self)
     local was = self.shown
     self.shown = false
     if was and self.scripts and self.scripts.OnHide then self.scripts.OnHide(self) end
@@ -158,6 +169,8 @@ function Frame:HookScript(name, fn)
     end
 end
 function Frame:SetFrameStrata() end
+function Frame:SetAttribute(k, v) Unlocked(self) self.attributes = self.attributes or {} self.attributes[k] = v end
+function Frame:GetAttribute(k) return self.attributes and self.attributes[k] end
 function Frame:SetFrameLevel(l) self.level = l end
 function Frame:GetFrameLevel() return self.level or 1 end
 function Frame:EnableMouse() end
@@ -216,7 +229,16 @@ function Button:SetText(t)
 end
 function Button:GetText() return self.text end
 function Button:Click(mouseButton)
-    if self.scripts.OnClick then self.scripts.OnClick(self, mouseButton or "LeftButton") end
+    mouseButton = mouseButton or "LeftButton"
+    -- A secure button does what its attributes say (left button only here), then its hooks run.
+    if self.templates.SecureActionButtonTemplate and mouseButton == "LeftButton" then
+        local kind = self:GetAttribute("type1")
+        if kind then
+            self.client.used = self.client.used or {}
+            table.insert(self.client.used, kind .. ":" .. tostring(self:GetAttribute(kind)))
+        end
+    end
+    if self.scripts.OnClick then self.scripts.OnClick(self, mouseButton) end
 end
 
 local CheckButton = setmetatable({}, Button)
@@ -631,6 +653,19 @@ function M.NewClient(opts)
             local list = bag == 0 and player.bagSlots or (bag == 6 and player.bankSlots) or nil
             local e = list and list[slot]
             if e then return { itemID = e[1], stackCount = e[2], itemName = e[3], hyperlink = "|Hitem:" .. e[1] .. "|h[" .. e[3] .. "]|h" } end
+        end,
+    }
+    -- Bag item tooltips: client.itemTooltips[itemID] = { "line", ... }.
+    env.C_TooltipInfo = {
+        GetBagItem = function(bag, slot)
+            local list = bag == 0 and player.bagSlots or nil
+            local e = list and list[slot]
+            if not e then return end
+            local lines = {}
+            for _, t in ipairs(client.itemTooltips and client.itemTooltips[e[1]] or { e[3] }) do
+                lines[#lines + 1] = { leftText = t }
+            end
+            return { lines = lines }
         end,
     }
     env.C_Bank = { FetchPurchasedBankTabData = function() return { { ID = 6 } } end }

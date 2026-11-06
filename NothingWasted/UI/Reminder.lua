@@ -1,8 +1,9 @@
 -- Nothing Wasted: the buff reminder. When you leave an inn or city with a leveling buff missing, the
 -- missing buffs' icons appear where the bars window was, large, with a pulsing yellow glow and a
--- small label under each. Hover one for the details; right-click to dismiss. An icon goes away when
--- you get that buff; they all go when none are left or when you're back in a rested area. It can
--- also show the reminder in large text near the top of the screen.
+-- small label under each. Hover one for the details; left-click to eat or use the sleeping bag;
+-- right-click to dismiss. An icon goes away when you get that buff; they all go when none are left
+-- or when you're back in a rested area. It can also show the reminder in large text near the top
+-- of the screen.
 local _, ns = ...
 local L = ns.L
 
@@ -40,17 +41,36 @@ local KINDS = {
             def.label = format(L["Well Fed (-%s XP)"], n)
             def.extra = format(L["Missed so far: about %s XP."], n)
         end
+        if ns.db.settings.alerts.buffClick then
+            local foodID, foodName = ns.Buffs.WellFedFood()
+            if foodID then
+                def.action = { type = "item", item = "item:" .. foodID }
+                def.click = format(L["Left-click to eat %s."], foodName or ("item " .. foodID))
+            else
+                def.click = L["No food that gives Well Fed in your bags."]
+            end
+        end
         return def
     end,
     bag = function()
-        return { icon = ItemIcon(ns.Data.sleepingBag.itemID), label = L["Sleeping bag"],
+        local def = { icon = ItemIcon(ns.Data.sleepingBag.itemID), label = L["Sleeping bag"],
             title = L["Sleeping bag ready"], hint = L["Rest in your Cozy Sleeping Bag for up to +3% XP."] }
+        return Reminder.AddBagAction(def)
     end,
     bagLogout = function()
-        return { icon = ItemIcon(ns.Data.sleepingBag.itemID), label = L["Sleeping bag"],
+        local def = { icon = ItemIcon(ns.Data.sleepingBag.itemID), label = L["Sleeping bag"],
             title = L["Use your sleeping bag"], hint = L["Rest in your Cozy Sleeping Bag before logging out to keep up to +3% XP for your next session."] }
+        return Reminder.AddBagAction(def)
     end,
 }
+
+function Reminder.AddBagAction(def)
+    if ns.db.settings.alerts.buffClick then
+        def.action = ns.Buffs.BagAction()
+        if def.action then def.click = L["Left-click to use your sleeping bag."] end
+    end
+    return def
+end
 
 local function Build()
     frame = CreateFrame("Frame", nil, UIParent)
@@ -99,6 +119,7 @@ local function CreateButton(i)
         GameTooltip:AddLine(self.def.title, YELLOW[1], YELLOW[2], YELLOW[3])
         GameTooltip:AddLine(self.def.hint, 1, 1, 1, true)
         if self.def.extra then GameTooltip:AddLine(self.def.extra, 1, 0.4, 0.4, true) end
+        if self.def.click then GameTooltip:AddLine(self.def.click, 0.4, 1, 0.4, true) end
         GameTooltip:AddLine(L["Right-click to dismiss."], 0.6, 0.6, 0.6)
         GameTooltip:Show()
     end)
@@ -135,6 +156,7 @@ local function Layout(keepPulse)
         buttons[i]:Hide()
     end
     frame:SetWidth(math.max(SIZE, x - GAP))
+    Reminder.SyncActions()
 end
 
 -- Shows the icons for these kinds ("wellFed", "bag", "bagLogout").
@@ -173,8 +195,68 @@ function Reminder.Hide()
         for _, b in ipairs(buttons) do b.pulse:Stop() end
         frame:Hide()
     end
+    Reminder.SyncActions()
     if was then ns.Fire("NW_REMINDER") end
 end
+
+-- Click to use: a secure button over each icon that has something to use (food, the sleeping
+-- bag). The game lets these change only out of combat, and locks whatever they're anchored to,
+-- so they sit on UIParent and are placed over the icons whenever those change outside combat. A
+-- change during combat waits for the fight to end.
+local actionButtons = {}
+local syncWanted = false
+
+local function ActionButton(i)
+    if actionButtons[i] then return actionButtons[i] end
+    local a = CreateFrame("Button", nil, UIParent, "SecureActionButtonTemplate")
+    a:SetSize(SIZE, SIZE)
+    a:SetFrameStrata("MEDIUM")
+    a:SetFrameLevel(frame:GetFrameLevel() + 10)
+    a:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+    a:HookScript("OnClick", function(_, mouseButton)
+        if mouseButton == "RightButton" then Reminder.Hide() end
+    end)
+    a:SetScript("OnEnter", function(self)
+        local icon = self.icon
+        if icon and icon:IsVisible() then icon:GetScript("OnEnter")(icon) end
+    end)
+    a:SetScript("OnLeave", GameTooltip_Hide)
+    a:Hide()
+    actionButtons[i] = a
+    return a
+end
+
+function Reminder.SyncActions()
+    if InCombatLockdown() then
+        syncWanted = true
+        return
+    end
+    syncWanted = false
+    for _, a in ipairs(actionButtons) do
+        a.icon = nil
+        a:Hide()
+    end
+    if not frame or not frame:IsShown() then return end
+    for i in ipairs(shown) do
+        local b = buttons[i]
+        local action = b and b.def and b.def.action
+        local x, y = b and b:GetCenter()
+        if action and x then
+            local a = ActionButton(i)
+            a:ClearAllPoints()
+            a:SetPoint("CENTER", UIParent, "BOTTOMLEFT", x, y)
+            a:SetAttribute("type1", action.type)
+            a:SetAttribute("item", action.item)
+            a:SetAttribute("toy", action.toy)
+            a.icon = b
+            a:Show()
+        end
+    end
+end
+
+ns.On("PLAYER_REGEN_ENABLED", function()
+    if syncWanted then Reminder.SyncActions() end
+end)
 
 -- Updates the labels of the icons that are up (the XP missed changes as you kill).
 function Reminder.Refresh()

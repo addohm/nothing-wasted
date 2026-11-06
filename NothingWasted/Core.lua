@@ -33,6 +33,7 @@ local DEFAULT_SETTINGS = {
         buffBigText = false,  -- show the reminder in large text near the top of the screen
         buffFlash = false,    -- flash the game's taskbar icon with the reminder
         buffMissedXP = true,  -- show the XP missed without Well Fed on its icon, and in chat when fed again
+        buffClick = true,     -- left-click a reminder icon to eat food that gives Well Fed, or use the sleeping bag
         buffOnKill = false,   -- a kill without a buff brings dismissed icons back (at most every 5 minutes)
         mailLogin = true,     -- at login, list characters with mail expiring within 7 days
         glow = true,          -- red screen-edge glow on the rested cap alert
