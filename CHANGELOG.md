@@ -24,6 +24,8 @@ All notable changes to this project are documented here. The format follows
 - **XP missed without Well Fed:** the Well Fed icon shows about how much kill XP you've missed by
   not eating, and a chat line gives the total when you're fed again (can be turned off).
 - Optionally, a kill without a buff brings dismissed reminder icons back, at most every 5 minutes.
+- **Camp Tent reminder:** without Boosted Rest (a tent used in the last hour) you can sit by
+  another Camp Tent for rested XP, so it gets a reminder icon like Well Fed and the sleeping bag.
 - The buff reminders also come up at login or after a reload when you're out in the world, not
   only on leaving an inn or city (can be turned off).
 - **Click to fix:** left-click the Well Fed reminder icon to eat food from your bags that gives Well

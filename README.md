@@ -27,7 +27,7 @@ client's `Interface/AddOns` folder, or copy the `NothingWasted` folder into your
 | `/nw reset` | Forget every character (asks first) |
 | `/nw chars` | List every saved character, what its bar shows, and which session last saved the data |
 | `/nw rate` | Measure the rested XP rate: shows the live values and expected rate, sets a mark, and on the next run shows the rate since the mark (works across a logout). Also lists automatic checks made at each login. `/nw rate reset` starts over |
-| `/nw buffs` | What the leveling buff reminders see: Well Fed, where the sleeping bag is, its cooldown and buff, food that gives Well Fed |
+| `/nw buffs` | What the leveling buff reminders see: Well Fed, where the sleeping bag is, its cooldown and buff, Boosted Rest, food that gives Well Fed |
 | `/nw perks` | List the Legacy perk nodes, to check perk spell IDs |
 
 `/nothingwasted` works too, in case another addon uses `/nw`. The minimap button and the game's
@@ -72,6 +72,8 @@ button for the bars window.
   - "Not Well Fed": cooked food's Well Fed gives +5% XP from kills.
   - "Sleeping bag ready": resting in it gives up to +3% XP. Only when the bag is in your bags (a bag
     in the bank can't be used) and off cooldown.
+  - "No Boosted Rest": sitting by a Camp Tent at a campfire tops up your rested XP and gives you
+    the Boosted Rest debuff for an hour. Without it you can use a tent again, so find one.
   - At logout, if the bag is ready and you don't have its buff: rest in it first to carry the buff
     into your next session.
   - An icon goes away when you get that buff; they all go when none are left, when you right-click

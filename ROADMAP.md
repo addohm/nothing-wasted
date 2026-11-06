@@ -37,6 +37,7 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
 
 ## Confirmed in game
 
+- A Camp Tent puts Boosted Rest (1229451) on you; when it's gone you can use another (2026-11-06).
 - The "Not Well Fed" reminder clears after eating, now that it looks for any buff named Well Fed
   (2026-11-06).
 - Untrained spells don't show in the spellbook, only at the trainer (2026-10-22).
@@ -64,6 +65,7 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
 - XP missed without Well Fed on its icon, and a kill bringing dismissed icons back (2026-11-06).
 - Click a reminder icon to eat food that gives Well Fed or use the sleeping bag (2026-11-06).
 - Buff reminders at login or after a reload out in the world (2026-11-06).
+- Camp Tent reminder while Boosted Rest is missing (2026-11-06).
 - Untrack characters (a bank alt) and forget deleted ones: Options → Characters, and a right-click
   menu on the bars (2026-11-04).
 - Standard docs (2026-10-22).

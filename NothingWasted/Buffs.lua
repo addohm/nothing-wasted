@@ -1,7 +1,7 @@
 -- Nothing Wasted: reminders for the leveling buffs, below max level.
 --
--- Well Fed (+5% kill XP from cooked food) and the Cozy Sleeping Bag's Well-Rested (up to
--- +3% XP). A missing buff is mentioned as a chat line when you leave an inn or city, and when it
+-- Well Fed (+5% kill XP from cooked food), the Cozy Sleeping Bag's Well-Rested (up to +3% XP) and
+-- the Camp Tent (rested XP; Boosted Rest marks one used, so missing it means you can use another). A missing buff is mentioned as a chat line when you leave an inn or city, and when it
 -- wears off while you're out in the world. At logout, a ready sleeping bag is pointed out: resting
 -- in it first carries the buff into the next session.
 local _, ns = ...
@@ -115,6 +115,7 @@ local CHAT = {
     wellFed = "Not Well Fed: eat cooked food for +5% XP from kills.",
     bag = "Your Cozy Sleeping Bag is ready: rest in it for up to +3% XP.",
     bagLogout = "Your Cozy Sleeping Bag is ready: rest in it before logging out to keep up to +3% XP for your next session.",
+    tent = "No Boosted Rest: find a Camp Tent by a campfire for rested XP.",
 }
 local function Remind(kinds)
     if #kinds == 0 then return end
@@ -187,7 +188,7 @@ end
 
 -- State between checks. nil until the first check after login or a reload: that one reminds only
 -- if you're out in the world (and that's turned on), then sets the baseline.
-local wasResting, hadWellFed, hadBagBuff
+local wasResting, hadWellFed, hadBagBuff, hadTent
 
 -- Kill XP and what Well Fed would have added to it. Kill XP is worked out as XP gained minus quest
 -- rewards (QUEST_TURNED_IN), so it's rough: exploration XP counts as kills too.
@@ -255,6 +256,7 @@ function Buffs.Check()
     local firstOut = wasResting == nil and not resting and settings.buffAtLogin
     local wellFed = WellFedSpell() ~= nil
     local bagBuff = HasAura(ns.Data.sleepingBag.buffSpellID)
+    local tent = HasAura(ns.Data.campTent.debuffSpellID)
     local killed = killedSinceCheck
     killedSinceCheck = false
 
@@ -271,6 +273,7 @@ function Buffs.Check()
         wellFed = not resting and settings.wellFed and not wellFed,
         bag = not resting and settings.bagBuff and not bagBuff and Buffs.BagReady(),
     }
+    missing.tent = not resting and settings.tent and not tent
     missing.bagLogout = missing.bag
     if resting then
         ns.Reminder.Hide()
@@ -279,8 +282,9 @@ function Buffs.Check()
         -- Leaving rest, or a buff wearing off, brings up the card with everything that's missing.
         local trigger = (missing.wellFed and (leftRest or firstOut or hadWellFed))
             or (missing.bag and (leftRest or firstOut or hadBagBuff))
+            or (missing.tent and (leftRest or firstOut or hadTent))
         -- A kill without a buff brings the icons back if they were dismissed, now and then.
-        if not trigger and killed and settings.buffOnKill and (missing.wellFed or missing.bag)
+        if not trigger and killed and settings.buffOnKill and (missing.wellFed or missing.bag or missing.tent)
             and not ns.Reminder.IsShown()
             and (not lastKillNudge or GetTime() - lastKillNudge >= KILL_NUDGE_SECONDS) then
             trigger = true
@@ -290,10 +294,11 @@ function Buffs.Check()
             local kinds = {}
             if missing.wellFed then kinds[#kinds + 1] = "wellFed" end
             if missing.bag then kinds[#kinds + 1] = "bag" end
+            if missing.tent then kinds[#kinds + 1] = "tent" end
             Remind(kinds)
         end
     end
-    wasResting, hadWellFed, hadBagBuff = resting, wellFed, bagBuff
+    wasResting, hadWellFed, hadBagBuff, hadTent = resting, wellFed, bagBuff, tent
 end
 
 local pending
@@ -308,7 +313,7 @@ end
 
 ns.On("PLAYER_ENTERING_WORLD", function(isInitialLogin, isReload)
     if isInitialLogin or isReload then
-        wasResting, hadWellFed, hadBagBuff = nil, nil, nil
+        wasResting, hadWellFed, hadBagBuff, hadTent = nil, nil, nil, nil
     end
     lastXP, lastXPMax, lastLevel = UnitXP("player"), UnitXPMax("player"), UnitLevel("player")
     C_Timer.After(5, Buffs.Check)
@@ -340,6 +345,8 @@ function Buffs.Report()
     ns.Print(format(L["Well-Rested buff (%d): %s. Bag reminder possible now: %s."], ns.Data.sleepingBag.buffSpellID,
         YesNo(HasAura(ns.Data.sleepingBag.buffSpellID)),
         YesNo(Buffs.BagReady() and not IsResting() and not HasAura(ns.Data.sleepingBag.buffSpellID))))
+    ns.Print(format(L["Boosted Rest from a Camp Tent (%d): %s."], ns.Data.campTent.debuffSpellID,
+        YesNo(HasAura(ns.Data.campTent.debuffSpellID))))
     local _, food = Buffs.WellFedFood()
     ns.Print(food and format(L["Food that gives Well Fed in your bags: %s."], food) or L["Food that gives Well Fed in your bags: none found."])
 end

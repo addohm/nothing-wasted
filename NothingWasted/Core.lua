@@ -19,6 +19,7 @@ local DEFAULT_SETTINGS = {
         logout = true,        -- chat line when logging out somewhere that isn't resting
         wellFed = true,       -- remind when the Well Fed XP buff is missing (below max level)
         bagBuff = true,       -- remind when the sleeping bag is ready and its buff is missing
+        tent = true,          -- remind when Boosted Rest (a Camp Tent used) is missing
         bagLogout = true,     -- remind at logout to use a ready sleeping bag first
         buffAtLogin = true,   -- also remind at login or after a reload out in the world, not only on leaving rest
         buffSound = true,     -- play the alert sound with the buff reminders

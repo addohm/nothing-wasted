@@ -45,6 +45,14 @@ Data.sleepingBag = {
     chain = { { 79007, 79008 }, { 79192 }, { 79980 }, { 79974 }, { 79975 }, { 79976 } },
 }
 
+-- Camp Tent: sitting by a Leatherworker's tent at a campfire tops up rested XP, then puts Boosted
+-- Rest on you for an hour. When it's gone you can use a tent again. The debuff ID was seen in game
+-- (2026-11-06); the tent spell (Wowhead Forever) only gives the icon.
+Data.campTent = {
+    spellID = 1307230,       -- Camp Tent
+    debuffSpellID = 1229451, -- Boosted Rest
+}
+
 -- The standard human male NPC's four farewell lines ("See ya later" and others), as sound file IDs
 -- (from the community listfile: sound/creature/humanmalestandardnpc/humanmalestandardnpcfarewell01-04).
 Data.farewellSounds = { 552199, 552209, 552208, 552205 }

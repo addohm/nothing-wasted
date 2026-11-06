@@ -57,6 +57,10 @@ local KINDS = {
             title = L["Sleeping bag ready"], hint = L["Rest in your Cozy Sleeping Bag for up to +3% XP."] }
         return Reminder.AddBagAction(def)
     end,
+    tent = function()
+        return { icon = SpellIcon(ns.Data.campTent.spellID), label = L["Camp Tent"],
+            title = L["No Boosted Rest"], hint = L["Find a Camp Tent by a campfire and sit by it: it tops up your rested XP."] }
+    end,
     bagLogout = function()
         local def = { icon = ItemIcon(ns.Data.sleepingBag.itemID), label = L["Sleeping bag"],
             title = L["Use your sleeping bag"], hint = L["Rest in your Cozy Sleeping Bag before logging out to keep up to +3% XP for your next session."] }
@@ -159,7 +163,7 @@ local function Layout(keepPulse)
     Reminder.SyncActions()
 end
 
--- Shows the icons for these kinds ("wellFed", "bag", "bagLogout").
+-- Shows the icons for these kinds ("wellFed", "bag", "tent", "bagLogout").
 function Reminder.Show(kinds)
     if #kinds == 0 then return end
     if not frame then Build() end

@@ -61,8 +61,8 @@ no mail left to expire.
   alert, a sound and a red screen-edge glow. It reminds you again at each login until you play
   that character.
 - **Early warning** before an alt caps (2 hours by default, adjustable).
-- **Leveling buffs:** leave town without Well Fed (+5% kill XP) or with your Cozy Sleeping Bag
-  unused (+3% XP), and the missing buffs' icons light up where the bars window was. Optionally
+- **Leveling buffs:** leave town without Well Fed (+5% kill XP), with your Cozy Sleeping Bag
+  unused (+3% XP) or ready for another Camp Tent (rested XP), and the missing buffs' icons light up where the bars window was. Optionally
   also a pulsing screen border until you fix it, a repeating sound, large text or a taskbar flash.
   The Well Fed icon counts the XP you've missed by not eating; click it to eat, or click the
   sleeping bag to use it.

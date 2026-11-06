@@ -152,17 +152,17 @@ return function(root)
         check(not meter.shown, "bars window hides on leaving rest")
         check(R.IsShown(), "the reminder shows at the same moment, no gap")
         c:Advance(2)
-        eq(Card(), "wellFed,bag", "with both missing buffs")
+        eq(Card(), "wellFed,bag,tent", "with all three missing")
         -- The labels mustn't overlap: each icon's slot is as wide as its label.
         local icons = {}
         for _, f in ipairs(c.frames) do
             if f.kind == "Button" and f.label and f.icon and f:IsVisible() then icons[#icons + 1] = f end
         end
-        eq(#icons, 2, "two icons")
+        eq(#icons, 3, "three icons")
         local group = icons[1].parent
         eq(group.points[1][1], "CENTER", "the icons are centered on the bars window")
         check(group.points[1][2] == meter, "on the bars window itself")
-        if #icons == 2 then
+        if #icons == 3 then
             local x1, x2 = icons[1].points[1][2], icons[2].points[1][2]
             local w1 = icons[1].label:GetStringWidth()
             check(x2 - x1 >= (w1 + 38) / 2 + 14 - 1, "the second icon clears the first label")
@@ -175,11 +175,15 @@ return function(root)
         c.player.auras[1243969] = 99999
         c:Fire("UNIT_AURA", "player")
         c:Advance(2)
-        eq(Card(), "wellFed,bag", "Well Fed XP Boost alone isn't Well Fed")
+        eq(Card(), "wellFed,bag,tent", "Well Fed XP Boost alone isn't Well Fed")
         c.player.auras[1248421] = 99999
         c:Fire("UNIT_AURA", "player")
         c:Advance(2)
-        eq(Card(), "bag", "eating removes the Well Fed row, whichever food's Well Fed it is")
+        eq(Card(), "bag,tent", "eating removes the Well Fed row, whichever food's Well Fed it is")
+        c.player.auras[1229451] = 99999
+        c:Fire("UNIT_AURA", "player")
+        c:Advance(2)
+        eq(Card(), "bag", "using a tent removes the tent row")
         c.player.auras[429959] = 99999
         c:Fire("UNIT_AURA", "player")
         c:Advance(2)
@@ -285,7 +289,7 @@ return function(root)
 
     test("1c2. getting attention while a buff is missing", function()
         local c = mock.NewClient({ root = root, player = {
-            name = "Loud", level = 20, xp = 0, xpMax = 10000, resting = true,
+            name = "Loud", level = 20, xp = 0, xpMax = 10000, resting = true, auras = { [1229451] = 99999 },
         }, spellNames = { [1248420] = "Well Fed" } })
         c:Login()
         local s = rawget(c.env, "NothingWastedDB").settings.alerts
@@ -446,7 +450,7 @@ return function(root)
 
     test("1c4. clicking a reminder icon eats or uses the sleeping bag", function()
         local c = mock.NewClient({ root = root, player = {
-            name = "Clicky", level = 20, xp = 0, xpMax = 10000, resting = true, items = { [211527] = 1 },
+            name = "Clicky", level = 20, xp = 0, xpMax = 10000, resting = true, items = { [211527] = 1 }, auras = { [1229451] = 99999 },
             bagSlots = { [1] = { 4540, 10, "Tough Hunk of Bread" }, [2] = { 211527, 1, "Cozy Sleeping Bag" },
                 [3] = { 2684, 5, "Coyote Steak" } },
         }, spellNames = { [1248420] = "Well Fed" } })
@@ -512,7 +516,7 @@ return function(root)
     end)
 
     test("1c5. reminders at login out in the world", function()
-        local c = mock.NewClient({ root = root, player = { name = "Outside", level = 20, xp = 0, xpMax = 10000, resting = false },
+        local c = mock.NewClient({ root = root, player = { name = "Outside", level = 20, xp = 0, xpMax = 10000, resting = false, auras = { [1229451] = 99999 } },
             spellNames = { [1248420] = "Well Fed" } })
         c:Login()
         local R = c.ns.Reminder
@@ -529,6 +533,37 @@ return function(root)
             db = { settings = { alerts = { buffAtLogin = false } } } })
         off:Login()
         check(not off.ns.Reminder.IsShown(), "not when turned off")
+    end)
+
+    test("1c6. Camp Tent: reminded like the buffs while Boosted Rest is missing", function()
+        local c = mock.NewClient({ root = root, player = { name = "Camper", level = 20, xp = 0, xpMax = 10000, resting = true,
+            auras = { [1248420] = 99999 } }, spellNames = { [1248420] = "Well Fed" } })
+        c:Login()
+        local R = c.ns.Reminder
+        local function Card() return table.concat(R.Kinds(), ",") end
+        c.player.resting = false
+        c:Fire("PLAYER_UPDATE_RESTING")
+        c:Advance(1)
+        eq(Card(), "tent", "leaving town without Boosted Rest")
+        local icon
+        for _, f in ipairs(c.frames) do if f.buffKind == "tent" and f:IsVisible() then icon = f end end
+        check(c:Hover(icon):Has("Find a Camp Tent by a campfire"), "the tooltip says what to do")
+        c.player.auras[1229451] = 99999
+        c:Fire("UNIT_AURA", "player")
+        c:Advance(2)
+        check(not R.IsShown(), "goes once a tent is used")
+        c.player.auras[1229451] = nil
+        c:Fire("UNIT_AURA", "player")
+        c:Advance(2)
+        eq(Card(), "tent", "back when Boosted Rest wears off")
+        c:ClearChat()
+        c:Slash("buffs")
+        check(c:ChatHas("Boosted Rest from a Camp Tent %(1229451%): no"), "/nw buffs shows it")
+
+        rawget(c.env, "NothingWastedDB").settings.alerts.tent = false
+        c:Fire("UNIT_AURA", "player")
+        c:Advance(2)
+        check(not R.IsShown(), "not when turned off")
     end)
 
     test("1d. measuring rested rates", function()
