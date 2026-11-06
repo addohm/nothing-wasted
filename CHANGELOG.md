@@ -16,14 +16,15 @@ All notable changes to this project are documented here. The format follows
 ### Changed
 
 - Right-clicking a bar opens a menu: Stop tracking, or Forget (which still asks first).
-- **More ways for the leveling buff reminders to get your attention**, all optional and off by
-  default (Options → Alerts): a pulsing border around the screen while the reminder icons are up
+- **More ways for the leveling buff reminders to get your attention**, all on by default and each
+  can be turned off (Options → Alerts): a pulsing border around the screen while the reminder icons are up
   (red, gold or class colour; three strengths), the reminder sound again every few minutes, a
   "build up" delay before those two start, large text near the top of the screen, and a flash of
   the game's taskbar icon. The Test button tries whatever is turned on.
 - **XP missed without Well Fed:** the Well Fed icon shows about how much kill XP you've missed by
   not eating, and a chat line gives the total when you're fed again (can be turned off).
-- Optionally, a kill without a buff brings dismissed reminder icons back, at most every 5 minutes.
+- A kill without a buff brings dismissed reminder icons back, at most every 5 minutes (can be
+  turned off).
 - **Camp Tent reminder:** without Boosted Rest (a tent used in the last hour) you can sit by
   another Camp Tent for rested XP, so it gets a reminder icon like Well Fed and the sleeping bag.
 - The buff reminders also come up at login or after a reload when you're out in the world, not

@@ -85,12 +85,13 @@ button for the bars window.
     the kill XP since Well Fed was last on, this session), and a chat line gives the total when
     you're fed again. Kill XP is your XP gained minus quest rewards, so exploration XP counts too.
     Can be turned off.
-  - Optional extras, all off by default (Options → Alerts): a kill without a buff brings dismissed
+  - Extras, all on by default and each can be turned off (Options → Alerts): a kill without a buff brings dismissed
     icons back (at most every 5 minutes; after the fight), large text near the top of the screen,
     a flash of the game's taskbar icon (for when you're alt-tabbed), and, while the icons are up, a
     **pulsing border around the screen** (red like low health, gold or your class colour; low,
     medium or high) and the reminder sound again every 1 to 10 minutes. **Build up** holds the
-    border and the repeated sound back until the icons have been up for 1 to 10 minutes. They stop
+    border and the repeated sound back until the icons have been up for 1 to 10 minutes (5 by
+    default). They stop
     when the icons go. The Test button tries whatever is turned on.
 - You pick the alert sound. The default is the raid warning sound. Any game sound works too: choose
   "Custom" and enter its ID, either the number from a Wowhead sound page (`sound=12345`) or a sound

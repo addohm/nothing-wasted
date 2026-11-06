@@ -5,7 +5,7 @@ local L = ns.L
 local GetMetadata = C_AddOns and C_AddOns.GetAddOnMetadata or GetAddOnMetadata
 ns.version = GetMetadata(addonName, "Version") or "?"
 
-local DB_VERSION = 1
+local DB_VERSION = 2 -- 2: the buff reminder extras turned on by default
 
 local DEFAULT_SETTINGS = {
     alerts = {
@@ -25,18 +25,18 @@ local DEFAULT_SETTINGS = {
         buffSound = true,     -- play the alert sound with the buff reminders
         buffGlow = true,      -- flash the screen edge with the buff reminders
         buffChat = false,     -- also print the buff reminders in chat
-        buffBorder = false,   -- keep a pulsing screen border while the buff reminder icons are up
+        buffBorder = true,    -- keep a pulsing screen border while the buff reminder icons are up
         buffBorderColor = "red", -- "red", "gold" or "class"
         buffBorderStrength = "medium", -- "low", "medium" or "high"
-        buffRepeat = false,   -- play the reminder sound again while the icons are up
+        buffRepeat = true,    -- play the reminder sound again while the icons are up
         buffRepeatMinutes = 5,
-        buffEscalate = false, -- start the border and the repeated sound only after the icons have been up a while
+        buffEscalate = true,  -- start the border and the repeated sound only after the icons have been up a while
         buffEscalateMinutes = 5,
-        buffBigText = false,  -- show the reminder in large text near the top of the screen
-        buffFlash = false,    -- flash the game's taskbar icon with the reminder
+        buffBigText = true,   -- show the reminder in large text near the top of the screen
+        buffFlash = true,     -- flash the game's taskbar icon with the reminder
         buffMissedXP = true,  -- show the XP missed without Well Fed on its icon, and in chat when fed again
         buffClick = true,     -- left-click a reminder icon to eat food that gives Well Fed, or use the sleeping bag
-        buffOnKill = false,   -- a kill without a buff brings dismissed icons back (at most every 5 minutes)
+        buffOnKill = true,    -- a kill without a buff brings dismissed icons back (at most every 5 minutes)
         mailLogin = true,     -- at login, list characters with mail expiring within 7 days
         glow = true,          -- red screen-edge glow on the rested cap alert
         sound = "RAID_WARNING",
@@ -227,6 +227,8 @@ end
 
 -- Startup
 
+local ON_IN_V2 = { "buffBorder", "buffRepeat", "buffEscalate", "buffBigText", "buffFlash", "buffOnKill" }
+
 local function InitDB()
     NothingWastedDB = NothingWastedDB or {}
     local db = NothingWastedDB
@@ -234,6 +236,11 @@ local function InitDB()
     db.chars = db.chars or {}
     db.settings = db.settings or {}
     ApplyDefaults(db.settings, DEFAULT_SETTINGS)
+    -- Version 1 saved the buff reminder extras as off; they're on by default now.
+    if db.version < 2 then
+        for _, key in ipairs(ON_IN_V2) do db.settings.alerts[key] = true end
+        db.version = 2
+    end
     ns.db = db
 end
 

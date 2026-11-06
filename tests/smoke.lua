@@ -305,24 +305,38 @@ return function(root)
             c:Advance(1)
         end
 
-        -- All off by default: just the icons, sound and flash as before.
+        -- All on by default, with build up: the border and repeated sound start after 5 minutes.
+        c.sounds = {}
         Leave()
         check(R.IsShown(), "icons up")
-        check(not Glow.IsSteady(), "no steady border by default")
-        check(R.BigTextShown() == nil, "no big text by default")
-        eq(c.taskbarFlashes, nil, "no taskbar flash by default")
-        c.sounds = {}
-        c:Advance(600)
-        eq(#c.sounds, 0, "no repeated sound by default")
+        eq(R.BigTextShown(), "Not Well Fed", "big text")
+        eq(c.taskbarFlashes, 1, "taskbar flash")
+        check(not Glow.IsSteady(), "no border at first")
+        eq(#c.sounds, 1, "the reminder sound")
+        c:Advance(4 * 60)
+        check(not Glow.IsSteady(), "still none after 4 minutes")
+        c:Advance(65)
+        check(Glow.IsSteady(), "border after 5 minutes")
+        eq(#c.sounds, 2, "with the sound again")
         Enter()
 
-        -- Border, big text, taskbar flash and the repeated sound.
-        s.buffBorder, s.buffBigText, s.buffFlash, s.buffRepeat = true, true, true, true
+        -- Each can be turned off.
+        s.buffBorder, s.buffBigText, s.buffFlash, s.buffRepeat = false, false, false, false
+        c.sounds = {}
+        Leave()
+        eq(c.taskbarFlashes, 1, "no taskbar flash when turned off")
+        c:Advance(600)
+        check(not Glow.IsSteady(), "no border when turned off")
+        eq(#c.sounds, 1, "no repeated sound when turned off")
+        Enter()
+
+        -- Without build up: the border straight away, the sound every 5 minutes.
+        s.buffBorder, s.buffBigText, s.buffFlash, s.buffRepeat, s.buffEscalate = true, true, true, true, false
         s.buffBorderColor = "gold"
         Leave()
         check(Glow.IsSteady(), "border pulses while the icons are up")
         eq(R.BigTextShown(), "Not Well Fed", "big text")
-        eq(c.taskbarFlashes, 1, "taskbar flash")
+        eq(c.taskbarFlashes, 2, "taskbar flash")
         c.sounds = {}
         c:Advance(5 * 60)
         eq(#c.sounds, 1, "sound again after 5 minutes")
@@ -425,9 +439,11 @@ return function(root)
 
         -- A kill brings dismissed icons back, at most every 5 minutes.
         R.Hide()
+        s.buffOnKill = false
         Kill(100)
-        check(not R.IsShown(), "off by default")
+        check(not R.IsShown(), "not when turned off")
         s.buffOnKill = true
+        c:Advance(300)
         Kill(100)
         check(R.IsShown(), "a kill brings the icons back")
         R.Hide()
@@ -564,6 +580,24 @@ return function(root)
         c:Fire("UNIT_AURA", "player")
         c:Advance(2)
         check(not R.IsShown(), "not when turned off")
+    end)
+
+    test("1c7. an install from before keeps its settings but gets the extras on", function()
+        local c = mock.NewClient({ root = root, player = { name = "Old", level = 20, xp = 0, xpMax = 10000, resting = true },
+            db = { version = 1, settings = { alerts = { buffBorder = false, buffRepeat = false, buffEscalate = false,
+                buffBigText = false, buffFlash = false, buffOnKill = false, buffChat = true, wellFed = false } } } })
+        c:Login()
+        local db = rawget(c.env, "NothingWastedDB")
+        local s = db.settings.alerts
+        check(s.buffBorder and s.buffRepeat and s.buffEscalate and s.buffBigText and s.buffFlash and s.buffOnKill,
+            "the extras are turned on once")
+        check(s.buffChat and s.wellFed == false, "other settings are kept")
+        eq(db.version, 2, "and the saved data is marked")
+        s.buffBorder = false
+        local saved = c:Logout()
+        local again = mock.NewClient({ root = root, db = saved, player = { name = "Old", level = 20, xp = 0, xpMax = 10000, resting = true } })
+        again:Login()
+        eq(rawget(again.env, "NothingWastedDB").settings.alerts.buffBorder, false, "turning one off afterwards sticks")
     end)
 
     test("1d. measuring rested rates", function()
