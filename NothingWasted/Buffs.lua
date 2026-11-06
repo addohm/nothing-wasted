@@ -51,7 +51,8 @@ end
 local YELLOW = "|cffffd100"
 
 -- Shows buff reminders on the reminder card (kinds: "wellFed", "bag", "bagLogout"), with one sound
--- and one screen-edge flash for the batch, and optionally as yellow chat lines too.
+-- and one screen-edge flash for the batch, and optionally as yellow chat lines, large text and a
+-- flash of the game's taskbar icon too.
 local CHAT = {
     wellFed = "Not Well Fed: eat cooked food for +5% XP from kills.",
     bag = "Your Cozy Sleeping Bag is ready: rest in it for up to +3% XP.",
@@ -66,6 +67,50 @@ local function Remind(kinds)
     end
     if settings.buffSound then ns.Alerts.PlaySound("buff") end
     if settings.buffGlow then ns.Glow.Pulse() end
+    if settings.buffBigText then ns.Reminder.BigText(kinds) end
+    if settings.buffFlash and FlashClientIcon then FlashClientIcon() end
+end
+
+-- While the icons are up: the steady screen border and the repeated sound. With "build up" on,
+-- both wait until the icons have been up a while; the repeated sound then plays at once.
+local nextSoundAt
+local function UpdateAttention()
+    local s = ns.db.settings.alerts
+    local since = ns.Reminder.ShownSince()
+    if not since then
+        ns.Glow.SetSteady(false)
+        return
+    end
+    local now = GetTime()
+    local wait = s.buffEscalate and s.buffEscalateMinutes * 60 or 0
+    local ready = now - since >= wait
+    ns.Glow.SetSteady(s.buffBorder and ready, s.buffBorderColor, s.buffBorderStrength)
+    if s.buffRepeat and ready then
+        nextSoundAt = nextSoundAt or (since + (wait > 0 and wait or s.buffRepeatMinutes * 60))
+        if now >= nextSoundAt then
+            ns.Alerts.PlaySound("buff")
+            nextSoundAt = now + s.buffRepeatMinutes * 60
+        end
+    end
+end
+ns.On("NW_REMINDER", function()
+    nextSoundAt = nil
+    UpdateAttention()
+end)
+ns.On("NW_REFRESH", UpdateAttention)
+ns.On("NW_INIT", function() C_Timer.NewTicker(5, UpdateAttention) end)
+
+-- The Test button: everything that's turned on, with the border for a few seconds.
+function Buffs.Preview()
+    local s = ns.db.settings.alerts
+    ns.Alerts.PlaySound("buff")
+    if s.buffGlow then ns.Glow.Pulse() end
+    if s.buffBigText then ns.Reminder.BigText({ "wellFed" }) end
+    if s.buffFlash and FlashClientIcon then FlashClientIcon() end
+    if s.buffBorder then
+        ns.Glow.SetSteady(true, s.buffBorderColor, s.buffBorderStrength)
+        C_Timer.After(5, UpdateAttention)
+    end
 end
 
 local function BelowMax()

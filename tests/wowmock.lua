@@ -106,6 +106,7 @@ function Texture:SetTexture(t) self.texture = t end
 function Texture:SetColorTexture(...) for _, v in ipairs({ ... }) do CheckValue("SetColorTexture", v) end end
 function Texture:SetTexCoord() end
 function Texture:SetBlendMode(m) self.blend = m end
+function Texture:SetDesaturated(v) self.desaturated = v end
 function Texture:SetVertexColor(...) for _, v in ipairs({ ... }) do CheckValue("SetVertexColor", v) end end
 function Texture:SetGradient(orientation, a, b)
     assert(orientation == "HORIZONTAL" or orientation == "VERTICAL", "bad gradient orientation")
@@ -118,6 +119,7 @@ function Anim:SetFromAlpha(v) CheckValue("SetFromAlpha", v) end
 function Anim:SetToAlpha(v) CheckValue("SetToAlpha", v) end
 function Anim:SetDuration(v) CheckValue("SetDuration", v) end
 function Anim:SetOrder() end
+function Anim:SetStartDelay(v) CheckValue("SetStartDelay", v) end
 function Anim:SetSmoothing() end
 
 local AnimGroup = {}
@@ -437,6 +439,7 @@ function M.NewClient(opts)
     for i = 1, 8 do env["FACTION_STANDING_LABEL" .. i] = "Standing" .. i end
     env.ATTACHMENTS_MAX_SEND, env.ATTACHMENTS_MAX_RECEIVE = 12, 16
     env.InCombatLockdown = function() return client.inCombat or false end
+    env.FlashClientIcon = function() client.taskbarFlashes = (client.taskbarFlashes or 0) + 1 end
     env.IsShiftKeyDown = function() return client.shift or false end
     env.PlayerHasToy = function(id) return player.toys and player.toys[id] or false end
     -- Midnight's secret values: tests mark values secret by wrapping them with mock.Secret().

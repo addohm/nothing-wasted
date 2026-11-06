@@ -62,7 +62,8 @@ no mail left to expire.
   that character.
 - **Early warning** before an alt caps (2 hours by default, adjustable).
 - **Leveling buffs:** leave town without Well Fed (+5% kill XP) or with your Cozy Sleeping Bag
-  unused (+3% XP), and the missing buffs' icons light up where the bars window was.
+  unused (+3% XP), and the missing buffs' icons light up where the bars window was. Optionally
+  also a pulsing screen border until you fix it, a repeating sound, large text or a taskbar flash.
 - **Logout warning** if you log out somewhere rested XP only builds at a quarter of the rate.
 - Pick any game sound, including the "See ya later" NPC farewell, or enter any sound ID.
 

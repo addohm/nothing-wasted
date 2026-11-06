@@ -283,6 +283,83 @@ return function(root)
         check(not m:ChatHas("Well Fed") and not m:ChatHas("Sleeping Bag"), "no buff reminders at max level")
     end)
 
+    test("1c2. getting attention while a buff is missing", function()
+        local c = mock.NewClient({ root = root, player = {
+            name = "Loud", level = 20, xp = 0, xpMax = 10000, resting = true,
+        }, spellNames = { [1248420] = "Well Fed" } })
+        c:Login()
+        local s = rawget(c.env, "NothingWastedDB").settings.alerts
+        local R, Glow = c.ns.Reminder, c.ns.Glow
+        local function Leave()
+            c.player.resting = false
+            c:Fire("PLAYER_UPDATE_RESTING")
+            c:Advance(1)
+        end
+        local function Enter()
+            c.player.resting = true
+            c:Fire("PLAYER_UPDATE_RESTING")
+            c:Advance(1)
+        end
+
+        -- All off by default: just the icons, sound and flash as before.
+        Leave()
+        check(R.IsShown(), "icons up")
+        check(not Glow.IsSteady(), "no steady border by default")
+        check(R.BigTextShown() == nil, "no big text by default")
+        eq(c.taskbarFlashes, nil, "no taskbar flash by default")
+        c.sounds = {}
+        c:Advance(600)
+        eq(#c.sounds, 0, "no repeated sound by default")
+        Enter()
+
+        -- Border, big text, taskbar flash and the repeated sound.
+        s.buffBorder, s.buffBigText, s.buffFlash, s.buffRepeat = true, true, true, true
+        s.buffBorderColor = "gold"
+        Leave()
+        check(Glow.IsSteady(), "border pulses while the icons are up")
+        eq(R.BigTextShown(), "Not Well Fed", "big text")
+        eq(c.taskbarFlashes, 1, "taskbar flash")
+        c.sounds = {}
+        c:Advance(5 * 60)
+        eq(#c.sounds, 1, "sound again after 5 minutes")
+        c:Advance(5 * 60)
+        eq(#c.sounds, 2, "and every 5 minutes")
+
+        -- Eating stops it all.
+        c.player.auras[1248420] = 99999
+        c:Fire("UNIT_AURA", "player")
+        c:Advance(2)
+        check(not R.IsShown(), "icons go when fed")
+        check(not Glow.IsSteady(), "and the border with them")
+        c.sounds = {}
+        c:Advance(600)
+        eq(#c.sounds, 0, "no more sounds")
+
+        -- Right-clicking an icon dismisses the border too.
+        c.player.auras[1248420] = nil
+        c:Fire("UNIT_AURA", "player")
+        c:Advance(2)
+        check(R.IsShown() and Glow.IsSteady(), "back when it wears off")
+        for _, f in ipairs(c.frames) do
+            if f.buffKind and f:IsVisible() then f:Click("RightButton") break end
+        end
+        check(not R.IsShown() and not Glow.IsSteady(), "dismissing stops the border")
+
+        -- Build up: the border and the sound wait.
+        s.buffEscalate, s.buffEscalateMinutes = true, 2
+        Enter()
+        Leave()
+        check(R.IsShown() and not Glow.IsSteady(), "no border at first when building up")
+        c.sounds = {}
+        c:Advance(60)
+        check(not Glow.IsSteady(), "still none after a minute")
+        c:Advance(65)
+        check(Glow.IsSteady(), "border after 2 minutes")
+        eq(#c.sounds, 1, "with the sound")
+        Enter()
+        check(not Glow.IsSteady(), "border goes in a rested area")
+    end)
+
     test("1d. measuring rested rates", function()
         local c = mock.NewClient({ root = root, player = { name = "Rater", level = 27, xp = 19455, xpMax = 38900, rested = 6958, resting = true } })
         c:Login()

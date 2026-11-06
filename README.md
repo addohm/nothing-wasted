@@ -76,6 +76,12 @@ button for the bars window.
     into your next session.
   - An icon goes away when you get that buff; they all go when none are left, when you right-click
     one, or when you're back in a rested area. Chat lines can be turned on as well.
+  - Optional extras, all off by default (Options → Alerts): large text near the top of the screen,
+    a flash of the game's taskbar icon (for when you're alt-tabbed), and, while the icons are up, a
+    **pulsing border around the screen** (red like low health, gold or your class colour; low,
+    medium or high) and the reminder sound again every 1 to 10 minutes. **Build up** holds the
+    border and the repeated sound back until the icons have been up for 1 to 10 minutes. They stop
+    when the icons go. The Test button tries whatever is turned on.
 - You pick the alert sound. The default is the raid warning sound. Any game sound works too: choose
   "Custom" and enter its ID, either the number from a Wowhead sound page (`sound=12345`) or a sound
   file ID as `file:12345`; several IDs separated by commas play one at random. A built-in

@@ -19,9 +19,9 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
 - **Well Rested cap:** whether +4% per rank multiplies the cap (rank 5: 180%) or adds to it (170%). The
   addon multiplies. Long term: it only shows once a character with Well Rested reaches the cap.
 - **Cozy Sleeping Bag:** which of quests 79007 and 79008 is Alliance or Horde (either counts).
-- **Well Fed:** that eating cooked food clears the "Not Well Fed" reminder now that it looks for any
-  buff named Well Fed (the name comes from spell 1248420). `/nw buffs` while fed shows the spell
-  found; try two different foods. Looking for Well Fed XP Boost (1243969) by ID never found it.
+- **Buff reminder extras:** how the gold and class-colour screen borders look (a grey copy of the
+  low-health texture, tinted), the large text (`GameFontNormalHuge3`) and the taskbar flash
+  (`FlashClientIcon`).
 - **Sleeping bag buff:** that it's Well-Rested (429959). Wowhead lists it; not yet seen in game.
 - **Characters page and the bar menu:** that right-clicking a bar opens the Stop tracking / Forget
   menu (`MenuUtil.CreateContextMenu`), and the page's tick boxes and Forget buttons line up.
@@ -31,6 +31,8 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
 
 ## Confirmed in game
 
+- The "Not Well Fed" reminder clears after eating, now that it looks for any buff named Well Fed
+  (2026-11-06).
 - Untrained spells don't show in the spellbook, only at the trainer (2026-10-22).
 - The first mount at level 40 costs 100g (2026-10-22).
 - The inn rate matches: `/nw rate` measured 6.06% of a level per 8h at Well Rested rank 5, expected
@@ -51,6 +53,8 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
 
 ## Done
 
+- Buff reminder extras: pulsing screen border, repeated sound, build up, large text, taskbar
+  flash (2026-11-06).
 - Untrack characters (a bank alt) and forget deleted ones: Options → Characters, and a right-click
   menu on the bars (2026-11-04).
 - Standard docs (2026-10-22).

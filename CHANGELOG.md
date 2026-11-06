@@ -16,6 +16,11 @@ All notable changes to this project are documented here. The format follows
 ### Changed
 
 - Right-clicking a bar opens a menu: Stop tracking, or Forget (which still asks first).
+- **More ways for the leveling buff reminders to get your attention**, all optional and off by
+  default (Options → Alerts): a pulsing border around the screen while the reminder icons are up
+  (red, gold or class colour; three strengths), the reminder sound again every few minutes, a
+  "build up" delay before those two start, large text near the top of the screen, and a flash of
+  the game's taskbar icon. The Test button tries whatever is turned on.
 
 ### Fixed
 

@@ -1,7 +1,8 @@
 -- Nothing Wasted: the buff reminder. When you leave an inn or city with a leveling buff missing, the
 -- missing buffs' icons appear where the bars window was, large, with a pulsing yellow glow and a
 -- small label under each. Hover one for the details; right-click to dismiss. An icon goes away when
--- you get that buff; they all go when none are left or when you're back in a rested area.
+-- you get that buff; they all go when none are left or when you're back in a rested area. It can
+-- also show the reminder in large text near the top of the screen.
 local _, ns = ...
 local L = ns.L
 
@@ -17,6 +18,7 @@ local GLOW = "Interface\\Buttons\\UI-ActionButton-Border" -- the game's yellow b
 local frame
 local buttons = {}
 local shown = {} -- the kinds currently shown
+local shownAt    -- GetTime() when the icons last came up
 
 local function SpellIcon(spellID)
     local info = C_Spell.GetSpellInfo and C_Spell.GetSpellInfo(spellID)
@@ -133,6 +135,8 @@ function Reminder.Show(kinds)
     Place()
     frame:Show()
     Layout()
+    shownAt = GetTime()
+    ns.Fire("NW_REMINDER")
 end
 
 -- Keeps only the icons still missing; hides when none are left.
@@ -152,10 +156,18 @@ end
 
 function Reminder.Hide()
     shown = {}
+    local was = shownAt ~= nil
+    shownAt = nil
     if frame then
         for _, b in ipairs(buttons) do b.pulse:Stop() end
         frame:Hide()
     end
+    if was then ns.Fire("NW_REMINDER") end
+end
+
+-- GetTime() when the icons came up, or nil while they're not up.
+function Reminder.ShownSince()
+    return shownAt
 end
 
 function Reminder.IsShown()
@@ -165,4 +177,41 @@ end
 -- The kinds currently shown (for the tests).
 function Reminder.Kinds()
     return shown
+end
+
+-- The reminder in large text near the top of the screen, fading out after a few seconds.
+local notice
+local function BuildNotice()
+    notice = CreateFrame("Frame", nil, UIParent)
+    notice:SetSize(800, 120)
+    notice:SetPoint("TOP", UIParent, "TOP", 0, -160)
+    notice:SetFrameStrata("HIGH")
+    notice:EnableMouse(false)
+    notice.text = notice:CreateFontString(nil, "OVERLAY", "GameFontNormalHuge3")
+    notice.text:SetPoint("TOP")
+    notice.text:SetJustifyH("CENTER")
+    notice.fade = notice:CreateAnimationGroup()
+    local a = notice.fade:CreateAnimation("Alpha")
+    a:SetFromAlpha(1)
+    a:SetToAlpha(0)
+    a:SetStartDelay(4)
+    a:SetDuration(1)
+    notice.fade:SetScript("OnFinished", function() notice:Hide() end)
+    notice:Hide()
+end
+
+function Reminder.BigText(kinds)
+    if #kinds == 0 then return end
+    if not notice then BuildNotice() end
+    local lines = {}
+    for _, k in ipairs(kinds) do lines[#lines + 1] = KINDS[k]().title end
+    notice.text:SetText(table.concat(lines, "\n"))
+    notice.fade:Stop()
+    notice:Show()
+    notice.fade:Play()
+end
+
+-- The big text shown now, or nil (for the tests).
+function Reminder.BigTextShown()
+    return notice and notice:IsShown() and notice.text:GetText() or nil
 end

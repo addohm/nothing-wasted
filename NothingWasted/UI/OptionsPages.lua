@@ -32,6 +32,10 @@ local BAR_COUNTS = { { 5, "5" }, { 10, "10" }, { 15, "15" }, { 20, "20" }, { 40,
 
 local MAIL_DAYS = { { 1, L["1 day"] }, { 3, L["3 days"] }, { 7, L["7 days"] } }
 
+local BORDER_COLORS = { { "red", L["Red, like low health"] }, { "gold", L["Gold"] }, { "class", L["Class colour"] } }
+local BORDER_STRENGTHS = { { "low", L["Low"] }, { "medium", L["Medium"] }, { "high", L["High"] } }
+local MINUTES = { { 1, L["1 minute"] }, { 2, L["2 minutes"] }, { 5, L["5 minutes"] }, { 10, L["10 minutes"] } }
+
 local function Setting(group, key)
     return function() return ns.db.settings[group][key] end,
         function(v)
@@ -97,12 +101,19 @@ Page("alerts", L["Alerts"], 1, function(stack)
     Check(stack, L["Play a sound with these reminders"], "alerts", "buffSound")
     Select(stack, L["Reminder sound"], BUFF_SOUNDS, "alerts", "buffSoundName")
     stack:Add(UI.OptionEdit(stack.inner, L["Custom reminder sound ID"], Setting("alerts", "buffCustomSound")))
-    stack:Add(UI.OptionButton(stack.inner, L["Try the reminder"], L["Test"], function()
-        ns.Alerts.PlaySound("buff")
-        if ns.db.settings.alerts.buffGlow then ns.Glow.Pulse() end
-    end))
+    stack:Add(UI.OptionButton(stack.inner, L["Try the reminder"], L["Test"], function() ns.Buffs.Preview() end))
     Check(stack, L["Flash the screen edge with these reminders"], "alerts", "buffGlow")
     Check(stack, L["Also print these reminders in chat"], "alerts", "buffChat")
+    Check(stack, L["Also show them in large text"], "alerts", "buffBigText")
+    Check(stack, L["Flash the game's taskbar icon"], "alerts", "buffFlash")
+    stack:Add(UI.OptionHeading(stack.inner, L["While the reminder icons are up"]))
+    Check(stack, L["Keep a pulsing border around the screen"], "alerts", "buffBorder")
+    Select(stack, L["Border colour"], BORDER_COLORS, "alerts", "buffBorderColor")
+    Select(stack, L["Border strength"], BORDER_STRENGTHS, "alerts", "buffBorderStrength")
+    Check(stack, L["Play the reminder sound again"], "alerts", "buffRepeat")
+    Select(stack, L["How often"], MINUTES, "alerts", "buffRepeatMinutes")
+    Check(stack, L["Build up: start the border and repeated sound after a while"], "alerts", "buffEscalate")
+    Select(stack, L["After"], MINUTES, "alerts", "buffEscalateMinutes")
 end, ResetGroup("alerts"))
 
 Page("barsopt", L["Bars window"], 2, function(stack)
