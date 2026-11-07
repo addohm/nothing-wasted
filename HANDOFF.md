@@ -28,6 +28,7 @@ lupa 2.8 bundles Lua 5.1 (`import lupa.lua51`), which matches the game's Lua.
   large text, taskbar flash, the XP missed without Well Fed, a kill bringing the icons back, and
   click an icon to eat or use the sleeping bag; also reminders at login or a reload out in the
   world, and a Camp Tent reminder while Boosted Rest is missing. All untried in game; see ROADMAP.md.
+- Characters show first and last names (2026-11-07); untried in game.
 - APIs were checked against Blizzard's Forever UI source (build 1.60.1) and game IDs against Wowhead's
   Forever tooltips. Where a value is a guess, `Data.lua` and ROADMAP.md say so.
 - The GitHub repo is `addohm/nothing-wasted` (renamed from `rested-xp` on 2026-10-22).

@@ -73,7 +73,7 @@ function Bars.CreateRow(parent, font)
     row:SetScript("OnClick", function(self)
         local item = self.item
         if not item then return end
-        local key, name = item.key, (item.c.name or "?") .. "-" .. (item.c.realm or "?")
+        local key, name = item.key, ns.FullName(item.c) .. "-" .. (item.c.realm or "?")
         MenuUtil.CreateContextMenu(self, function(_, root)
             root:CreateTitle(name)
             root:CreateButton(L["Stop tracking"], function()

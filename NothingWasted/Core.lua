@@ -190,9 +190,16 @@ function ns.ClassColor(c)
     return 1, 1, 1
 end
 
+-- The name to show: Forever characters have a first name and a surname ("First Last"). Saved
+-- characters get their surname the next time they're played.
+function ns.FullName(c)
+    if c.surname then return (c.name or "?") .. " " .. c.surname end
+    return c.name or "?"
+end
+
 function ns.ColoredName(c)
     local r, g, b = ns.ClassColor(c)
-    return format("|cff%02x%02x%02x%s|r", r * 255, g * 255, b * 255, c.name or "?")
+    return format("|cff%02x%02x%02x%s|r", r * 255, g * 255, b * 255, ns.FullName(c))
 end
 
 function ns.FormatDuration(seconds)

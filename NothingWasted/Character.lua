@@ -46,7 +46,12 @@ function Character.Save(reason)
     local className, class = UnitClass("player")
     Set(c, "className", className)
     Set(c, "class", class)
-    Set(c, "name", UnitName("player"))
+    -- On Forever, UnitName's second value is the surname (Blizzard's Camelot NameUtil.lua).
+    local name, surname = UnitName("player")
+    Set(c, "name", name)
+    if type(surname) == "string" and not (issecretvalue and issecretvalue(surname)) then
+        Set(c, "surname", surname)
+    end
     Set(c, "realm", GetRealmName())
     Set(c, "faction", UnitFactionGroup("player"))
     if c.level and level > c.level then ns.Fire("NW_LEVEL_UP", c, level) end

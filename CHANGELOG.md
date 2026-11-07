@@ -15,6 +15,9 @@ All notable changes to this project are documented here. The format follows
 
 ### Changed
 
+- Characters show with their first and last names ("Kyol Brightwater"), as Forever names them:
+  bars, tooltips, lists, menus and `/nw chars`. A saved character gets its last name the next time
+  you play it. Mail to an alt is recognised by its full name too.
 - Right-clicking a bar opens a menu: Stop tracking, or Forget (which still asks first).
 - **More ways for the leveling buff reminders to get your attention**, all on by default and each
   can be turned off (Options → Alerts): a pulsing border around the screen while the reminder icons are up

@@ -43,7 +43,7 @@ local function ListCharacters()
             local _, _, toCap = ns.Rested.Estimate(c, now)
             status = toCap <= 0 and L["at the rested cap"] or format(L["caps in %s"], ns.FormatDuration(toCap))
         end
-        ns.Print(format("  %s  %s %d, %s, %s", key, L["level"], c.level or 0,
+        ns.Print(format("  %s  %s %d, %s, %s", c.name and (ns.FullName(c) .. "-" .. (c.realm or "?")) or key, L["level"], c.level or 0,
             c.savedAt and format(L["saved %s ago"], ns.FormatDuration(now - c.savedAt)) or L["never saved"], status))
     end
 end

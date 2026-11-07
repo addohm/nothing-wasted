@@ -53,7 +53,7 @@ local function Sample(c, now)
     local samples = ns.db.rateSamples or {}
     ns.db.rateSamples = samples
     table.insert(samples, 1, {
-        name = c.name, at = now, away = away, resting = c.resting, rank = c.wellRested or 0,
+        name = ns.FullName(c), at = now, away = away, resting = c.resting, rank = c.wellRested or 0,
         gain = gain, expectedGain = estimate - (c.rested or 0),
         rate = PerEightHours(gain, c.xpMax, away),
         expectedRate = ExpectedPerEightHours(c.wellRested, c.resting),

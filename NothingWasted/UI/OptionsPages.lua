@@ -197,7 +197,7 @@ end
 
 local function UpdateCharacterRow(row, item)
     local c = item.c
-    item.name = (c.name or "?") .. "-" .. (c.realm or "?")
+    item.name = ns.FullName(c) .. "-" .. (c.realm or "?")
     local tracked = ns.IsTracked(c)
     row.check:SetChecked(tracked)
     local name = ns.ColoredName(c) .. " |cff999999" .. (c.realm or "?") .. "|r"

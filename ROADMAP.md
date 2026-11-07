@@ -19,6 +19,10 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
 - **Well Rested cap:** whether +4% per rank multiplies the cap (rank 5: 180%) or adds to it (170%). The
   addon multiplies. Long term: it only shows once a character with Well Rested reaches the cap.
 - **Cozy Sleeping Bag:** which of quests 79007 and 79008 is Alliance or Horde (either counts).
+- **Surnames:** that `UnitName("player")`'s second value is the surname on Forever (Blizzard's
+  Camelot `NameUtil.lua` reads it that way), and how the mail Send To box takes a full name.
+  Saved data is still keyed by first name and realm; if two of your characters on one realm can
+  share a first name, that needs the surname in the key.
 - **Buff reminder extras:** how the gold and class-colour screen borders look (a grey copy of the
   low-health texture, tinted), the large text (`GameFontNormalHuge3`) and the taskbar flash
   (`FlashClientIcon`).
@@ -66,6 +70,7 @@ What's done for Nothing Wasted and what's next. Update it in the same commit as 
 - Click a reminder icon to eat food that gives Well Fed or use the sleeping bag (2026-11-06).
 - Buff reminders at login or after a reload out in the world (2026-11-06).
 - Camp Tent reminder while Boosted Rest is missing (2026-11-06).
+- First and last names shown everywhere (2026-11-07).
 - Untrack characters (a bank alt) and forget deleted ones: Options → Characters, and a right-click
   menu on the bars (2026-11-04).
 - Standard docs (2026-10-22).

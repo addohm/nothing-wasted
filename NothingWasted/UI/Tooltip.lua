@@ -21,7 +21,7 @@ end
 
 -- Adds a character's name and every enabled section to a tooltip.
 function Tooltip.Fill(tip, c, now, isMe)
-    tip:AddLine((c.name or "?") .. (c.realm and ("  |cff999999" .. c.realm .. "|r") or ""), ns.ClassColor(c))
+    tip:AddLine(ns.FullName(c) .. (c.realm and ("  |cff999999" .. c.realm .. "|r") or ""), ns.ClassColor(c))
     local enabled = ns.db.settings.tooltip
     for _, def in ipairs(sections) do
         if enabled[def.id] ~= false then

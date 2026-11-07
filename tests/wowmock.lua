@@ -491,7 +491,7 @@ function M.NewClient(opts)
     env.C_AddOns = { GetAddOnMetadata = function(_, field) if field == "Version" then return version end end }
 
     -- Player
-    env.UnitName = function() return player.name end
+    env.UnitName = function() return player.name, player.surname end
     env.UnitClass = function() return player.className, player.class, 8 end
     env.UnitLevel = function() return player.level end
     env.UnitXP = function() return player.xp end
