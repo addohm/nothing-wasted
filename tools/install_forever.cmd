@@ -1,5 +1,6 @@
 @echo off
-rem Update this repo from GitHub and copy Nothing Wasted into the WoW: Forever client.
+rem Update this repo from GitHub, copy Nothing Wasted into the WoW: Forever client, and pack
+rem NothingWasted-<version>.zip on the desktop.
 rem Run it from a terminal (from any folder), then restart the client, or /reload if Nothing
 rem Wasted was already loaded. It only pulls what's on GitHub: push your commits first.
 setlocal
@@ -74,6 +75,25 @@ for /f %%s in ('git -C "%REPO%" status --porcelain -- NothingWasted') do set "BU
   echo ns.build = "%BUILD%"
 )
 echo Installed Nothing Wasted build %BUILD% into "%ADDON%"
+
+rem Also pack the committed addon as NothingWasted-<version>.zip on the desktop, ready to upload
+rem to CurseForge or Wago. git archive takes only committed files (without the build stamp above),
+rem under a NothingWasted folder. The version is ## Version in the .toc. The desktop comes from
+rem Windows, since OneDrive can move it.
+set "VERSION="
+for /f "tokens=3" %%v in ('findstr /b /c:"## Version:" "%REPO%\NothingWasted\NothingWasted.toc"') do set "VERSION=%%v"
+set "DESKTOP=%USERPROFILE%\Desktop"
+for /f "usebackq delims=" %%d in (`powershell -NoProfile -Command "[Environment]::GetFolderPath('Desktop')"`) do set "DESKTOP=%%d"
+if "%VERSION%"=="" (
+  echo No ## Version in the .toc, so no zip was made.
+) else (
+  git -C "%REPO%" archive --format=zip --output="%DESKTOP%\NothingWasted-%VERSION%.zip" HEAD NothingWasted
+  if errorlevel 1 (
+    echo Couldn't write "%DESKTOP%\NothingWasted-%VERSION%.zip".
+  ) else (
+    echo Packed "%DESKTOP%\NothingWasted-%VERSION%.zip" from the last commit.
+  )
+)
 if "%RESTART%"=="1" (
   echo The addon's file list changed: fully restart the game, /reload won't load new files.
   echo Then /nw help should say build %BUILD%.

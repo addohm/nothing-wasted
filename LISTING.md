@@ -135,6 +135,18 @@ character names you're happy to show.
 
 ---
 
+## Release notes for 1.1.1
+
+> - Reminders for Well Fed, the Cozy Sleeping Bag and now the Camp Tent can get your attention
+>   harder: large text, a taskbar flash, and after a while a pulsing screen border and a repeating
+>   sound (each can be turned off)
+> - Click a reminder icon to eat food that gives Well Fed, or to use your sleeping bag
+> - The Well Fed icon shows the XP you've missed by not eating
+> - Reminders at login and after a reload out in the world, and after a kill without a buff
+> - Characters show with their first and last names
+> - Options → Characters: stop tracking a bank alt, or forget a deleted character
+> - Fixed: "Not Well Fed" showed even after eating
+
 ## Release notes for 1.0.0
 
 > First release, for WoW: Forever.

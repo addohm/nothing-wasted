@@ -17,20 +17,22 @@ Interface 16001), and there's no server.
 3. Move the CHANGELOG's Unreleased entries under the new version.
 4. Commit, then build the zip with `python3 tools/make_release.py` (it writes
    `release/NothingWasted-<version>.zip` from the committed files) and commit that too.
-5. Tag the release (`git tag v1.0.0`).
+5. Tag the release (`git tag v1.1.1`).
 6. To try it locally, run `tools\install_forever.cmd` (see below) and `/reload`.
 
 ## Installing your own build on Windows
 
 `tools\install_forever.cmd` pulls the repo from GitHub (`git pull --ff-only`), mirrors
 `NothingWasted/` into `<WOW>\Interface\AddOns\NothingWasted`, and writes the commit into the
-installed `Build.lua`. `WOW` at the top of the script is the client folder, by default
+installed `Build.lua`. It also packs `NothingWasted-<version>.zip` on your desktop (the version
+from the `.toc`), ready to upload to CurseForge or Wago: `git archive` of the committed
+`NothingWasted/` folder, without the build stamp. `WOW` at the top of the script is the client folder, by default
 `C:\Program Files (x86)\World of Warcraft\_classic_beta_` (the beta client). Change it to
 `_forever_` for the live game.
 
 - On the first run it creates the addon folder (and `Interface\AddOns` if the client has none yet).
   If `WOW` itself doesn't exist it stops instead, since the path is probably wrong.
-- `/nw help` then shows `v1.0.0 build <commit>`; "-dirty" means the copy included uncommitted changes.
+- `/nw help` then shows `v<version> build <commit>`; "-dirty" means the copy included uncommitted changes.
 - The pull can update the script itself, so it runs from a copy in `%TEMP%`.
 - WoW reads the addon's file list only when the game starts. When files were added, renamed or
   removed, the script says so: fully restart the game instead of using `/reload`.

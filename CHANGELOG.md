@@ -6,12 +6,30 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-11-07
+
 ### Added
 
 - **Characters page** (Options → Characters): every saved character, tracked or not. Untick one to
   stop tracking it, such as a bank alt: it stays saved but is left out of every list, alert and
   tooltip, and gets no buff reminders or logout warning while you play it. Tick it again to bring it
   back. **Forget** removes a deleted character, including max-level ones that have no bar.
+- **Camp Tent reminder:** without Boosted Rest (a tent used in the last hour) you can sit by
+  another Camp Tent for rested XP, so it gets a reminder icon like Well Fed and the sleeping bag.
+- **More ways for the leveling buff reminders to get your attention**, all on by default and each
+  can be turned off (Options → Alerts): a pulsing border around the screen while the reminder
+  icons are up (red, gold or class colour; three strengths), the reminder sound again every few
+  minutes, a "build up" delay before those two start, large text near the top of the screen, and a
+  flash of the game's taskbar icon. The Test button tries whatever is turned on.
+- **XP missed without Well Fed:** the Well Fed icon shows about how much kill XP you've missed by
+  not eating, and a chat line gives the total when you're fed again (can be turned off).
+- **Click to fix:** left-click the Well Fed reminder icon to eat food from your bags that gives Well
+  Fed, or the sleeping bag icon to use the bag (out of combat; can be turned off). `/nw buffs`
+  shows the food it found.
+- A kill without a buff brings dismissed reminder icons back, at most every 5 minutes (can be
+  turned off).
+- `tools\install_forever.cmd` also writes `NothingWasted-<version>.zip` to the desktop, ready to
+  upload.
 
 ### Changed
 
@@ -19,22 +37,8 @@ All notable changes to this project are documented here. The format follows
   bars, tooltips, lists, menus and `/nw chars`. A saved character gets its last name the next time
   you play it. Mail to an alt is recognised by its full name too.
 - Right-clicking a bar opens a menu: Stop tracking, or Forget (which still asks first).
-- **More ways for the leveling buff reminders to get your attention**, all on by default and each
-  can be turned off (Options → Alerts): a pulsing border around the screen while the reminder icons are up
-  (red, gold or class colour; three strengths), the reminder sound again every few minutes, a
-  "build up" delay before those two start, large text near the top of the screen, and a flash of
-  the game's taskbar icon. The Test button tries whatever is turned on.
-- **XP missed without Well Fed:** the Well Fed icon shows about how much kill XP you've missed by
-  not eating, and a chat line gives the total when you're fed again (can be turned off).
-- A kill without a buff brings dismissed reminder icons back, at most every 5 minutes (can be
-  turned off).
-- **Camp Tent reminder:** without Boosted Rest (a tent used in the last hour) you can sit by
-  another Camp Tent for rested XP, so it gets a reminder icon like Well Fed and the sleeping bag.
 - The buff reminders also come up at login or after a reload when you're out in the world, not
   only on leaving an inn or city (can be turned off).
-- **Click to fix:** left-click the Well Fed reminder icon to eat food from your bags that gives Well
-  Fed, or the sleeping bag icon to use the bag (out of combat; can be turned off). `/nw buffs`
-  shows the food it found.
 
 ### Fixed
 
